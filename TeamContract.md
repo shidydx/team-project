@@ -47,8 +47,10 @@ This contract sets out shared expectations and commitments for how our team will
 ---
 ## Conflict resolution
 
-* Listening to each other and attempting to reach a compromise. 
-* If that is not possible, then reaaching out to a TA/Instructor for advice.
+* If conflict arises:
+* The team will first attempt to resolve the issue privately through open discussion. 
+* If the issue persists, the team will involve a member of the course teaching team as mediator.
+
 
 ---
 
