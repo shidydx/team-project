@@ -4,9 +4,9 @@ public class LeftNewsSummaryState {
     private String summary = "";
     private String errorMessage = "";
 
-    public LeftNewsSummaryState(String copySum, String copyErr) {
-        summary = copySum;
-        errorMessage = copyErr;
+    public LeftNewsSummaryState(LeftNewsSummaryState copy) {
+        summary = copy.summary;
+        errorMessage = copy.errorMessage;
     }
 
     public LeftNewsSummaryState() {}
