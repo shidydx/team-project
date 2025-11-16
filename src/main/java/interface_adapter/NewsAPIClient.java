@@ -37,30 +37,21 @@ public class NewsAPIClient implements NewsFetcherService {
                 sources = RIGHT_LEANING_SOURCES;
             }
             String sourcesString = String.join(",", sources);
-
-            // Build URL with parameters
             String encodedTopic = URLEncoder.encode(topic, StandardCharsets.UTF_8);
             String url = BASE_URL + "?q=" + encodedTopic + "&sources=" + sourcesString + "&pageSize=5&apiKey=" + apiKey;
 
-            // Create HTTP request
-            Request request = new Request.Builder()
-                    .url(url)
-                    .get()
-                    .build();
+            Request request = new Request.Builder().url(url).get().build();
 
-            // Execute request
             try (Response response = client.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
                     throw new IOException("Unexpected code " + response + ": " + response.body().string());
                 }
 
-                // Parse JSON response
                 String responseBody = response.body().string();
                 return parseArticles(responseBody);
             }
 
         } catch (IOException e) {
-            // Return empty list on error, or you could throw an exception
             System.err.println("Error fetching news: " + e.getMessage());
             return new ArrayList<>();
         }
@@ -76,21 +67,18 @@ public class NewsAPIClient implements NewsFetcherService {
             for (int i = 0; i < articlesArray.length(); i++) {
                 JSONObject articleJson = articlesArray.getJSONObject(i);
 
-                // Extract article fields
                 String title = articleJson.optString("title", "");
                 String url = articleJson.optString("url", "");
                 String description = articleJson.optString("description", "");
                 String content = articleJson.optString("content", "");
                 String publishedDate = articleJson.optString("publishedAt", "");
 
-                // Extract source name
                 String sourceName = "";
                 if (articleJson.has("source") && !articleJson.isNull("source")) {
                     JSONObject source = articleJson.getJSONObject("source");
                     sourceName = source.optString("name", "");
                 }
-
-                // Create Article object
+                
                 Article article = new Article(title, url, sourceName, description, content, publishedDate);
                 articles.add(article);
             }
