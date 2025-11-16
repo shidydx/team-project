@@ -33,12 +33,7 @@ public class OpenAIClient implements OpenAISummarizerService {
             String prompt = buildPrompt(articles);
             String requestBody = buildRequestBody(prompt);
 
-            Request request = new Request.Builder()
-                    .url(BASE_URL)
-                    .post(RequestBody.create(requestBody, JSON))
-                    .addHeader("Authorization", "Bearer " + apiKey)
-                    .addHeader("Content-Type", "application/json")
-                    .build();
+            Request request = new Request.Builder().url(BASE_URL).post(RequestBody.create(requestBody, JSON)).addHeader("Authorization", "Bearer " + apiKey).addHeader("Content-Type", "application/json").build();
 
             try (Response response = client.newCall(request).execute()) {
                 if (!response.isSuccessful()) {
@@ -59,7 +54,7 @@ public class OpenAIClient implements OpenAISummarizerService {
         StringBuilder prompt = new StringBuilder();
         prompt.append("Please provide a concise summary of the following news articles. ");
         prompt.append("Focus on the main points and key information. ");
-        prompt.append("Keep the summary to 2-3 paragraphs.\n\n");
+        prompt.append("Keep the summary to 1 paragraph.\n\n");
 
         for (int i = 0; i < articles.size(); i++) {
             Article article = articles.get(i);
