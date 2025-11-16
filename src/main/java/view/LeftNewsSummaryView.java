@@ -9,7 +9,6 @@ import java.awt.*;
 
 public class LeftNewsSummaryView extends JPanel {
     public static final String VIEW_NAME = "left_news_summary";
-
     private final LeftNewsSummaryViewModel viewModel;
     private LeftNewsSummaryController controller;
 

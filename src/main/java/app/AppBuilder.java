@@ -9,6 +9,7 @@ public class AppBuilder {
     
     private use_case.NewsFetcherService newsFetcher;
     private use_case.OpenAISummarizerService summarizer;
+
     private use_case.left_news_summary.LeftNewsSummaryDataAccessInterface dataAccess;
     
     private view.LeftNewsSummaryView leftNewsSummaryView;
