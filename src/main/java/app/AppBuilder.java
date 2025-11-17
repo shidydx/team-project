@@ -15,9 +15,9 @@ public class AppBuilder {
     private view.LeftNewsSummaryView leftNewsSummaryView;
     private interface_adapter.left_news_summary.LeftNewsSummaryViewModel leftNewsSummaryViewModel;
 
-    // NEW: autosave_search_history pieces (all yours)
-    private use_case.autosave_search_history.SearchHistoryDataAccessInterface searchHistoryDataAccess; // NEW
-    private interface_adapter.autosave_search_history.SearchHistoryViewModel searchHistoryViewModel;   // NEW
+    // *** YOUR NEW FIELDS ***
+    private use_case.autosave_search_history.SearchHistoryDataAccessInterface searchHistoryDataAccess;
+    private interface_adapter.autosave_search_history.SearchHistoryViewModel searchHistoryViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -29,25 +29,26 @@ public class AppBuilder {
         this.summarizer = new interface_adapter.OpenAIClient(openAiApiKey);
         this.dataAccess = new data_access.LeftNewsSummaryDataAccessImpl(newsFetcher, summarizer);
 
-        // NEW: create your in-memory search history DAO
+        // *** your in-memory DAO ***
         this.searchHistoryDataAccess =
-                new use_case.autosave_search_history.InMemorySearchHistoryDataAccessObject(); // NEW
+                new use_case.autosave_search_history.InMemorySearchHistoryDataAccessObject();
     }
 
     public AppBuilder addLeftNewsSummaryView() {
         leftNewsSummaryViewModel = new interface_adapter.left_news_summary.LeftNewsSummaryViewModel();
-        leftNewsSummaryView = new view.LeftNewsSummaryView(leftNewsSummaryViewModel);
+
+        // *** create your history VM ***
+        searchHistoryViewModel = new interface_adapter.autosave_search_history.SearchHistoryViewModel();
+
+        // *** UPDATED constructor: pass both VMs to the view ***
+        leftNewsSummaryView = new view.LeftNewsSummaryView(leftNewsSummaryViewModel, searchHistoryViewModel);
+
         cardPanel.add(leftNewsSummaryView, leftNewsSummaryView.getViewName());
-
-        // NEW: create your own ViewModel (not passed into their view, so you’re not touching it)
-        searchHistoryViewModel = new interface_adapter.autosave_search_history.SearchHistoryViewModel(); // NEW
-
         return this;
     }
 
-
     public AppBuilder addLeftNewsSummaryUseCase() {
-        // ----- existing teammate use case (unchanged) -----
+        // existing teammate use case
         final use_case.left_news_summary.LeftNewsSummaryOutputBoundary presenter =
                 new interface_adapter.left_news_summary.LeftNewsSummaryPresenter(leftNewsSummaryViewModel);
         final use_case.left_news_summary.LeftNewsSummaryInputBoundary interactor =
@@ -56,33 +57,31 @@ public class AppBuilder {
                 new interface_adapter.left_news_summary.LeftNewsSummaryController(interactor);
         leftNewsSummaryView.setController(controller);
 
-        // ----- NEW: your autosave_search_history use cases -----
-
-        // SaveTopicUseCase wiring
+        // *** YOUR SAVE use case wiring ***
         interface_adapter.autosave_search_history.SaveTopicPresenter saveTopicPresenter =
-                new interface_adapter.autosave_search_history.SaveTopicPresenter(searchHistoryViewModel); // NEW
+                new interface_adapter.autosave_search_history.SaveTopicPresenter(searchHistoryViewModel);
 
         use_case.autosave_search_history.SaveTopicUseCase saveTopicInteractor =
                 new use_case.autosave_search_history.SaveTopicUseCase(
-                        searchHistoryDataAccess, saveTopicPresenter); // NEW
+                        searchHistoryDataAccess, saveTopicPresenter);
 
         interface_adapter.autosave_search_history.SaveTopicController saveTopicController =
-                new interface_adapter.autosave_search_history.SaveTopicController(saveTopicInteractor); // NEW
+                new interface_adapter.autosave_search_history.SaveTopicController(saveTopicInteractor);
 
-        // LoadSearchHistoryUseCase wiring
+        // *** YOUR LOAD use case wiring ***
         interface_adapter.autosave_search_history.LoadSearchHistoryPresenter loadHistoryPresenter =
-                new interface_adapter.autosave_search_history.LoadSearchHistoryPresenter(searchHistoryViewModel); // NEW
+                new interface_adapter.autosave_search_history.LoadSearchHistoryPresenter(searchHistoryViewModel);
 
         use_case.autosave_search_history.LoadSearchHistoryUseCase loadHistoryInteractor =
                 new use_case.autosave_search_history.LoadSearchHistoryUseCase(
-                        searchHistoryDataAccess, loadHistoryPresenter); // NEW
+                        searchHistoryDataAccess, loadHistoryPresenter);
 
         interface_adapter.autosave_search_history.LoadSearchHistoryController loadHistoryController =
-                new interface_adapter.autosave_search_history.LoadSearchHistoryController(loadHistoryInteractor); // NEW
+                new interface_adapter.autosave_search_history.LoadSearchHistoryController(loadHistoryInteractor);
 
-        // NOTE: we are NOT calling anything on leftNewsSummaryView with these controllers,
-        // so we don’t modify their view / viewmodel at all. They are available for
-        // unit tests or for later UI integration if your team wants it.
+        // *** pass your controllers into the view ***
+        leftNewsSummaryView.setSaveTopicController(saveTopicController);
+        leftNewsSummaryView.setLoadHistoryController(loadHistoryController);
 
         return this;
     }
