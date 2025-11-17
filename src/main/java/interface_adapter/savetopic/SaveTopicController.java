@@ -1,7 +1,7 @@
-package interface_adapter.autosave_search_history;
+package interface_adapter.savetopic;
 
-import use_case.autosave_search_history.SaveTopicInputBoundary;
-import use_case.autosave_search_history.SaveTopicInputData;
+import use_case.savetopic.SaveTopicInputBoundary;
+import use_case.savetopic.SaveTopicInputData;
 
 import java.time.LocalDateTime;
 
