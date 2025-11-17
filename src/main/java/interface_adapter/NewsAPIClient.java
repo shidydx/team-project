@@ -24,7 +24,11 @@ public class NewsAPIClient implements NewsFetcherService {
 
     public NewsAPIClient(String apiKey) {
         this.apiKey = apiKey;
-        this.client = new OkHttpClient();
+        this.client = new OkHttpClient.Builder()
+            .connectTimeout(10, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(30, java.util.concurrent.TimeUnit.SECONDS)
+            .writeTimeout(10, java.util.concurrent.TimeUnit.SECONDS)
+            .build();
     }
 
     @Override

@@ -17,12 +17,14 @@ public class LeftNewsSummaryInteractor implements LeftNewsSummaryInputBoundary {
         String topic = inputData.getTopic();
         try {
             List<Article> articles = dataAccess.fetchLeftNewsArticles(topic);
-            String summary = dataAccess.summarizeLeftNewsArticles(articles);
             
+            // Check for articles first before trying to summarize
             if (articles == null || articles.isEmpty()) {
                 outputBoundary.failureView("No articles found for topic: " + topic);
                 return;
             }
+            
+            String summary = dataAccess.summarizeLeftNewsArticles(articles);
             
             if (summary == null || summary.isEmpty()) {
                 outputBoundary.failureView("Failed to generate summary");

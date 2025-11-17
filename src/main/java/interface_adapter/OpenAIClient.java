@@ -24,7 +24,11 @@ public class OpenAIClient implements OpenAISummarizerService {
 
     public OpenAIClient(String apiKey) {
         this.apiKey = apiKey;
-        this.client = new OkHttpClient();
+        this.client = new OkHttpClient.Builder()
+            .connectTimeout(10, java.util.concurrent.TimeUnit.SECONDS)
+            .readTimeout(60, java.util.concurrent.TimeUnit.SECONDS) // OpenAI can take longer
+            .writeTimeout(10, java.util.concurrent.TimeUnit.SECONDS)
+            .build();
     }
 
     @Override
@@ -108,6 +112,28 @@ public class OpenAIClient implements OpenAISummarizerService {
             return "";
         } catch (Exception e) {
             System.err.println("Error parsing summary: " + e.getMessage());
+            return "";
+        }
+    }
+
+    @Override
+    public String generateAnalysis(String prompt) {
+        try {
+            String requestBody = buildRequestBody(prompt);
+
+            Request request = new Request.Builder().url(BASE_URL).post(RequestBody.create(requestBody, JSON)).addHeader("Authorization", "Bearer " + apiKey).addHeader("Content-Type", "application/json").build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response + ": " + response.body().string());
+                }
+
+                String responseBody = response.body().string();
+                return parseSummary(responseBody);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Error generating analysis: " + e.getMessage());
             return "";
         }
     }
