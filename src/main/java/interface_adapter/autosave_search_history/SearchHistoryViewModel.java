@@ -1,4 +1,4 @@
-package interface_adapter.savetopic;
+package interface_adapter.autosave_search_history;
 
 import java.beans.PropertyChangeListener;
 import java.beans.PropertyChangeSupport;

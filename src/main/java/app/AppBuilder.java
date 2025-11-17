@@ -1,9 +1,5 @@
 package app;
 
-import interface_adapter.loadsearch.LoadSearchHistoryController;
-import interface_adapter.loadsearch.LoadSearchHistoryPresenter;
-import use_case.savetopic.SaveTopicUseCase;
-
 import javax.swing.*;
 import java.awt.*;
 
@@ -20,8 +16,8 @@ public class AppBuilder {
     private interface_adapter.left_news_summary.LeftNewsSummaryViewModel leftNewsSummaryViewModel;
 
     // *** YOUR NEW FIELDS ***
-    private use_case.loadsearch.SearchHistoryDataAccessInterface searchHistoryDataAccess;
-    private interface_adapter.savetopic.SearchHistoryViewModel searchHistoryViewModel;
+    private use_case.autosave_search_history.SearchHistoryDataAccessInterface searchHistoryDataAccess;
+    private interface_adapter.autosave_search_history.SearchHistoryViewModel searchHistoryViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -35,14 +31,14 @@ public class AppBuilder {
 
         // *** your in-memory DAO ***
         this.searchHistoryDataAccess =
-                new use_case.loadsearch.InMemorySearchHistoryDataAccessObject();
+                new use_case.autosave_search_history.InMemorySearchHistoryDataAccessObject();
     }
 
     public AppBuilder addLeftNewsSummaryView() {
         leftNewsSummaryViewModel = new interface_adapter.left_news_summary.LeftNewsSummaryViewModel();
 
         // *** create your history VM ***
-        searchHistoryViewModel = new interface_adapter.savetopic.SearchHistoryViewModel();
+        searchHistoryViewModel = new interface_adapter.autosave_search_history.SearchHistoryViewModel();
 
         // *** UPDATED constructor: pass both VMs to the view ***
         leftNewsSummaryView = new view.LeftNewsSummaryView(leftNewsSummaryViewModel, searchHistoryViewModel);
@@ -62,26 +58,26 @@ public class AppBuilder {
         leftNewsSummaryView.setController(controller);
 
         // *** YOUR SAVE use case wiring ***
-        interface_adapter.savetopic.SaveTopicPresenter saveTopicPresenter =
-                new interface_adapter.savetopic.SaveTopicPresenter(searchHistoryViewModel);
+        interface_adapter.autosave_search_history.SaveTopicPresenter saveTopicPresenter =
+                new interface_adapter.autosave_search_history.SaveTopicPresenter(searchHistoryViewModel);
 
-        SaveTopicUseCase saveTopicInteractor =
-                new SaveTopicUseCase(
+        use_case.autosave_search_history.SaveTopicUseCase saveTopicInteractor =
+                new use_case.autosave_search_history.SaveTopicUseCase(
                         searchHistoryDataAccess, saveTopicPresenter);
 
-        interface_adapter.savetopic.SaveTopicController saveTopicController =
-                new interface_adapter.savetopic.SaveTopicController(saveTopicInteractor);
+        interface_adapter.autosave_search_history.SaveTopicController saveTopicController =
+                new interface_adapter.autosave_search_history.SaveTopicController(saveTopicInteractor);
 
         // *** YOUR LOAD use case wiring ***
-        LoadSearchHistoryPresenter loadHistoryPresenter =
-                new LoadSearchHistoryPresenter(searchHistoryViewModel);
+        interface_adapter.autosave_search_history.LoadSearchHistoryPresenter loadHistoryPresenter =
+                new interface_adapter.autosave_search_history.LoadSearchHistoryPresenter(searchHistoryViewModel);
 
-        use_case.loadsearch.LoadSearchHistoryUseCase loadHistoryInteractor =
-                new use_case.loadsearch.LoadSearchHistoryUseCase(
+        use_case.autosave_search_history.LoadSearchHistoryUseCase loadHistoryInteractor =
+                new use_case.autosave_search_history.LoadSearchHistoryUseCase(
                         searchHistoryDataAccess, loadHistoryPresenter);
 
-        LoadSearchHistoryController loadHistoryController =
-                new LoadSearchHistoryController(loadHistoryInteractor);
+        interface_adapter.autosave_search_history.LoadSearchHistoryController loadHistoryController =
+                new interface_adapter.autosave_search_history.LoadSearchHistoryController(loadHistoryInteractor);
 
         // *** pass your controllers into the view ***
         leftNewsSummaryView.setSaveTopicController(saveTopicController);

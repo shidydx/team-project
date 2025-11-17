@@ -1,7 +1,7 @@
-package interface_adapter.loadsearch;
+package interface_adapter.autosave_search_history;
 
-import use_case.loadsearch.LoadSearchHistoryInputBoundary;
-import use_case.loadsearch.LoadSearchHistoryInputData;
+import use_case.autosave_search_history.LoadSearchHistoryInputBoundary;
+import use_case.autosave_search_history.LoadSearchHistoryInputData;
 
 public class LoadSearchHistoryController {
 

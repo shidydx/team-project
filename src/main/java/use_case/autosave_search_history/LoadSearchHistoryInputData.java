@@ -1,4 +1,4 @@
-package use_case.loadsearch;
+package use_case.autosave_search_history;
 
 public class LoadSearchHistoryInputData {
 

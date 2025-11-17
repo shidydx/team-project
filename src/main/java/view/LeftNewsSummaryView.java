@@ -3,9 +3,9 @@ package view;
 import interface_adapter.left_news_summary.LeftNewsSummaryController;
 import interface_adapter.left_news_summary.LeftNewsSummaryState;
 import interface_adapter.left_news_summary.LeftNewsSummaryViewModel;
-import interface_adapter.savetopic.SearchHistoryViewModel;
-import interface_adapter.savetopic.SaveTopicController;
-import interface_adapter.loadsearch.LoadSearchHistoryController;
+import interface_adapter.autosave_search_history.SearchHistoryViewModel;
+import interface_adapter.autosave_search_history.SaveTopicController;
+import interface_adapter.autosave_search_history.LoadSearchHistoryController;
 
 
 import javax.swing.*;

@@ -1,7 +1,4 @@
-package use_case.savetopic;
-
-import use_case.loadsearch.SearchHistoryDataAccessInterface;
-import use_case.loadsearch.SearchHistoryEntry;
+package use_case.autosave_search_history;
 
 import java.time.LocalDateTime;
 import java.util.Comparator;
