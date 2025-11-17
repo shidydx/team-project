@@ -15,7 +15,7 @@ public class FetchNewsUseCase {
         this.newsFetcher = newsFetcher;
     }
     public boolean validateTopic (String keyword) {
-        if (keyword.equals("")) {
+        if (keyword.isEmpty()) {
             return false;
         } else {
             List<Article> leftArticles = newsFetcher.fetchNews(keyword, "left");
