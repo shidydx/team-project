@@ -1,7 +1,7 @@
-package interface_adapter.autosave_search_history;
+package interface_adapter.savetopic;
 
-import use_case.autosave_search_history.SaveTopicOutputBoundary;
-import use_case.autosave_search_history.SaveTopicOutputData;
+import use_case.savetopic.SaveTopicOutputBoundary;
+import use_case.savetopic.SaveTopicOutputData;
 
 import java.util.stream.Collectors;
 

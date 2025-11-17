@@ -1,7 +1,8 @@
-package interface_adapter.autosave_search_history;
+package interface_adapter.loadsearch;
 
-import use_case.autosave_search_history.LoadSearchHistoryOutputBoundary;
-import use_case.autosave_search_history.LoadSearchHistoryOutputData;
+import interface_adapter.savetopic.SearchHistoryViewModel;
+import use_case.loadsearch.LoadSearchHistoryOutputBoundary;
+import use_case.loadsearch.LoadSearchHistoryOutputData;
 
 import java.util.stream.Collectors;
 

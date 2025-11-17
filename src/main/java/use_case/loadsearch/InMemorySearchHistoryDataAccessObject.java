@@ -1,4 +1,4 @@
-package use_case.autosave_search_history;
+package use_case.loadsearch;
 
 import java.util.*;
 

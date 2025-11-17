@@ -1,12 +1,9 @@
-package use_case.autosave_search_history;
+package use_case.loadsearch;
 
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Immutable DTO for the updated history list.
- */
-public class SaveTopicOutputData {
+public class LoadSearchHistoryOutputData {
 
     public static class HistoryItem {
         private final String topic;
@@ -27,12 +24,18 @@ public class SaveTopicOutputData {
     }
 
     private final List<HistoryItem> historyItems;
+    private final boolean empty;
 
-    public SaveTopicOutputData(List<HistoryItem> historyItems) {
+    public LoadSearchHistoryOutputData(List<HistoryItem> historyItems, boolean empty) {
         this.historyItems = historyItems;
+        this.empty = empty;
     }
 
     public List<HistoryItem> getHistoryItems() {
         return historyItems;
+    }
+
+    public boolean isEmpty() {
+        return empty;
     }
 }
