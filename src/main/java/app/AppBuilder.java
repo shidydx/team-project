@@ -1,8 +1,12 @@
 package app;
 
+import data_access.RightNewsSummaryDataAccessImpl;
 import interface_adapter.loadsearch.LoadSearchHistoryController;
 import interface_adapter.loadsearch.LoadSearchHistoryPresenter;
+import interface_adapter.right_news_summary.RightNewsController;
+import interface_adapter.right_news_summary.RightNewsPresenter;
 import use_case.savetopic.SaveTopicUseCase;
+import view.RightNewsSummaryView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -19,9 +23,13 @@ public class AppBuilder {
     private view.LeftNewsSummaryView leftNewsSummaryView;
     private interface_adapter.left_news_summary.LeftNewsSummaryViewModel leftNewsSummaryViewModel;
 
+    private view.RightNewsSummaryView rightNewsSummaryView;
     // *** YOUR NEW FIELDS ***
     private use_case.loadsearch.SearchHistoryDataAccessInterface searchHistoryDataAccess;
     private interface_adapter.savetopic.SearchHistoryViewModel searchHistoryViewModel;
+
+    private use_case.right_news_summary.RightNewsSummaryDataAccessInterface rightNewsDataAccess;
+    private interface_adapter.right_news_summary.RightNewsViewModel rightNewsViewModel;
 
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
@@ -36,6 +44,7 @@ public class AppBuilder {
         // *** your in-memory DAO ***
         this.searchHistoryDataAccess =
                 new use_case.loadsearch.InMemorySearchHistoryDataAccessObject();
+        this.rightNewsDataAccess = new RightNewsSummaryDataAccessImpl(newsFetcher);
     }
 
     public AppBuilder addLeftNewsSummaryView() {
@@ -87,6 +96,22 @@ public class AppBuilder {
         leftNewsSummaryView.setSaveTopicController(saveTopicController);
         leftNewsSummaryView.setLoadHistoryController(loadHistoryController);
 
+        return this;
+    }
+
+    public AppBuilder addRightNewsSummaryView() {
+        rightNewsViewModel = new interface_adapter.right_news_summary.RightNewsViewModel();
+        return this;
+    }
+
+    public AppBuilder addRightNewsSummaryUseCase() {
+        RightNewsPresenter presenter = new RightNewsPresenter(rightNewsViewModel);
+        use_case.right_news_summary.RightNewsSummaryInteractor interactor
+                = new  use_case.right_news_summary.RightNewsSummaryInteractor(
+                        summarizer, presenter, rightNewsDataAccess);
+        RightNewsController controller = new RightNewsController(interactor);
+        rightNewsSummaryView  = new RightNewsSummaryView(controller, rightNewsViewModel);
+        cardPanel.add(rightNewsSummaryView, "rightNewsSummaryView");
         return this;
     }
 

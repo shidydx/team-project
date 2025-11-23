@@ -23,6 +23,11 @@ public class RightNewsPresenter implements RightNewsSummaryOutputBoundary {
 
     @Override
     public void summarizeFailView(String failedMessage) {
+        viewModel.setSummary("");
+        viewModel.setUrl("");
+        viewModel.setTitle("");
+        viewModel.setName("");
+        viewModel.setArticles(null);
         viewModel.setErrorMessage(failedMessage);
         viewModel.firePropertyChanged();
     }

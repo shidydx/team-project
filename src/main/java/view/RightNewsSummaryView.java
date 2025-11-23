@@ -7,12 +7,13 @@ import interface_adapter.right_news_summary.RightNewsViewModel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
-import java.awt.event.ItemListener;
 import java.util.List;
 
 public class RightNewsSummaryView extends JPanel {
+
     private final RightNewsController controller;
     private final RightNewsViewModel viewModel;
+
     private final JTextField topicField;
     private final JTextArea summaryArea;
     private final JComboBox<String> sourceComboBox;
@@ -24,7 +25,7 @@ public class RightNewsSummaryView extends JPanel {
     public RightNewsSummaryView(RightNewsController controller, RightNewsViewModel viewModel) {
         this.controller = controller;
         this.viewModel = viewModel;
-        setLayout(new BorderLayout());
+        this.setLayout(new BorderLayout());
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         JPanel topicPanel = new JPanel(new BorderLayout());
@@ -73,17 +74,12 @@ public class RightNewsSummaryView extends JPanel {
         mainPanel.add(sourcePanel);
         mainPanel.add(Box.createVerticalStrut(8));
         mainPanel.add(buttonPanel);
-        add(mainPanel, BorderLayout.CENTER);
-
-        sourceComboBox.addItemListener(new ItemListener() {
-            @Override
-            public void itemStateChanged(ItemEvent e) {
-                if (e.getStateChange() == ItemEvent.SELECTED) {
-                    updateArticleDetails();
-                }
+        this.add(mainPanel, BorderLayout.CENTER);
+        sourceComboBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                updateArticleDetails();
             }
         });
-
         summarizeButton.addActionListener(e -> {
             String keyword = topicField.getText().trim();
             controller.execute(keyword);
@@ -95,12 +91,12 @@ public class RightNewsSummaryView extends JPanel {
                         "Source Unavailable",
                         JOptionPane.ERROR_MESSAGE
                 );
-            } else {
-                summaryArea.setText(viewModel.getSummary());
-                linkField.setText(viewModel.getUrl());
-                fillSourceComboBox();
-                updateArticleDetails();
+                return;
             }
+            summaryArea.setText(viewModel.getSummary());
+            linkField.setText(viewModel.getUrl());
+            fillSourceComboBox();
+            updateArticleDetails();
         });
     }
 
@@ -113,9 +109,21 @@ public class RightNewsSummaryView extends JPanel {
                 label = "Right source";
             }
             sourceComboBox.addItem(label);
-            titleField.setText(viewModel.getTitle() == null ? "" : viewModel.getTitle());
-            nameField.setText(viewModel.getName() == null ? "" : viewModel.getName());
-            linkField.setText(viewModel.getUrl() == null ? "" : viewModel.getUrl());
+            if (viewModel.getTitle() == null) {
+                titleField.setText("");
+            } else {
+                titleField.setText(viewModel.getTitle());
+            }
+            if (viewModel.getName() == null) {
+                nameField.setText("");
+            } else {
+                nameField.setText(viewModel.getName());
+            }
+            if (viewModel.getUrl() == null) {
+                linkField.setText("");
+            } else {
+                linkField.setText(viewModel.getUrl());
+            }
             return;
         }
         for (Article article : articles) {
@@ -143,9 +151,21 @@ public class RightNewsSummaryView extends JPanel {
             index = 0;
         }
         Article article = articles.get(index);
-        titleField.setText(article.getTitle() == null ? "" : article.getTitle());
-        nameField.setText(article.getSourceName() == null ? "" : article.getSourceName());
-        linkField.setText(article.getUrl() == null ? "" : article.getUrl());
+        if (article.getTitle() == null) {
+            titleField.setText("");
+        } else {
+            titleField.setText(article.getTitle());
+        }
+        if (article.getSourceName() == null) {
+            nameField.setText("");
+        } else {
+            nameField.setText(article.getSourceName());
+        }
+        if (article.getUrl() == null) {
+            linkField.setText("");
+        } else {
+            linkField.setText(article.getUrl());
+        }
     }
 
     public static void showInFrame(RightNewsController controller, RightNewsViewModel viewModel) {

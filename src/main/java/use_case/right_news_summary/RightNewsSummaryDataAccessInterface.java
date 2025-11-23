@@ -5,5 +5,4 @@ import java.util.List;
 
 public interface RightNewsSummaryDataAccessInterface {
     List<Article> fetchRightNewsArticles(String topic);
-    String summarizeRightNewsArticles(List<Article> articles);
 }
