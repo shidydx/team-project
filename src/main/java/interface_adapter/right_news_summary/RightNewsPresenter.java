@@ -18,7 +18,6 @@ public class RightNewsPresenter implements RightNewsSummaryOutputBoundary {
         viewModel.setName(summarizeRightNewsOutputData.getSourceName());
         viewModel.setArticles(summarizeRightNewsOutputData.getArticles());
         viewModel.setErrorMessage("");
-        viewModel.firePropertyChanged();
     }
 
     @Override
@@ -29,6 +28,5 @@ public class RightNewsPresenter implements RightNewsSummaryOutputBoundary {
         viewModel.setName("");
         viewModel.setArticles(null);
         viewModel.setErrorMessage(failedMessage);
-        viewModel.firePropertyChanged();
     }
 }

@@ -25,12 +25,12 @@ public class RightNewsSummaryInteractor implements RightNewsSummaryInputBoundary
         }
         List<Article> articles = dataAccess.fetchRightNewsArticles(topic);
         if (articles == null || articles.isEmpty()) {
-            presenter.summarizeFailView("No article found");
+            presenter.summarizeFailView("No articles found for topic: " + topic);
             return;
         }
         String summary = summarizer.summarizeArticles(articles);
         if (summary == null || summary.trim().isEmpty()) {
-            presenter.summarizeFailView("Failed to summarize news");
+            presenter.summarizeFailView("Failed to generate summary");
             return;
         }
         Article first = articles.get(0);

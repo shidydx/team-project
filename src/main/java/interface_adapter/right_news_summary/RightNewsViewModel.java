@@ -52,7 +52,4 @@ public class RightNewsViewModel {
     public String getName() {return name;}
 
     public String getTitle() {return title;}
-
-    public void firePropertyChanged() {
-    }
 }
