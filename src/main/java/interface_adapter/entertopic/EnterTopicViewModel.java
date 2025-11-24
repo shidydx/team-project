@@ -1,22 +1,16 @@
 package interface_adapter.entertopic;
 
 public class EnterTopicViewModel {
-    private String errorMessage;
-    private String topic;
+    private EnterTopicState enterTopicState;
 
-    public String getErrorMessage() {
-        return errorMessage;
+    public EnterTopicViewModel() {
+        enterTopicState = new EnterTopicState();
     }
 
-    public String getTopic() {
-        return topic;
+    public EnterTopicState getState() {
+        return enterTopicState;
     }
-
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
-    }
-
-    public void setTopic(String topic) {
-        this.topic = topic;
+    public void setEnterTopicState(EnterTopicState enterTopicState) {
+        this.enterTopicState = enterTopicState;
     }
 }

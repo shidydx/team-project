@@ -8,17 +8,22 @@ public class EnterTopicPresenter implements EnterTopicOutputBoundary {
     private final EnterTopicViewModel viewModel;
 
     public EnterTopicPresenter(EnterTopicViewModel viewModel) {
-        this.viewModel = viewModel;
+        if (viewModel != null) {this.viewModel = viewModel;
+        } else {this.viewModel = new EnterTopicViewModel();
+        }
+
     }
 
     @Override
     public void prepareSuccessView (EnterTopicOutputData outputData) {
-        viewModel.setTopic(outputData.getOutput());
-        viewModel.setErrorMessage(null);
+        EnterTopicState state = viewModel.getState();
+        state.setTopic(outputData.getOutput());
+        state.setErrorMessage(null);
     }
 
     @Override
     public void prepareFailView(String errorMessage) {
-        viewModel.setErrorMessage(errorMessage);
+        EnterTopicState state = viewModel.getState();
+        state.setErrorMessage(errorMessage);
     }
 }

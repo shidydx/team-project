@@ -4,11 +4,11 @@ import entity.Article;
 
 import java.util.List;
 
-public class EnterTopicUseCase  implements EnterTopicInputBoundary{
+public class EnterTopicInteractor implements EnterTopicInputBoundary{
     private final EnterTopicOutputBoundary output;
     private final EnterTopicDataAccessInterface dataAccess;
 
-    public EnterTopicUseCase(EnterTopicOutputBoundary output, EnterTopicDataAccessInterface dataAccess) {
+    public EnterTopicInteractor(EnterTopicOutputBoundary output, EnterTopicDataAccessInterface dataAccess) {
         this.output = output;
         this.dataAccess = dataAccess;
     }
