@@ -31,6 +31,5 @@ public class EnterTopicUseCase  implements EnterTopicInputBoundary{
             EnterTopicOutputData outputData = new EnterTopicOutputData(inputData.getTopic());
             output.prepareSuccessView(outputData);
         }
-
     }
 }
