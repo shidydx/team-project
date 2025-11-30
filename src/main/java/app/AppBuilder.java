@@ -139,7 +139,8 @@ public class AppBuilder {
                 summarizer, presenter, rightNewsDataAccess);
         RightNewsController controller = new RightNewsController(interactor);
         rightNewsSummaryView  = new RightNewsSummaryView(controller, rightNewsViewModel);
-        cardPanel.add(rightNewsSummaryView, "rightNewsSummaryView");
+        rightNewsSummaryView.setCardChange(cardLayout, cardPanel);
+        cardPanel.add(rightNewsSummaryView, RightNewsSummaryView.VIEW_NAME);
         return this;
     }
 
@@ -148,7 +149,10 @@ public class AppBuilder {
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
         application.add(cardPanel);
-        if (leftNewsSummaryView != null) {
+        if (rightNewsSummaryView != null){
+            cardLayout.show(cardPanel, RightNewsSummaryView.VIEW_NAME);
+        }
+        else if (leftNewsSummaryView != null) {
             cardLayout.show(cardPanel, leftNewsSummaryView.getViewName());
         }
         return application;
