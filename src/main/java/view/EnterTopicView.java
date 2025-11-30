@@ -26,6 +26,15 @@ public class EnterTopicView extends JPanel {
         updateView();
     }
 
+    public EnterTopicView(EnterTopicViewModel viewModel) {
+        this.viewModel = viewModel;
+        initializeUI();
+        updateView();
+    }
+
+    public void setController(EnterTopicController controller) {
+        this.controller = controller;
+    }
 
     public String getViewName() {
         return VIEW_NAME;
@@ -60,13 +69,7 @@ public class EnterTopicView extends JPanel {
         mainPanel.add(errorLabel);
         mainPanel.add(searchButton);
 
-//        // Error panel
-//        JPanel errorPanel = new JPanel(new BorderLayout());
-
-//        errorPanel.add(errorLabel, BorderLayout.CENTER);
-
         add(mainPanel);
-//        add(errorPanel, BorderLayout.SOUTH);
     }
     public void updateView() {
         if (viewModel.getState().getErrorMessage() != null && !viewModel.getState().getErrorMessage().isEmpty()) {

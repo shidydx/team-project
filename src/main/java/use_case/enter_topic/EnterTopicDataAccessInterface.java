@@ -4,6 +4,8 @@ import entity.Article;
 import java.util.*;
 
 public interface EnterTopicDataAccessInterface {
-    List<Article> fetchNews(String keyword);
 
+    List<Article> fetchLeftNews(String keyword);
+
+    List<Article> fetchRightNews(String keyword);
 }

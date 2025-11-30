@@ -28,7 +28,13 @@ public class EnterTopicInteractorTest {
 
         EnterTopicDataAccessInterface dataAccess = new EnterTopicDataAccessInterface() {
             @Override
-            public List<Article> fetchNews(String topic) {
+            public List<Article> fetchLeftNews(String topic) {
+                fail("Data access should not be called");
+                return null;
+            }
+
+            @Override
+            public List<Article> fetchRightNews(String topic) {
                 fail("Data access should not be called");
                 return null;
             }
@@ -40,7 +46,7 @@ public class EnterTopicInteractorTest {
 
     @Test
     public void invalidTopicTest() {
-        EnterTopicInputData inputData = new EnterTopicInputData("1234567890");
+        EnterTopicInputData inputData = new EnterTopicInputData("12345678910");
         EnterTopicOutputBoundary presenter = new EnterTopicOutputBoundary() {
             @Override
             public void prepareSuccessView(EnterTopicOutputData output) {
@@ -53,7 +59,11 @@ public class EnterTopicInteractorTest {
 
         EnterTopicDataAccessInterface dataAccess = new EnterTopicDataAccessInterface() {
             @Override
-            public List<Article> fetchNews(String topic) {
+            public List<Article> fetchLeftNews(String topic) {
+                return new ArrayList<>();
+            }
+            @Override
+            public List<Article> fetchRightNews(String topic) {
                 return new ArrayList<>();
             }
         };
@@ -77,7 +87,12 @@ public class EnterTopicInteractorTest {
         };
         EnterTopicDataAccessInterface dataAccess = new EnterTopicDataAccessInterface() {
             @Override
-            public List<Article> fetchNews(String topic) {
+            public List<Article> fetchLeftNews(String topic) {
+                return List.of(new Article("title", "url", "source", "description", "content", "publishdate"));
+            }
+
+            @Override
+            public List<Article> fetchRightNews(String topic) {
                 return List.of(new Article("title", "url", "source", "description", "content", "publishdate"));
             }
         };
