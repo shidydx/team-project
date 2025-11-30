@@ -1,12 +1,17 @@
 package app;
 
+import data_access.EnterTopicDataAccessImpl;
 import data_access.RightNewsSummaryDataAccessImpl;
 import interface_adapter.loadsearch.LoadSearchHistoryController;
 import interface_adapter.loadsearch.LoadSearchHistoryPresenter;
 import interface_adapter.right_news_summary.RightNewsController;
 import interface_adapter.right_news_summary.RightNewsPresenter;
+import interface_adapter.entertopic.EnterTopicController;
+import interface_adapter.entertopic.EnterTopicPresenter;
+import use_case.enter_topic.EnterTopicInteractor;
 import use_case.savetopic.SaveTopicUseCase;
 import view.RightNewsSummaryView;
+import view.EnterTopicView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +36,10 @@ public class AppBuilder {
     private use_case.right_news_summary.RightNewsSummaryDataAccessInterface rightNewsDataAccess;
     private interface_adapter.right_news_summary.RightNewsViewModel rightNewsViewModel;
 
+    private use_case.enter_topic.EnterTopicDataAccessInterface enterTopicDataAccess;
+    private interface_adapter.entertopic.EnterTopicViewModel enterTopicViewModel;
+    private view.EnterTopicView enterTopicView;
+
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
 
@@ -45,6 +54,25 @@ public class AppBuilder {
         this.searchHistoryDataAccess =
                 new use_case.loadsearch.InMemorySearchHistoryDataAccessObject();
         this.rightNewsDataAccess = new RightNewsSummaryDataAccessImpl(newsFetcher);
+        this.enterTopicDataAccess = new EnterTopicDataAccessImpl(newsFetcher);
+
+    }
+
+    public AppBuilder addEnterTopicView() {
+        enterTopicViewModel = new interface_adapter.entertopic.EnterTopicViewModel();
+        enterTopicView = new EnterTopicView(enterTopicViewModel);
+        cardPanel.add(enterTopicView, enterTopicView.getName());
+        return this;
+    }
+
+    public AppBuilder addEnterTopicUseCase(){
+        final EnterTopicPresenter enterTopicPresenter = new EnterTopicPresenter(enterTopicViewModel);
+        final EnterTopicInteractor interactor = new EnterTopicInteractor(enterTopicPresenter, enterTopicDataAccess);
+        final EnterTopicController controller = new EnterTopicController(interactor);
+
+        enterTopicView.setController(controller);
+        cardPanel.add(enterTopicView, enterTopicView.getName());
+        return this;
     }
 
     public AppBuilder addLeftNewsSummaryView() {
@@ -108,7 +136,7 @@ public class AppBuilder {
         RightNewsPresenter presenter = new RightNewsPresenter(rightNewsViewModel);
         use_case.right_news_summary.RightNewsSummaryInteractor interactor
                 = new  use_case.right_news_summary.RightNewsSummaryInteractor(
-                        summarizer, presenter, rightNewsDataAccess);
+                summarizer, presenter, rightNewsDataAccess);
         RightNewsController controller = new RightNewsController(interactor);
         rightNewsSummaryView  = new RightNewsSummaryView(controller, rightNewsViewModel);
         rightNewsSummaryView.setCardChange(cardLayout, cardPanel);

@@ -6,7 +6,8 @@ public class Main {
     public static void main(String[] args) {
         AppBuilder appBuilder = new AppBuilder();
 
-        JFrame application = appBuilder.addLeftNewsSummaryView().addLeftNewsSummaryUseCase()
+        JFrame application = appBuilder.addEnterTopicView().addEnterTopicUseCase()
+                .addLeftNewsSummaryView().addLeftNewsSummaryUseCase()
                 .addRightNewsSummaryView().addRightNewsSummaryUseCase()
                 .build();
 

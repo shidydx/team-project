@@ -4,7 +4,7 @@ import entity.Article;
 
 import java.util.List;
 
-public class EnterTopicInteractor implements EnterTopicInputBoundary{
+public class EnterTopicInteractor implements EnterTopicInputBoundary {
     private final EnterTopicOutputBoundary output;
     private final EnterTopicDataAccessInterface dataAccess;
 
@@ -20,13 +20,24 @@ public class EnterTopicInteractor implements EnterTopicInputBoundary{
             output.prepareFailView("Topic is empty");
         } else {
             try {
-                List<Article> articles = dataAccess.fetchNews(keyword);
-                if (articles.isEmpty()) {
+                List<Article> leftArticles = dataAccess.fetchLeftNews(keyword);
+                if (leftArticles.isEmpty()) {
                     output.prepareFailView("Topic invalid");
                     return;
                 }
+                try {
+                    List<Article> rightArticles = dataAccess.fetchRightNews(keyword);
+                    if (rightArticles.isEmpty()) {
+                        output.prepareFailView("Topic invalid");
+                        return;
+                    }
+                } catch (Exception e) {
+                    output.prepareFailView("failed to fetch right articles");
+                    return;
+                }
             } catch (Exception e) {
-                output.prepareFailView(e.getMessage());
+                output.prepareFailView("failed to fetch left articles");
+                return;
             }
             EnterTopicOutputData outputData = new EnterTopicOutputData(inputData.getTopic());
             output.prepareSuccessView(outputData);
