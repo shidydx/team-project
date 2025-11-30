@@ -18,13 +18,6 @@ public class EnterTopicView extends JPanel {
     private final JTextField topicTextField = new JTextField();
     private final JButton searchButton = new JButton("Search");
 
-    public EnterTopicView(EnterTopicViewModel viewModel, EnterTopicController controller) {
-        this.viewModel = viewModel;
-        this.controller = controller;
-
-        initializeUI();
-        updateView();
-    }
 
     public EnterTopicView(EnterTopicViewModel viewModel) {
         this.viewModel = viewModel;

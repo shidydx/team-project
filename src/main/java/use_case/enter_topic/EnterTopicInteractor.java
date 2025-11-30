@@ -21,13 +21,13 @@ public class EnterTopicInteractor implements EnterTopicInputBoundary {
         } else {
             try {
                 List<Article> leftArticles = dataAccess.fetchLeftNews(keyword);
-                if (leftArticles.isEmpty() || leftArticles.size() == 0) {
+                if (leftArticles.isEmpty()) {
                     output.prepareFailView("Topic invalid");
                     return;
                 }
                 try {
                     List<Article> rightArticles = dataAccess.fetchRightNews(keyword);
-                    if (rightArticles.isEmpty() || rightArticles.size() == 0) {
+                    if (rightArticles.isEmpty()) {
                         output.prepareFailView("Topic invalid");
                         return;
                     }
