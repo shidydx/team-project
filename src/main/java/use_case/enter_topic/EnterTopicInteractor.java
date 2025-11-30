@@ -32,11 +32,11 @@ public class EnterTopicInteractor implements EnterTopicInputBoundary {
                         return;
                     }
                 } catch (Exception e) {
-                    output.prepareFailView(e.getMessage());
+                    output.prepareFailView("failed to fetch right articles");
                     return;
                 }
             } catch (Exception e) {
-                output.prepareFailView(e.getMessage());
+                output.prepareFailView("failed to fetch left articles");
                 return;
             }
             EnterTopicOutputData outputData = new EnterTopicOutputData(inputData.getTopic());

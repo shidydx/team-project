@@ -45,7 +45,7 @@ public class EnterTopicInteractorTest {
     }
 
     @Test
-    public void invalidTopicTest() {
+    public void invalidLeftArticlesTest() {
         EnterTopicInputData inputData = new EnterTopicInputData("12345678910");
         EnterTopicOutputBoundary presenter = new EnterTopicOutputBoundary() {
             @Override
@@ -64,6 +64,34 @@ public class EnterTopicInteractorTest {
             }
             @Override
             public List<Article> fetchRightNews(String topic) {
+                return List.of(new Article("title", "url", "source", "description", "content", "publishdate"));
+            }
+        };
+
+        EnterTopicInteractor interactor = new EnterTopicInteractor(presenter, dataAccess);
+        interactor.execute(inputData);
+    }
+
+    @Test
+    public void invalidRightArticlesTest() {
+        EnterTopicInputData inputData = new EnterTopicInputData("12345678910");
+        EnterTopicOutputBoundary presenter = new EnterTopicOutputBoundary() {
+            @Override
+            public void prepareSuccessView(EnterTopicOutputData output) {
+                fail("expected fail view");
+            }
+
+            public void prepareFailView(String errorMessage) {
+                assertEquals("Topic invalid", errorMessage);}
+        };
+
+        EnterTopicDataAccessInterface dataAccess = new EnterTopicDataAccessInterface() {
+            @Override
+            public List<Article> fetchLeftNews(String topic) {
+                return List.of(new Article("title", "url", "source", "description", "content", "publishdate"));
+            }
+            @Override
+            public List<Article> fetchRightNews(String topic) {
                 return new ArrayList<>();
             }
         };
@@ -71,6 +99,7 @@ public class EnterTopicInteractorTest {
         EnterTopicInteractor interactor = new EnterTopicInteractor(presenter, dataAccess);
         interactor.execute(inputData);
     }
+
 
     @Test
     public void validTopicTest() {
@@ -94,6 +123,65 @@ public class EnterTopicInteractorTest {
             @Override
             public List<Article> fetchRightNews(String topic) {
                 return List.of(new Article("title", "url", "source", "description", "content", "publishdate"));
+            }
+        };
+
+        EnterTopicInteractor interactor = new EnterTopicInteractor(presenter, dataAccess);
+        interactor.execute(inputData);
+    }
+
+    @Test
+    public void failLeftFetchingTest() {
+        EnterTopicInputData inputData = new EnterTopicInputData("topic");
+        EnterTopicOutputBoundary presenter = new EnterTopicOutputBoundary() {
+            @Override
+            public void prepareSuccessView(EnterTopicOutputData output) {
+                fail("expected fail view");
+            }
+
+            public void prepareFailView(String errorMessage) {
+                assertEquals("failed to fetch left articles", errorMessage);
+            }
+        };
+        EnterTopicDataAccessInterface dataAccess = new EnterTopicDataAccessInterface() {
+            @Override
+            public List<Article> fetchLeftNews(String topic) {
+                throw new RuntimeException();
+            }
+
+            @Override
+            public List<Article> fetchRightNews(String topic) {
+               fail("fetch right news should not be called");
+               return null;
+            }
+        };
+
+        EnterTopicInteractor interactor = new EnterTopicInteractor(presenter, dataAccess);
+        interactor.execute(inputData);
+    }
+
+    @Test
+    public void failRightFetchingTest() {
+        EnterTopicInputData inputData = new EnterTopicInputData("topic");
+        EnterTopicOutputBoundary presenter = new EnterTopicOutputBoundary() {
+            @Override
+            public void prepareSuccessView(EnterTopicOutputData output) {
+                fail("expected fail view");
+            }
+
+            public void prepareFailView(String errorMessage) {
+                assertEquals("failed to fetch right articles", errorMessage);
+            }
+        };
+        EnterTopicDataAccessInterface dataAccess = new EnterTopicDataAccessInterface() {
+            @Override
+            public List<Article> fetchLeftNews(String topic) {
+                return List.of(new Article("title", "url", "source", "description", "content", "publishdate"));
+            }
+
+            @Override
+            public List<Article> fetchRightNews(String topic) {
+                throw new RuntimeException();
             }
         };
 
