@@ -78,11 +78,11 @@ public class AppBuilder {
     public AppBuilder addLeftNewsSummaryView() {
         leftNewsSummaryViewModel = new interface_adapter.left_news_summary.LeftNewsSummaryViewModel();
 
-        // *** create your history VM ***
+        // *** create your history VM (will be used for separate SearchHistoryView later) ***
         searchHistoryViewModel = new interface_adapter.savetopic.SearchHistoryViewModel();
 
-        // *** UPDATED constructor: pass both VMs to the view ***
-        leftNewsSummaryView = new view.LeftNewsSummaryView(leftNewsSummaryViewModel, searchHistoryViewModel);
+        // *** Updated constructor: only pass the viewModel (search history removed from this view) ***
+        leftNewsSummaryView = new view.LeftNewsSummaryView(leftNewsSummaryViewModel);
 
         cardPanel.add(leftNewsSummaryView, leftNewsSummaryView.getViewName());
         return this;
@@ -97,6 +97,7 @@ public class AppBuilder {
         interface_adapter.left_news_summary.LeftNewsSummaryController controller =
                 new interface_adapter.left_news_summary.LeftNewsSummaryController(interactor);
         leftNewsSummaryView.setController(controller);
+        leftNewsSummaryView.setCardChange(cardLayout, cardPanel);
 
         // *** YOUR SAVE use case wiring ***
         interface_adapter.savetopic.SaveTopicPresenter saveTopicPresenter =
@@ -119,10 +120,8 @@ public class AppBuilder {
 
         LoadSearchHistoryController loadHistoryController =
                 new LoadSearchHistoryController(loadHistoryInteractor);
-
-        // *** pass your controllers into the view ***
-        leftNewsSummaryView.setSaveTopicController(saveTopicController);
-        leftNewsSummaryView.setLoadHistoryController(loadHistoryController);
+        // leftNewsSummaryView.setSaveTopicController(saveTopicController);
+        // leftNewsSummaryView.setLoadHistoryController(loadHistoryController);
 
         return this;
     }
