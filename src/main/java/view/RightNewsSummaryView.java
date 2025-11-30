@@ -10,9 +10,12 @@ import java.awt.event.ItemEvent;
 import java.util.List;
 
 public class RightNewsSummaryView extends JPanel {
-
+    public static final String VIEW_NAME = "Right News Summary";
     private final RightNewsController controller;
     private final RightNewsViewModel viewModel;
+
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
 
     private final JTextField topicField;
     private final JTextArea summaryArea;
@@ -66,7 +69,9 @@ public class RightNewsSummaryView extends JPanel {
         sourcePanel.add(linkField);
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         summarizeButton = new JButton("Summarize Right News");
+        JButton changeButton = new JButton("Change to Left News summary");
         buttonPanel.add(summarizeButton);
+        buttonPanel.add(changeButton);
         mainPanel.add(topicPanel);
         mainPanel.add(Box.createVerticalStrut(8));
         mainPanel.add(summaryPanel);
@@ -98,6 +103,14 @@ public class RightNewsSummaryView extends JPanel {
             fillSourceComboBox();
             updateArticleDetails();
         });
+        changeButton.addActionListener(e -> {
+            cardLayout.show(cardPanel, LeftNewsSummaryView.VIEW_NAME);
+        });
+    }
+
+    public void setCardChange(CardLayout cardLayout, JPanel cardPanel) {
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
     }
 
     private void fillSourceComboBox() {
@@ -169,7 +182,7 @@ public class RightNewsSummaryView extends JPanel {
     }
 
     public static void showInFrame(RightNewsController controller, RightNewsViewModel viewModel) {
-        JFrame frame = new JFrame("Right source link");
+        JFrame frame = new JFrame(VIEW_NAME);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(new RightNewsSummaryView(controller, viewModel));
         frame.pack();
