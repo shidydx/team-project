@@ -29,7 +29,7 @@ public class LeftNewsSummaryInteractor implements LeftNewsSummaryInputBoundary {
                 return;
             }
             
-            LeftNewsSummaryOutputData outputData = new LeftNewsSummaryOutputData(summary, "");
+            LeftNewsSummaryOutputData outputData = new LeftNewsSummaryOutputData(summary, "", articles);
             outputBoundary.successView(outputData);
             
         } catch (Exception e) {

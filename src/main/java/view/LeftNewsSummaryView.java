@@ -1,5 +1,6 @@
 package view;
 
+import entity.Article;
 import interface_adapter.left_news_summary.LeftNewsSummaryController;
 import interface_adapter.left_news_summary.LeftNewsSummaryState;
 import interface_adapter.left_news_summary.LeftNewsSummaryViewModel;
@@ -7,6 +8,7 @@ import interface_adapter.left_news_summary.LeftNewsSummaryViewModel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.util.List;
 
 public class LeftNewsSummaryView extends JPanel {
     public static final String VIEW_NAME = "left_news_summary";
@@ -104,68 +106,141 @@ public class LeftNewsSummaryView extends JPanel {
         this.add(mainPanel, BorderLayout.CENTER);
         
         // Set up listeners
-//         sourceComboBox.addItemListener(e -> {
-//             if (e.getStateChange() == ItemEvent.SELECTED) {
-//                 updateArticleDetails();
-//             }
-//         });
+        sourceComboBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                updateArticleDetails();
+            }
+        });
         
-//         summarizeButton.addActionListener(e -> {
-//             String keyword = topicField.getText().trim();
-//             if (controller != null) {
-//                 controller.execute(keyword);
-//             }
+        summarizeButton.addActionListener(e -> {
+            String keyword = topicField.getText().trim();
+            if (controller != null) {
+                controller.execute(keyword);
+            }
             
-//         });
-        
-//         searchHistoryButton.addActionListener(e -> {
+            String error = viewModel.getErrorMessage();
+            if (error != null && !error.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        LeftNewsSummaryView.this,
+                        error,
+                        "Source Unavailable",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
             
-//             if (cardLayout != null && cardPanel != null) {
-                
-//             }
-//         });
+            // Update summary and article details
+            summaryArea.setText(viewModel.getSummary());
+            linkField.setText(viewModel.getUrl());
+            fillSourceComboBox();
+            updateArticleDetails();
+        });
         
-//         switchToRightButton.addActionListener(e -> {
-            
-//             if (cardLayout != null && cardPanel != null) {
-                
-//             }
-//         });
-//     }
-
-//     public void setController(LeftNewsSummaryController controller) {
-//         this.controller = controller;
-//     }
-
-//     public void setCardChange(CardLayout cardLayout, JPanel cardPanel) {
-//         this.cardLayout = cardLayout;
-//         this.cardPanel = cardPanel;
-//     }
-
-//     public String getViewName() {
-//         return VIEW_NAME;
-//     }
-
-//     private void fillSourceComboBox() {
+        searchHistoryButton.addActionListener(e -> {
+            if (cardLayout != null && cardPanel != null) {
+                // cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
+            }
+        });
         
-//         sourceComboBox.removeAllItems();
-//         sourceComboBox.addItem("Left source");
-//     }
+        switchToRightButton.addActionListener(e -> {
+            // Navigate to right news summary view
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, "Right News Summary");
+            }
+        });
+    }
 
-//     private void updateArticleDetails() {
-        
-//     }
+    public void setController(LeftNewsSummaryController controller) {
+        this.controller = controller;
+    }
 
-//     public void updateView() {
-//         LeftNewsSummaryState state = viewModel.getState();
+    public void setCardChange(CardLayout cardLayout, JPanel cardPanel) {
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
+    }
+
+    public String getViewName() {
+        return VIEW_NAME;
+    }
+
+    private void fillSourceComboBox() {
+        sourceComboBox.removeAllItems();
+        List<Article> articles = viewModel.getArticles();
+        if (articles == null || articles.isEmpty()) {
+            String label = viewModel.getName();
+            if (label == null || label.isEmpty()) {
+                label = "Left source";
+            }
+            sourceComboBox.addItem(label);
+            if (viewModel.getTitle() == null) {
+                titleField.setText("");
+            } else {
+                titleField.setText(viewModel.getTitle());
+            }
+            if (viewModel.getName() == null) {
+                nameField.setText("");
+            } else {
+                nameField.setText(viewModel.getName());
+            }
+            if (viewModel.getUrl() == null) {
+                linkField.setText("");
+            } else {
+                linkField.setText(viewModel.getUrl());
+            }
+            return;
+        }
+        for (Article article : articles) {
+            String label = article.getSourceName();
+            if (label == null || label.isEmpty()) {
+                label = article.getTitle();
+            }
+            if (label == null || label.isEmpty()) {
+                label = "Source";
+            }
+            sourceComboBox.addItem(label);
+        }
+        if (sourceComboBox.getItemCount() > 0) {
+            sourceComboBox.setSelectedIndex(0);
+        }
+    }
+
+    private void updateArticleDetails() {
+        List<Article> articles = viewModel.getArticles();
+        if (articles == null || articles.isEmpty()) {
+            return;
+        }
+        int index = sourceComboBox.getSelectedIndex();
+        if (index < 0 || index >= articles.size()) {
+            index = 0;
+        }
+        Article article = articles.get(index);
+        if (article.getTitle() == null) {
+            titleField.setText("");
+        } else {
+            titleField.setText(article.getTitle());
+        }
+        if (article.getSourceName() == null) {
+            nameField.setText("");
+        } else {
+            nameField.setText(article.getSourceName());
+        }
+        if (article.getUrl() == null) {
+            linkField.setText("");
+        } else {
+            linkField.setText(article.getUrl());
+        }
+    }
+
+    public void updateView() {
+        LeftNewsSummaryState state = viewModel.getState();
         
-//         if (state.getErrorMessage() != null && !state.getErrorMessage().isEmpty()) {
-//             errorLabel.setText(state.getErrorMessage());
-//             summaryArea.setText("");
-//         } else if (state.getSummary() != null && !state.getSummary().isEmpty()) {
-//             summaryArea.setText(state.getSummary());
-//             errorLabel.setText("");
-//         }
-//     }
-// }
+        if (state.getErrorMessage() != null && !state.getErrorMessage().isEmpty()) {
+            errorLabel.setText(state.getErrorMessage());
+            summaryArea.setText("");
+        } else if (state.getSummary() != null && !state.getSummary().isEmpty()) {
+            summaryArea.setText(state.getSummary());
+            errorLabel.setText("");
+        }
+    }
+}
 
