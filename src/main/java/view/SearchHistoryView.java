@@ -55,7 +55,7 @@ public class SearchHistoryView extends JPanel {
         
         loadHistoryButton.addActionListener(e -> {
             if (loadHistoryController != null) {
-                String username = "default-user"; // TODO: Get actual username if needed
+                String username = "default-user";
                 loadHistoryController.load(username);
             }
         });
