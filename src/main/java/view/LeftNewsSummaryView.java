@@ -144,7 +144,7 @@ public class LeftNewsSummaryView extends JPanel {
         
         switchToRightButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
-                cardLayout.show(cardPanel, "Right News Summary");
+                cardLayout.show(cardPanel, RightNewsSummaryView.VIEW_NAME);
             }
         });
     }
