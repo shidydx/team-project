@@ -11,7 +11,7 @@ import interface_adapter.entertopic.EnterTopicPresenter;
 import interface_adapter.right_news_summary.RightNewsSummaryViewModel;
 import interface_adapter.savetopic.SaveTopicController;
 import use_case.enter_topic.EnterTopicInteractor;
-import use_case.savetopic.SaveTopicUseCase;
+import use_case.SaveTopic.SaveTopicUseCase;
 import view.RightNewsSummaryView;
 import view.EnterTopicView;
 

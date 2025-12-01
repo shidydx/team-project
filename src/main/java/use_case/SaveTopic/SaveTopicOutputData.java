@@ -1,4 +1,4 @@
-package use_case.savetopic;
+package use_case.SaveTopic;
 
 import java.time.LocalDateTime;
 import java.util.List;

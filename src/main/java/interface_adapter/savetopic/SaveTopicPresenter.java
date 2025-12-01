@@ -1,7 +1,7 @@
 package interface_adapter.savetopic;
 
-import use_case.savetopic.SaveTopicOutputBoundary;
-import use_case.savetopic.SaveTopicOutputData;
+import use_case.SaveTopic.SaveTopicOutputBoundary;
+import use_case.SaveTopic.SaveTopicOutputData;
 
 import java.util.stream.Collectors;
 

@@ -1,4 +1,4 @@
-package use_case.savetopic;
+package use_case.SaveTopic;
 
 import use_case.loadsearch.SearchHistoryDataAccessInterface;
 import use_case.loadsearch.SearchHistoryEntry;
