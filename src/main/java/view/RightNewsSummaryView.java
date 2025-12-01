@@ -35,17 +35,19 @@ public class RightNewsSummaryView extends JPanel {
     private final JTextField linkField;
     private final JButton summarizeButton;
 
-    public RightNewsSummaryView(RightNewsController controller, RightNewsViewModel viewModel) {
+    public RightNewsSummaryView(RightNewsSummaryController controller, RightNewsSummaryViewModel viewModel) {
         this.controller = controller;
         this.viewModel = viewModel;
         this.setLayout(new BorderLayout());
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+
         JPanel topicPanel = new JPanel(new BorderLayout());
         JLabel topicLabel = new JLabel("Topic: ");
         topicField = new JTextField();
         topicPanel.add(topicLabel, BorderLayout.WEST);
         topicPanel.add(topicField, BorderLayout.CENTER);
+
         JPanel summaryPanel = new JPanel(new BorderLayout());
         JLabel summaryLabel = new JLabel("Summary:");
         summaryArea = new JTextArea(8, 40);
@@ -55,6 +57,7 @@ public class RightNewsSummaryView extends JPanel {
         JScrollPane summaryScroll = new JScrollPane(summaryArea);
         summaryPanel.add(summaryLabel, BorderLayout.NORTH);
         summaryPanel.add(summaryScroll, BorderLayout.CENTER);
+
         JPanel sourcePanel = new JPanel();
         sourcePanel.setLayout(new GridLayout(4, 2, 4, 4));
         JLabel sourceLabel = new JLabel("Source:");
@@ -77,6 +80,7 @@ public class RightNewsSummaryView extends JPanel {
         sourcePanel.add(nameField);
         sourcePanel.add(linkLabel);
         sourcePanel.add(linkField);
+
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         summarizeButton = new JButton("Summarize Right News");
         JButton searchHistoryButton = new JButton("View Search History");
@@ -86,6 +90,7 @@ public class RightNewsSummaryView extends JPanel {
         buttonPanel.add(summarizeButton);
         buttonPanel.add(searchHistoryButton);
         buttonPanel.add(changeButton);
+
         mainPanel.add(topicPanel);
         mainPanel.add(Box.createVerticalStrut(8));
         mainPanel.add(summaryPanel);
@@ -99,6 +104,7 @@ public class RightNewsSummaryView extends JPanel {
                 updateArticleDetails();
             }
         });
+
         summarizeButton.addActionListener(e -> {
             String keyword = topicField.getText().trim();
             controller.execute(keyword);
@@ -117,8 +123,20 @@ public class RightNewsSummaryView extends JPanel {
             fillSourceComboBox();
             updateArticleDetails();
         });
+
+        searchHistoryButton.addActionListener(e -> {
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
+            }
+        });
+
         changeButton.addActionListener(e -> {
-            cardLayout.show(cardPanel, LeftNewsSummaryView.VIEW_NAME);
+            if (leftView != null) {
+                leftView.setTopicText(getTopicText());
+            }
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, LeftNewsSummaryView.VIEW_NAME);
+            }
         });
 
 
@@ -149,9 +167,21 @@ public class RightNewsSummaryView extends JPanel {
         });
     }
 
+    public void setLeftView(LeftNewsSummaryView leftView) {
+        this.leftView = leftView;
+    }
+
     public void setCardChange(CardLayout cardLayout, JPanel cardPanel) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
+    }
+
+    public String getTopicText(){
+        return topicField.getText();
+    }
+
+    public void setTopicText(String topic){
+        topicField.setText(topic);
     }
 
     private void fillSourceComboBox() {
@@ -222,7 +252,7 @@ public class RightNewsSummaryView extends JPanel {
         }
     }
 
-    public static void showInFrame(RightNewsController controller, RightNewsViewModel viewModel) {
+    public static void showInFrame(RightNewsSummaryController controller, RightNewsSummaryViewModel viewModel) {
         JFrame frame = new JFrame(VIEW_NAME);
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setContentPane(new RightNewsSummaryView(controller, viewModel));

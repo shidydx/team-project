@@ -4,10 +4,11 @@ import data_access.EnterTopicDataAccessImpl;
 import data_access.RightNewsSummaryDataAccessImpl;
 import interface_adapter.loadsearch.LoadSearchHistoryController;
 import interface_adapter.loadsearch.LoadSearchHistoryPresenter;
-import interface_adapter.right_news_summary.RightNewsController;
-import interface_adapter.right_news_summary.RightNewsPresenter;
+import interface_adapter.right_news_summary.RightNewsSummaryController;
+import interface_adapter.right_news_summary.RightNewsSummaryPresenter;
 import interface_adapter.entertopic.EnterTopicController;
 import interface_adapter.entertopic.EnterTopicPresenter;
+import interface_adapter.right_news_summary.RightNewsSummaryViewModel;
 import use_case.enter_topic.EnterTopicInteractor;
 import use_case.savetopic.SaveTopicUseCase;
 import view.RightNewsSummaryView;
@@ -38,7 +39,7 @@ public class AppBuilder {
     private LoadSearchHistoryController loadHistoryController;
 
     private use_case.right_news_summary.RightNewsSummaryDataAccessInterface rightNewsDataAccess;
-    private interface_adapter.right_news_summary.RightNewsViewModel rightNewsViewModel;
+    private RightNewsSummaryViewModel rightNewsViewModel;
 
     private use_case.enter_topic.EnterTopicDataAccessInterface enterTopicDataAccess;
     private interface_adapter.entertopic.EnterTopicViewModel enterTopicViewModel;
@@ -127,12 +128,12 @@ public class AppBuilder {
     }
 
     public AppBuilder addRightNewsSummaryView() {
-        rightNewsViewModel = new interface_adapter.right_news_summary.RightNewsViewModel();
+        rightNewsViewModel = new RightNewsSummaryViewModel();
         return this;
     }
 
     public AppBuilder addRightNewsSummaryUseCase() {
-        RightNewsPresenter presenter = new RightNewsPresenter(rightNewsViewModel);
+        RightNewsSummaryPresenter presenter = new RightNewsSummaryPresenter(rightNewsViewModel);
         use_case.right_news_summary.RightNewsSummaryInteractor interactor
                 = new use_case.right_news_summary.RightNewsSummaryInteractor(
                 summarizer, presenter, rightNewsDataAccess);
