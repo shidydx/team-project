@@ -3,6 +3,7 @@ package view;
 import entity.Article;
 import interface_adapter.right_news_summary.RightNewsController;
 import interface_adapter.right_news_summary.RightNewsViewModel;
+import interface_adapter.savetopic.SaveTopicController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -11,6 +12,15 @@ import java.util.List;
 
 public class RightNewsSummaryView extends JPanel {
     public static final String VIEW_NAME = "Right News Summary";
+
+    private SaveTopicController saveTopicController;
+
+    public void setSaveTopicController(SaveTopicController saveTopicController) {
+        this.saveTopicController = saveTopicController;
+    }
+
+
+
     private final RightNewsController controller;
     private final RightNewsViewModel viewModel;
 
@@ -69,8 +79,12 @@ public class RightNewsSummaryView extends JPanel {
         sourcePanel.add(linkField);
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         summarizeButton = new JButton("Summarize Right News");
-        JButton changeButton = new JButton("Change to Left News summary");
+        JButton searchHistoryButton = new JButton("View Search History");
+        JButton changeButton = new JButton("Switch to Left News summary");
+        JButton saveButton = new JButton("Save Topic");
+        buttonPanel.add(saveButton);
         buttonPanel.add(summarizeButton);
+        buttonPanel.add(searchHistoryButton);
         buttonPanel.add(changeButton);
         mainPanel.add(topicPanel);
         mainPanel.add(Box.createVerticalStrut(8));
@@ -105,6 +119,31 @@ public class RightNewsSummaryView extends JPanel {
         });
         changeButton.addActionListener(e -> {
             cardLayout.show(cardPanel, LeftNewsSummaryView.VIEW_NAME);
+        });
+
+
+        searchHistoryButton.addActionListener(e -> {
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
+            }
+        });
+
+        saveButton.addActionListener(e -> {
+            if (saveTopicController == null) {
+                System.err.println("SaveTopicController not set!");
+                return;
+            }
+
+            String topic = topicField.getText().trim();
+            if (!topic.isEmpty()) {
+                saveTopicController.save(topic, "right");
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Topic saved!",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
         });
     }
 

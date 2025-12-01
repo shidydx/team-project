@@ -4,6 +4,8 @@ import entity.Article;
 import interface_adapter.left_news_summary.LeftNewsSummaryController;
 import interface_adapter.left_news_summary.LeftNewsSummaryState;
 import interface_adapter.left_news_summary.LeftNewsSummaryViewModel;
+import interface_adapter.savetopic.SaveTopicController;
+
 
 import javax.swing.*;
 import java.awt.*;
@@ -14,6 +16,13 @@ import java.util.Set;
 
 public class LeftNewsSummaryView extends JPanel {
     public static final String VIEW_NAME = "left_news_summary";
+
+    private SaveTopicController saveTopicController;
+
+    public void setSaveTopicController(SaveTopicController saveTopicController) {
+        this.saveTopicController = saveTopicController;
+    }
+
 
     private final LeftNewsSummaryViewModel viewModel;
     private LeftNewsSummaryController controller;
@@ -54,7 +63,8 @@ public class LeftNewsSummaryView extends JPanel {
         JScrollPane summaryScroll = new JScrollPane(summaryArea);
         summaryPanel.add(summaryLabel, BorderLayout.NORTH);
         summaryPanel.add(summaryScroll, BorderLayout.CENTER);
-        
+
+
         // Source panel with article details
         JPanel sourcePanel = new JPanel();
         sourcePanel.setLayout(new GridLayout(4, 2, 4, 4));
@@ -84,6 +94,8 @@ public class LeftNewsSummaryView extends JPanel {
         summarizeButton = new JButton("Summarize Left News");
         JButton searchHistoryButton = new JButton("View Search History");
         JButton switchToRightButton = new JButton("Switch to Right News Summary");
+        JButton saveButton = new JButton("Save Topic");
+        buttonPanel.add(saveButton);
         buttonPanel.add(summarizeButton);
         buttonPanel.add(searchHistoryButton);
         buttonPanel.add(switchToRightButton);
@@ -135,7 +147,27 @@ public class LeftNewsSummaryView extends JPanel {
             fillSourceComboBox();
             updateArticleDetails();
         });
-        
+
+        saveButton.addActionListener(e -> {
+            if (saveTopicController == null) {
+                System.err.println("SaveTopicController not set!");
+                return;
+            }
+
+            String topic = topicField.getText().trim();
+            if (!topic.isEmpty()) {
+                saveTopicController.save(topic, "left");
+                JOptionPane.showMessageDialog(
+                        this,
+                        "Topic saved!",
+                        "Success",
+                        JOptionPane.INFORMATION_MESSAGE
+                );
+            }
+        });
+
+
+
         searchHistoryButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
                 cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);

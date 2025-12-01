@@ -29,7 +29,9 @@ public class AppBuilder {
     private interface_adapter.left_news_summary.LeftNewsSummaryViewModel leftNewsSummaryViewModel;
 
     private view.RightNewsSummaryView rightNewsSummaryView;
-    // *** YOUR NEW FIELDS ***
+
+    private interface_adapter.savetopic.SaveTopicController saveTopicController;
+
     private use_case.loadsearch.SearchHistoryDataAccessInterface searchHistoryDataAccess;
     private interface_adapter.savetopic.SearchHistoryViewModel searchHistoryViewModel;
     private view.SearchHistoryView searchHistoryView;
@@ -84,6 +86,7 @@ public class AppBuilder {
         leftNewsSummaryView = new view.LeftNewsSummaryView(leftNewsSummaryViewModel);
 
         cardPanel.add(leftNewsSummaryView, leftNewsSummaryView.getViewName());
+
         return this;
     }
 
@@ -97,17 +100,19 @@ public class AppBuilder {
         leftNewsSummaryView.setController(controller);
         leftNewsSummaryView.setCardChange(cardLayout, cardPanel);
 
+        // --- SAVE TOPIC WIRING ---
         interface_adapter.savetopic.SaveTopicPresenter saveTopicPresenter =
                 new interface_adapter.savetopic.SaveTopicPresenter(searchHistoryViewModel);
 
         SaveTopicUseCase saveTopicInteractor =
-                new SaveTopicUseCase(
-                        searchHistoryDataAccess, saveTopicPresenter);
+                new SaveTopicUseCase(searchHistoryDataAccess, saveTopicPresenter);
 
-        interface_adapter.savetopic.SaveTopicController saveTopicController =
+        this.saveTopicController =
                 new interface_adapter.savetopic.SaveTopicController(saveTopicInteractor);
 
-        // *** YOUR LOAD use case wiring ***
+        leftNewsSummaryView.setSaveTopicController(saveTopicController);
+
+
         LoadSearchHistoryPresenter loadHistoryPresenter =
                 new LoadSearchHistoryPresenter(searchHistoryViewModel);
 
@@ -129,11 +134,18 @@ public class AppBuilder {
     public AppBuilder addRightNewsSummaryUseCase() {
         RightNewsPresenter presenter = new RightNewsPresenter(rightNewsViewModel);
         use_case.right_news_summary.RightNewsSummaryInteractor interactor
-                = new  use_case.right_news_summary.RightNewsSummaryInteractor(
+                = new use_case.right_news_summary.RightNewsSummaryInteractor(
                 summarizer, presenter, rightNewsDataAccess);
         RightNewsController controller = new RightNewsController(interactor);
+
         rightNewsSummaryView  = new RightNewsSummaryView(controller, rightNewsViewModel);
         rightNewsSummaryView.setCardChange(cardLayout, cardPanel);
+
+        // 🔹 NEW: give it the same SaveTopicController
+        if (saveTopicController != null) {
+            rightNewsSummaryView.setSaveTopicController(saveTopicController);
+        }
+
         cardPanel.add(rightNewsSummaryView, RightNewsSummaryView.VIEW_NAME);
         return this;
     }

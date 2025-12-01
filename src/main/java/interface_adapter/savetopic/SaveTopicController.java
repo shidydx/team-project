@@ -13,9 +13,10 @@ public class SaveTopicController {
         this.saveTopicUseCase = saveTopicUseCase;
     }
 
-    public void save(String topic, String username) {
+    public void save(String topic, String stance) {
         SaveTopicInputData inputData =
-                new SaveTopicInputData(topic, username, LocalDateTime.now());
+                new SaveTopicInputData(topic, stance, LocalDateTime.now());
         saveTopicUseCase.execute(inputData);
     }
+
 }
