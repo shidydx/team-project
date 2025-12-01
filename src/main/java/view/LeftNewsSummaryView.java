@@ -6,6 +6,7 @@ import interface_adapter.left_news_summary.LeftNewsSummaryState;
 import interface_adapter.left_news_summary.LeftNewsSummaryViewModel;
 import interface_adapter.right_news_summary.RightNewsSummaryController;
 import view.RightNewsSummaryView;
+import interface_adapter.savetopic.SaveTopicController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -31,6 +32,7 @@ public class LeftNewsSummaryView extends JPanel {
     private final JTextField nameField;
     private final JTextField linkField;
     private final JButton summarizeButton;
+    private SaveTopicController saveTopicController;
     private final JLabel errorLabel;
 
     public LeftNewsSummaryView(LeftNewsSummaryViewModel viewModel) {
@@ -83,13 +85,13 @@ public class LeftNewsSummaryView extends JPanel {
         sourcePanel.add(linkField);
         
         // Button panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        summarizeButton = new JButton("Summarize Left News");
-        JButton searchHistoryButton = new JButton("View Search History");
-        JButton switchToRightButton = new JButton("Switch to Right News Summary");
-        buttonPanel.add(summarizeButton);
-        buttonPanel.add(searchHistoryButton);
-        buttonPanel.add(switchToRightButton);
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    summarizeButton = new JButton("Summarize Left News");
+    JButton saveButton = new JButton("Save Topic");
+    JButton switchToRightButton = new JButton("Switch to Right News Summary");
+    buttonPanel.add(summarizeButton);
+    buttonPanel.add(saveButton);
+    buttonPanel.add(switchToRightButton);
         
         // Error label
         errorLabel = new JLabel();
@@ -139,11 +141,7 @@ public class LeftNewsSummaryView extends JPanel {
             updateArticleDetails();
         });
         
-        searchHistoryButton.addActionListener(e -> {
-            if (cardLayout != null && cardPanel != null) {
-                cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
-            }
-        });
+        // (Search history button removed) Navigate to search history is now handled elsewhere.
         
         switchToRightButton.addActionListener(e -> {
             if (rightView != null) {
@@ -153,10 +151,28 @@ public class LeftNewsSummaryView extends JPanel {
                 cardLayout.show(cardPanel, RightNewsSummaryView.VIEW_NAME);
             }
         });
+
+        saveButton.addActionListener(e -> {
+            String topic = topicField.getText().trim();
+            if (saveTopicController != null && topic != null && !topic.isEmpty()) {
+                saveTopicController.save(topic, "default-user");
+            } else {
+                JOptionPane.showMessageDialog(
+                        LeftNewsSummaryView.this,
+                        "No topic to save or save controller not available.",
+                        "Save Failed",
+                        JOptionPane.WARNING_MESSAGE
+                );
+            }
+        });
     }
 
     public void setController(LeftNewsSummaryController controller) {
         this.controller = controller;
+    }
+
+    public void setSaveTopicController(interface_adapter.savetopic.SaveTopicController saveTopicController) {
+        this.saveTopicController = saveTopicController;
     }
 
     public void setCardChange(CardLayout cardLayout, JPanel cardPanel) {

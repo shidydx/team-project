@@ -9,6 +9,7 @@ import interface_adapter.right_news_summary.RightNewsSummaryPresenter;
 import interface_adapter.entertopic.EnterTopicController;
 import interface_adapter.entertopic.EnterTopicPresenter;
 import interface_adapter.right_news_summary.RightNewsSummaryViewModel;
+import interface_adapter.savetopic.SaveTopicController;
 import use_case.enter_topic.EnterTopicInteractor;
 import use_case.savetopic.SaveTopicUseCase;
 import view.RightNewsSummaryView;
@@ -30,6 +31,7 @@ public class AppBuilder {
     private interface_adapter.left_news_summary.LeftNewsSummaryViewModel leftNewsSummaryViewModel;
 
     private view.RightNewsSummaryView rightNewsSummaryView;
+    private SaveTopicController saveTopicController;
     // *** YOUR NEW FIELDS ***
     private use_case.loadsearch.SearchHistoryDataAccessInterface searchHistoryDataAccess;
     private interface_adapter.savetopic.SearchHistoryViewModel searchHistoryViewModel;
@@ -98,15 +100,20 @@ public class AppBuilder {
         leftNewsSummaryView.setController(controller);
         leftNewsSummaryView.setCardChange(cardLayout, cardPanel);
 
-        interface_adapter.savetopic.SaveTopicPresenter saveTopicPresenter =
-                new interface_adapter.savetopic.SaveTopicPresenter(searchHistoryViewModel);
+    interface_adapter.savetopic.SaveTopicPresenter saveTopicPresenter =
+        new interface_adapter.savetopic.SaveTopicPresenter(searchHistoryViewModel);
 
-        SaveTopicUseCase saveTopicInteractor =
-                new SaveTopicUseCase(
-                        searchHistoryDataAccess, saveTopicPresenter);
+    SaveTopicUseCase saveTopicInteractor =
+        new SaveTopicUseCase(
+            searchHistoryDataAccess, saveTopicPresenter);
 
-        interface_adapter.savetopic.SaveTopicController saveTopicController =
-                new interface_adapter.savetopic.SaveTopicController(saveTopicInteractor);
+    this.saveTopicController =
+        new SaveTopicController(saveTopicInteractor);
+
+    // expose controller to left view so it can save topics
+    if (leftNewsSummaryView != null) {
+        leftNewsSummaryView.setSaveTopicController(this.saveTopicController);
+    }
 
         // *** YOUR LOAD use case wiring ***
         LoadSearchHistoryPresenter loadHistoryPresenter =
@@ -136,6 +143,11 @@ public class AppBuilder {
         RightNewsSummaryController controller = new RightNewsSummaryController(interactor);
         rightNewsSummaryView  = new RightNewsSummaryView(controller, rightNewsViewModel);
         rightNewsSummaryView.setCardChange(cardLayout, cardPanel);
+
+        // wire save controller into right view if available
+        if (this.saveTopicController != null) {
+            rightNewsSummaryView.setSaveTopicController(this.saveTopicController);
+        }
 
         if (leftNewsSummaryView != null) {
             rightNewsSummaryView.setLeftView(leftNewsSummaryView);

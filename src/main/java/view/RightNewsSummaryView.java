@@ -5,6 +5,7 @@ import entity.Article;
 import view.LeftNewsSummaryView;
 import interface_adapter.right_news_summary.RightNewsSummaryController;
 import interface_adapter.right_news_summary.RightNewsSummaryViewModel;
+import interface_adapter.savetopic.SaveTopicController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,8 +21,6 @@ public class RightNewsSummaryView extends JPanel {
         this.saveTopicController = saveTopicController;
     }
 
-    private final RightNewsController controller;
-    private final RightNewsViewModel viewModel;
     private final RightNewsSummaryController controller;
     private final RightNewsSummaryViewModel viewModel;
     private LeftNewsSummaryView  leftView;
@@ -83,13 +82,13 @@ public class RightNewsSummaryView extends JPanel {
         sourcePanel.add(linkLabel);
         sourcePanel.add(linkField);
 
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        summarizeButton = new JButton("Summarize Right News");
-        JButton searchHistoryButton = new JButton("View Search History");
-        JButton changeButton = new JButton("Change to Left News summary");
-        buttonPanel.add(summarizeButton);
-        buttonPanel.add(searchHistoryButton);
-        buttonPanel.add(changeButton);
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    summarizeButton = new JButton("Summarize Right News");
+    JButton saveButton = new JButton("Save Topic");
+    JButton changeButton = new JButton("Change to Left News summary");
+    buttonPanel.add(summarizeButton);
+    buttonPanel.add(saveButton);
+    buttonPanel.add(changeButton);
 
         mainPanel.add(topicPanel);
         mainPanel.add(Box.createVerticalStrut(8));
@@ -124,11 +123,21 @@ public class RightNewsSummaryView extends JPanel {
             updateArticleDetails();
         });
 
-        searchHistoryButton.addActionListener(e -> {
-            if (cardLayout != null && cardPanel != null) {
-                cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
+        saveButton.addActionListener(e -> {
+            String topic = topicField.getText().trim();
+            if (saveTopicController != null && topic != null && !topic.isEmpty()) {
+                saveTopicController.save(topic, "default-user");
+            } else {
+                JOptionPane.showMessageDialog(
+                        RightNewsSummaryView.this,
+                        "No topic to save or save controller not available.",
+                        "Save Failed",
+                        JOptionPane.WARNING_MESSAGE
+                );
             }
         });
+
+        // (Search history button removed) Navigate to search history is now handled elsewhere.
 
         changeButton.addActionListener(e -> {
             if (leftView != null) {
