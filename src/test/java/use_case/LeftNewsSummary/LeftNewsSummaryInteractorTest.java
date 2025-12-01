@@ -66,7 +66,7 @@ class LeftNewsSummaryInteractorTest {
             }
         };
 
-        LeftNewsSummaryInputBoundary interactor = getNewsSummaryInputBoundary("No articles found for topic:    ", dataAccess);
+        LeftNewsSummaryInputBoundary interactor = getNewsSummaryInputBoundary("Topic is empty", dataAccess);
         interactor.execute(inputData);
     }
 
@@ -154,6 +154,26 @@ class LeftNewsSummaryInteractorTest {
         };
 
         LeftNewsSummaryInputBoundary interactor = getNewsSummaryInputBoundary("Failed to generate summary", dataAccess);
+        interactor.execute(inputData);
+    }
+
+
+    @Test
+    void exceptionHandlingFailureTest() {
+        LeftNewsSummaryInputData inputData = new LeftNewsSummaryInputData("something");
+        LeftNewsSummaryDataAccessInterface dataAccess = new LeftNewsSummaryDataAccessInterface() {
+            @Override
+            public List<Article> fetchLeftNewsArticles(String topic) {
+                throw new RuntimeException("Data access error");
+            }
+
+            @Override
+            public String summarizeLeftNewsArticles(List<Article> articles) {
+                return "summary";
+            }
+        };
+
+        LeftNewsSummaryInputBoundary interactor = getNewsSummaryInputBoundary("Error: Data access error", dataAccess);
         interactor.execute(inputData);
     }
 }
