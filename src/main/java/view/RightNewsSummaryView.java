@@ -19,8 +19,6 @@ public class RightNewsSummaryView extends JPanel {
         this.saveTopicController = saveTopicController;
     }
 
-
-
     private final RightNewsController controller;
     private final RightNewsViewModel viewModel;
 
