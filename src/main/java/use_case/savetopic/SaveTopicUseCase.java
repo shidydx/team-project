@@ -29,23 +29,34 @@ public class SaveTopicUseCase implements SaveTopicInputBoundary {
         LocalDateTime timestamp = inputData.getSearchedAt();
 
         try {
-        List<SearchHistoryEntry> history = historyGateway.getHistoryForUser(username);
+            List<SearchHistoryEntry> history = historyGateway.getHistoryForUser(username);
 
-        // Always create a new entry for each save (allow duplicates).
-        SearchHistoryEntry entry = new SearchHistoryEntry(topic, username, timestamp);
-        historyGateway.save(entry);
-        // Reflect the new entry in the in-memory list returned to presenter.
-        history.add(0, entry);
+            // Reverse-chronological assumption: most recent is first after sorting.
+            history.sort(Comparator.comparing(SearchHistoryEntry::getSearchedAt).reversed());
 
-        // Ensure reverse-chronological order before returning.
-        history.sort(Comparator.comparing(SearchHistoryEntry::getSearchedAt).reversed());
+            if (!history.isEmpty()
+                    && history.get(0).getTopic().equalsIgnoreCase(topic)) {
+                // Alternative flow: same as most recent → update timestamp only.
+                SearchHistoryEntry mostRecent = history.get(0);
+                mostRecent.setSearchedAt(timestamp);
+                historyGateway.save(mostRecent);
+            } else {
+                // Main flow: create new entry and save.
+                SearchHistoryEntry entry =
+                        new SearchHistoryEntry(topic, username, timestamp);
+                historyGateway.save(entry);
+                history.add(0, entry); // reflect in in-memory list for output
+            }
 
-        SaveTopicOutputData outputData = new SaveTopicOutputData(
-            history.stream()
-                .map(e -> new SaveTopicOutputData.HistoryItem(
-                    e.getTopic(), e.getSearchedAt()))
-                .collect(Collectors.toList())
-        );
+            // Ensure reverse-chronological order before returning.
+            history.sort(Comparator.comparing(SearchHistoryEntry::getSearchedAt).reversed());
+
+            SaveTopicOutputData outputData = new SaveTopicOutputData(
+                    history.stream()
+                            .map(e -> new SaveTopicOutputData.HistoryItem(
+                                    e.getTopic(), e.getSearchedAt()))
+                            .collect(Collectors.toList())
+            );
 
             presenter.prepareSuccessView(outputData);
 
