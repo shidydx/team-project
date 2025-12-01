@@ -18,4 +18,5 @@ public class SaveTopicController {
                 new SaveTopicInputData(topic, username, LocalDateTime.now());
         saveTopicUseCase.execute(inputData);
     }
+
 }

@@ -30,7 +30,9 @@ public class AppBuilder {
     private interface_adapter.left_news_summary.LeftNewsSummaryViewModel leftNewsSummaryViewModel;
 
     private view.RightNewsSummaryView rightNewsSummaryView;
-    // *** YOUR NEW FIELDS ***
+
+    private interface_adapter.savetopic.SaveTopicController saveTopicController;
+
     private use_case.loadsearch.SearchHistoryDataAccessInterface searchHistoryDataAccess;
     private interface_adapter.savetopic.SearchHistoryViewModel searchHistoryViewModel;
     private view.SearchHistoryView searchHistoryView;
@@ -85,6 +87,7 @@ public class AppBuilder {
         leftNewsSummaryView = new view.LeftNewsSummaryView(leftNewsSummaryViewModel);
 
         cardPanel.add(leftNewsSummaryView, leftNewsSummaryView.getViewName());
+
         return this;
     }
 
@@ -98,26 +101,28 @@ public class AppBuilder {
         leftNewsSummaryView.setController(controller);
         leftNewsSummaryView.setCardChange(cardLayout, cardPanel);
 
+        // --- SAVE TOPIC WIRING ---
         interface_adapter.savetopic.SaveTopicPresenter saveTopicPresenter =
                 new interface_adapter.savetopic.SaveTopicPresenter(searchHistoryViewModel);
 
         SaveTopicUseCase saveTopicInteractor =
-                new SaveTopicUseCase(
-                        searchHistoryDataAccess, saveTopicPresenter);
+                new SaveTopicUseCase(searchHistoryDataAccess, saveTopicPresenter);
 
-        interface_adapter.savetopic.SaveTopicController saveTopicController =
+        this.saveTopicController =
                 new interface_adapter.savetopic.SaveTopicController(saveTopicInteractor);
 
-        // *** YOUR LOAD use case wiring ***
-        LoadSearchHistoryPresenter loadHistoryPresenter =
-                new LoadSearchHistoryPresenter(searchHistoryViewModel);
+        leftNewsSummaryView.setSaveTopicController(saveTopicController);
 
-        use_case.loadsearch.LoadSearchHistoryUseCase loadHistoryInteractor =
-                new use_case.loadsearch.LoadSearchHistoryUseCase(
-                        searchHistoryDataAccess, loadHistoryPresenter);
 
-        loadHistoryController =
-                new LoadSearchHistoryController(loadHistoryInteractor);
+//        LoadSearchHistoryPresenter loadHistoryPresenter =
+//                new LoadSearchHistoryPresenter(searchHistoryViewModel);
+//
+//        use_case.loadsearch.LoadSearchHistoryUseCase loadHistoryInteractor =
+//                new use_case.loadsearch.LoadSearchHistoryUseCase(
+//                        searchHistoryDataAccess, loadHistoryPresenter);
+//
+//        loadHistoryController =
+//                new LoadSearchHistoryController(loadHistoryInteractor);
 
         return this;
     }
@@ -130,16 +135,16 @@ public class AppBuilder {
     public AppBuilder addRightNewsSummaryUseCase() {
         RightNewsSummaryPresenter presenter = new RightNewsSummaryPresenter(rightNewsViewModel);
         use_case.right_news_summary.RightNewsSummaryInteractor interactor
-                = new  use_case.right_news_summary.RightNewsSummaryInteractor(
+                = new use_case.right_news_summary.RightNewsSummaryInteractor(
                 summarizer, presenter, rightNewsDataAccess);
+        RightNewsController controller = new RightNewsController(interactor);
 
-        RightNewsSummaryController controller = new RightNewsSummaryController(interactor);
         rightNewsSummaryView  = new RightNewsSummaryView(controller, rightNewsViewModel);
         rightNewsSummaryView.setCardChange(cardLayout, cardPanel);
 
-        if (leftNewsSummaryView != null) {
-            rightNewsSummaryView.setLeftView(leftNewsSummaryView);
-            leftNewsSummaryView.setRightView(rightNewsSummaryView);
+        // 🔹 NEW: give it the same SaveTopicController
+        if (saveTopicController != null) {
+            rightNewsSummaryView.setSaveTopicController(saveTopicController);
         }
 
         cardPanel.add(rightNewsSummaryView, RightNewsSummaryView.VIEW_NAME);
@@ -158,25 +163,25 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addSearchHistoryUseCase() {
-        if (loadHistoryController == null) {
-            LoadSearchHistoryPresenter loadHistoryPresenter =
-                    new LoadSearchHistoryPresenter(searchHistoryViewModel);
-
-            use_case.loadsearch.LoadSearchHistoryUseCase loadHistoryInteractor =
-                    new use_case.loadsearch.LoadSearchHistoryUseCase(
-                            searchHistoryDataAccess, loadHistoryPresenter);
-
-            loadHistoryController =
-                    new LoadSearchHistoryController(loadHistoryInteractor);
-        }
-        
-        if (searchHistoryView != null) {
-            searchHistoryView.setLoadHistoryController(loadHistoryController);
-        }
-        
-        return this;
-    }
+//    public AppBuilder addSearchHistoryUseCase() {
+//        if (loadHistoryController == null) {
+//            LoadSearchHistoryPresenter loadHistoryPresenter =
+//                    new LoadSearchHistoryPresenter(searchHistoryViewModel);
+//
+//            use_case.loadsearch.LoadSearchHistoryUseCase loadHistoryInteractor =
+//                    new use_case.loadsearch.LoadSearchHistoryUseCase(
+//                            searchHistoryDataAccess, loadHistoryPresenter);
+//
+//            loadHistoryController =
+//                    new LoadSearchHistoryController(loadHistoryInteractor);
+//        }
+//
+//        if (searchHistoryView != null) {
+//            searchHistoryView.setLoadHistoryController(loadHistoryController);
+//        }
+//
+//        return this;
+//    }
 
     public JFrame build() {
         final JFrame application = new JFrame("News Analysis Application");

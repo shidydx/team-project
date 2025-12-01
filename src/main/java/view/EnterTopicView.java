@@ -45,6 +45,13 @@ public class EnterTopicView extends JPanel {
         errorLabel.setForeground(Color.RED);
 
         searchButton.addActionListener(e -> {
+            String topic = topicTextField.getText().trim();
+            if (topic.isEmpty()) {
+                errorLabel.setText("Please enter a topic before searching.");
+                errorLabel.setVisible(true);
+                return;
+            }
+
             controller.execute(topicTextField.getText());
             EnterTopicState state = viewModel.getState();
             String errorMsg = state.getErrorMessage();
