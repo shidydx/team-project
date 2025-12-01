@@ -138,7 +138,7 @@ public class LeftNewsSummaryView extends JPanel {
         
         searchHistoryButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
-                // cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
+                cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
             }
         });
         

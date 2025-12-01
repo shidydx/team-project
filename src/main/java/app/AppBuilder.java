@@ -32,6 +32,8 @@ public class AppBuilder {
     // *** YOUR NEW FIELDS ***
     private use_case.loadsearch.SearchHistoryDataAccessInterface searchHistoryDataAccess;
     private interface_adapter.savetopic.SearchHistoryViewModel searchHistoryViewModel;
+    private view.SearchHistoryView searchHistoryView;
+    private LoadSearchHistoryController loadHistoryController;
 
     private use_case.right_news_summary.RightNewsSummaryDataAccessInterface rightNewsDataAccess;
     private interface_adapter.right_news_summary.RightNewsViewModel rightNewsViewModel;
@@ -50,7 +52,6 @@ public class AppBuilder {
         this.summarizer = new interface_adapter.OpenAIClient(openAiApiKey);
         this.dataAccess = new data_access.LeftNewsSummaryDataAccessImpl(newsFetcher, summarizer);
 
-        // *** your in-memory DAO ***
         this.searchHistoryDataAccess =
                 new use_case.loadsearch.InMemorySearchHistoryDataAccessObject();
         this.rightNewsDataAccess = new RightNewsSummaryDataAccessImpl(newsFetcher);
@@ -78,10 +79,8 @@ public class AppBuilder {
     public AppBuilder addLeftNewsSummaryView() {
         leftNewsSummaryViewModel = new interface_adapter.left_news_summary.LeftNewsSummaryViewModel();
 
-        // *** create your history VM (will be used for separate SearchHistoryView later) ***
         searchHistoryViewModel = new interface_adapter.savetopic.SearchHistoryViewModel();
 
-        // *** Updated constructor: only pass the viewModel (search history removed from this view) ***
         leftNewsSummaryView = new view.LeftNewsSummaryView(leftNewsSummaryViewModel);
 
         cardPanel.add(leftNewsSummaryView, leftNewsSummaryView.getViewName());
@@ -89,7 +88,6 @@ public class AppBuilder {
     }
 
     public AppBuilder addLeftNewsSummaryUseCase() {
-        // existing teammate use case
         final use_case.left_news_summary.LeftNewsSummaryOutputBoundary presenter =
                 new interface_adapter.left_news_summary.LeftNewsSummaryPresenter(leftNewsSummaryViewModel);
         final use_case.left_news_summary.LeftNewsSummaryInputBoundary interactor =
@@ -99,7 +97,6 @@ public class AppBuilder {
         leftNewsSummaryView.setController(controller);
         leftNewsSummaryView.setCardChange(cardLayout, cardPanel);
 
-        // *** YOUR SAVE use case wiring ***
         interface_adapter.savetopic.SaveTopicPresenter saveTopicPresenter =
                 new interface_adapter.savetopic.SaveTopicPresenter(searchHistoryViewModel);
 
@@ -118,10 +115,8 @@ public class AppBuilder {
                 new use_case.loadsearch.LoadSearchHistoryUseCase(
                         searchHistoryDataAccess, loadHistoryPresenter);
 
-        LoadSearchHistoryController loadHistoryController =
+        loadHistoryController =
                 new LoadSearchHistoryController(loadHistoryInteractor);
-        // leftNewsSummaryView.setSaveTopicController(saveTopicController);
-        // leftNewsSummaryView.setLoadHistoryController(loadHistoryController);
 
         return this;
     }
@@ -140,6 +135,41 @@ public class AppBuilder {
         rightNewsSummaryView  = new RightNewsSummaryView(controller, rightNewsViewModel);
         rightNewsSummaryView.setCardChange(cardLayout, cardPanel);
         cardPanel.add(rightNewsSummaryView, RightNewsSummaryView.VIEW_NAME);
+        return this;
+    }
+
+    public AppBuilder addSearchHistoryView() {
+        // Create SearchHistoryView (reuse existing searchHistoryViewModel)
+        if (searchHistoryViewModel == null) {
+            searchHistoryViewModel = new interface_adapter.savetopic.SearchHistoryViewModel();
+        }
+        
+        searchHistoryView = new view.SearchHistoryView(searchHistoryViewModel);
+        searchHistoryView.setCardChange(cardLayout, cardPanel);
+        cardPanel.add(searchHistoryView, searchHistoryView.getViewName());
+        
+        return this;
+    }
+
+    public AppBuilder addSearchHistoryUseCase() {
+        // Wire up the controller if not already done
+        if (loadHistoryController == null) {
+            LoadSearchHistoryPresenter loadHistoryPresenter =
+                    new LoadSearchHistoryPresenter(searchHistoryViewModel);
+
+            use_case.loadsearch.LoadSearchHistoryUseCase loadHistoryInteractor =
+                    new use_case.loadsearch.LoadSearchHistoryUseCase(
+                            searchHistoryDataAccess, loadHistoryPresenter);
+
+            loadHistoryController =
+                    new LoadSearchHistoryController(loadHistoryInteractor);
+        }
+        
+        // Set controller in view
+        if (searchHistoryView != null) {
+            searchHistoryView.setLoadHistoryController(loadHistoryController);
+        }
+        
         return this;
     }
 
