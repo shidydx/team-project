@@ -94,7 +94,7 @@ public class LeftNewsSummaryView extends JPanel {
         summarizeButton = new JButton("Summarize Left News");
         JButton searchHistoryButton = new JButton("View Search History");
         JButton switchToRightButton = new JButton("Switch to Right News Summary");
-        JButton saveButton = new JButton("Save Topic");
+        JButton saveButton = new JButton("Add to Search History");
         buttonPanel.add(saveButton);
         buttonPanel.add(summarizeButton);
         buttonPanel.add(searchHistoryButton);
@@ -159,7 +159,7 @@ public class LeftNewsSummaryView extends JPanel {
                 saveTopicController.save(topic, "left");
                 JOptionPane.showMessageDialog(
                         this,
-                        "Topic saved!",
+                        "Topic added!",
                         "Success",
                         JOptionPane.INFORMATION_MESSAGE
                 );
