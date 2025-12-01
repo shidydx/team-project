@@ -22,12 +22,8 @@ public class InMemorySearchHistoryDataAccessObject implements SearchHistoryDataA
         List<SearchHistoryEntry> userHistory =
                 storage.computeIfAbsent(entry.getUsername(), u -> new ArrayList<>());
 
-        // If an equal entry already exists, replace timestamp.
-        int index = userHistory.indexOf(entry);
-        if (index != -1) {
-            userHistory.get(index).setSearchedAt(entry.getSearchedAt());
-        } else {
-            userHistory.add(entry);
-        }
+        // Always append the new entry. This allows the same topic to be
+        // stored multiple times (e.g., searches from left and right).
+        userHistory.add(entry);
     }
 }
