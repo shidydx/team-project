@@ -13,9 +13,15 @@ import java.util.List;
 
 public class RightNewsSummaryView extends JPanel {
     public static final String VIEW_NAME = "Right News Summary";
-    private final RightNewsSummaryController controller;
-    private final RightNewsSummaryViewModel viewModel;
-    private LeftNewsSummaryView  leftView;
+
+    private SaveTopicController saveTopicController;
+
+    public void setSaveTopicController(SaveTopicController saveTopicController) {
+        this.saveTopicController = saveTopicController;
+    }
+
+    private final RightNewsController controller;
+    private final RightNewsViewModel viewModel;
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
