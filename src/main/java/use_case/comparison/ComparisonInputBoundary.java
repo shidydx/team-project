@@ -4,3 +4,4 @@ public interface ComparisonInputBoundary {
     void execute(ComparisonInputData inputData);
 }
 
+

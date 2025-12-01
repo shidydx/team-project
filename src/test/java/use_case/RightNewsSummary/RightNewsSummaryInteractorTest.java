@@ -30,6 +30,11 @@ public class RightNewsSummaryInteractorTest {
                     public String summarizeArticles(List<Article> articles) {
                         return "not a summary";
                     }
+                    
+                    @Override
+                    public String compareArticles(String article1, String article2) {
+                        return "not a comparison";
+                    }
                 };
 
         RightNewsSummaryOutputBoundary presenter = new RightNewsSummaryOutputBoundary() {
@@ -53,7 +58,8 @@ public class RightNewsSummaryInteractorTest {
     }
 
     @Test
-    void emptyTopicFailureTest() {RightNewsSummaryInputData inputData = new RightNewsSummaryInputData("   ");
+    void emptyTopicFailureTest() {
+        RightNewsSummaryInputData inputData = new RightNewsSummaryInputData("   ");
         RightNewsSummaryDataAccessInterface dataAccess = new RightNewsSummaryDataAccessInterface() {
                     @Override
                     public List<Article> fetchRightNewsArticles(String topic) {
@@ -65,6 +71,12 @@ public class RightNewsSummaryInteractorTest {
                     @Override
                     public String summarizeArticles(List<Article> articles) {
                         fail("Summarizer should not be called when topic is empty");
+                        return null;
+                    }
+                    
+                    @Override
+                    public String compareArticles(String article1, String article2) {
+                        fail("compareArticles should not be called when topic is empty");
                         return null;
                     }
                 };

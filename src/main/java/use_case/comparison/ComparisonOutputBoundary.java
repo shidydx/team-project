@@ -5,3 +5,4 @@ public interface ComparisonOutputBoundary {
     void failureView(String error);
 }
 
+
