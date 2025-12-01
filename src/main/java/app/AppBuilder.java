@@ -113,15 +113,15 @@ public class AppBuilder {
         leftNewsSummaryView.setSaveTopicController(saveTopicController);
 
 
-        LoadSearchHistoryPresenter loadHistoryPresenter =
-                new LoadSearchHistoryPresenter(searchHistoryViewModel);
-
-        use_case.loadsearch.LoadSearchHistoryUseCase loadHistoryInteractor =
-                new use_case.loadsearch.LoadSearchHistoryUseCase(
-                        searchHistoryDataAccess, loadHistoryPresenter);
-
-        loadHistoryController =
-                new LoadSearchHistoryController(loadHistoryInteractor);
+//        LoadSearchHistoryPresenter loadHistoryPresenter =
+//                new LoadSearchHistoryPresenter(searchHistoryViewModel);
+//
+//        use_case.loadsearch.LoadSearchHistoryUseCase loadHistoryInteractor =
+//                new use_case.loadsearch.LoadSearchHistoryUseCase(
+//                        searchHistoryDataAccess, loadHistoryPresenter);
+//
+//        loadHistoryController =
+//                new LoadSearchHistoryController(loadHistoryInteractor);
 
         return this;
     }
@@ -162,25 +162,25 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addSearchHistoryUseCase() {
-        if (loadHistoryController == null) {
-            LoadSearchHistoryPresenter loadHistoryPresenter =
-                    new LoadSearchHistoryPresenter(searchHistoryViewModel);
-
-            use_case.loadsearch.LoadSearchHistoryUseCase loadHistoryInteractor =
-                    new use_case.loadsearch.LoadSearchHistoryUseCase(
-                            searchHistoryDataAccess, loadHistoryPresenter);
-
-            loadHistoryController =
-                    new LoadSearchHistoryController(loadHistoryInteractor);
-        }
-        
-        if (searchHistoryView != null) {
-            searchHistoryView.setLoadHistoryController(loadHistoryController);
-        }
-        
-        return this;
-    }
+//    public AppBuilder addSearchHistoryUseCase() {
+//        if (loadHistoryController == null) {
+//            LoadSearchHistoryPresenter loadHistoryPresenter =
+//                    new LoadSearchHistoryPresenter(searchHistoryViewModel);
+//
+//            use_case.loadsearch.LoadSearchHistoryUseCase loadHistoryInteractor =
+//                    new use_case.loadsearch.LoadSearchHistoryUseCase(
+//                            searchHistoryDataAccess, loadHistoryPresenter);
+//
+//            loadHistoryController =
+//                    new LoadSearchHistoryController(loadHistoryInteractor);
+//        }
+//
+//        if (searchHistoryView != null) {
+//            searchHistoryView.setLoadHistoryController(loadHistoryController);
+//        }
+//
+//        return this;
+//    }
 
     public JFrame build() {
         final JFrame application = new JFrame("News Analysis Application");
