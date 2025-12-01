@@ -4,6 +4,8 @@ import entity.Article;
 import interface_adapter.left_news_summary.LeftNewsSummaryController;
 import interface_adapter.left_news_summary.LeftNewsSummaryState;
 import interface_adapter.left_news_summary.LeftNewsSummaryViewModel;
+import interface_adapter.right_news_summary.RightNewsSummaryController;
+import view.RightNewsSummaryView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -17,6 +19,7 @@ public class LeftNewsSummaryView extends JPanel {
 
     private final LeftNewsSummaryViewModel viewModel;
     private LeftNewsSummaryController controller;
+    private RightNewsSummaryView rightView;
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
@@ -143,6 +146,9 @@ public class LeftNewsSummaryView extends JPanel {
         });
         
         switchToRightButton.addActionListener(e -> {
+            if (rightView != null) {
+                rightView.setTopicText(getTopicText());
+            }
             if (cardLayout != null && cardPanel != null) {
                 cardLayout.show(cardPanel, RightNewsSummaryView.VIEW_NAME);
             }
@@ -160,6 +166,18 @@ public class LeftNewsSummaryView extends JPanel {
 
     public String getViewName() {
         return VIEW_NAME;
+    }
+
+    public void setRightView(RightNewsSummaryView rightView) {
+        this.rightView = rightView;
+    }
+
+    public String getTopicText(){
+        return topicField.getText();
+    }
+
+    public void setTopicText(String topic) {
+        topicField.setText(topic);
     }
 
     private void fillSourceComboBox() {
