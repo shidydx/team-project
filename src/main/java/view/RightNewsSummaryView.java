@@ -1,9 +1,10 @@
 package view;
 
 import entity.Article;
-import interface_adapter.right_news_summary.RightNewsController;
-import interface_adapter.right_news_summary.RightNewsViewModel;
-import interface_adapter.savetopic.SaveTopicController;
+
+import view.LeftNewsSummaryView;
+import interface_adapter.right_news_summary.RightNewsSummaryController;
+import interface_adapter.right_news_summary.RightNewsSummaryViewModel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -12,17 +13,9 @@ import java.util.List;
 
 public class RightNewsSummaryView extends JPanel {
     public static final String VIEW_NAME = "Right News Summary";
-
-    private SaveTopicController saveTopicController;
-
-    public void setSaveTopicController(SaveTopicController saveTopicController) {
-        this.saveTopicController = saveTopicController;
-    }
-
-
-
-    private final RightNewsController controller;
-    private final RightNewsViewModel viewModel;
+    private final RightNewsSummaryController controller;
+    private final RightNewsSummaryViewModel viewModel;
+    private LeftNewsSummaryView  leftView;
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
@@ -84,9 +77,7 @@ public class RightNewsSummaryView extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         summarizeButton = new JButton("Summarize Right News");
         JButton searchHistoryButton = new JButton("View Search History");
-        JButton changeButton = new JButton("Switch to Left News summary");
-        JButton saveButton = new JButton("Add to Search History");
-        buttonPanel.add(saveButton);
+        JButton changeButton = new JButton("Change to Left News summary");
         buttonPanel.add(summarizeButton);
         buttonPanel.add(searchHistoryButton);
         buttonPanel.add(changeButton);
@@ -136,33 +127,6 @@ public class RightNewsSummaryView extends JPanel {
             }
             if (cardLayout != null && cardPanel != null) {
                 cardLayout.show(cardPanel, LeftNewsSummaryView.VIEW_NAME);
-            }
-        });
-
-
-        searchHistoryButton.addActionListener(e -> {
-            if (cardLayout != null && cardPanel != null) {
-                SearchHistoryView.lastSourceViewName = RightNewsSummaryView.VIEW_NAME;
-                cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
-            }
-        });
-
-        saveButton.addActionListener(e -> {
-            if (saveTopicController == null) {
-                System.err.println("SaveTopicController not set!");
-                return;
-            }
-
-            String topic = topicField.getText().trim();
-            if (!topic.isEmpty()) {
-        // Use a shared username so search history is global across left/right
-        saveTopicController.save(topic, "default-user");
-                JOptionPane.showMessageDialog(
-                        this,
-                        "Topic added!",
-                        "Success",
-                        JOptionPane.INFORMATION_MESSAGE
-                );
             }
         });
     }
