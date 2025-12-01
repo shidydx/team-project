@@ -84,19 +84,22 @@ public class RightNewsSummaryView extends JPanel {
 
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     summarizeButton = new JButton("Summarize Right News");
-    JButton saveButton = new JButton("Save Topic");
+    JButton saveButton = new JButton("Add to Search History");
+    JButton searchHistoryButton = new JButton("View Search History");
     JButton changeButton = new JButton("Change to Left News summary");
+    // Button order (left-to-right): Summarize, Add, View History, Switch
     buttonPanel.add(summarizeButton);
     buttonPanel.add(saveButton);
+    buttonPanel.add(searchHistoryButton);
     buttonPanel.add(changeButton);
 
-        mainPanel.add(topicPanel);
-        mainPanel.add(Box.createVerticalStrut(8));
-        mainPanel.add(summaryPanel);
-        mainPanel.add(Box.createVerticalStrut(8));
-        mainPanel.add(sourcePanel);
-        mainPanel.add(Box.createVerticalStrut(8));
-        mainPanel.add(buttonPanel);
+    mainPanel.add(topicPanel);
+    mainPanel.add(Box.createVerticalStrut(8));
+    mainPanel.add(summaryPanel);
+    mainPanel.add(Box.createVerticalStrut(8));
+    mainPanel.add(sourcePanel);
+    mainPanel.add(Box.createVerticalStrut(8));
+    mainPanel.add(buttonPanel);
         this.add(mainPanel, BorderLayout.CENTER);
         sourceComboBox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -130,14 +133,19 @@ public class RightNewsSummaryView extends JPanel {
             } else {
                 JOptionPane.showMessageDialog(
                         RightNewsSummaryView.this,
-                        "No topic to save or save controller not available.",
-                        "Save Failed",
+                        "No topic to add or save controller not available.",
+                        "Add Failed",
                         JOptionPane.WARNING_MESSAGE
                 );
             }
         });
 
-        // (Search history button removed) Navigate to search history is now handled elsewhere.
+        // search history button listener
+        searchHistoryButton.addActionListener(ev -> {
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
+            }
+        });
 
         changeButton.addActionListener(e -> {
             if (leftView != null) {

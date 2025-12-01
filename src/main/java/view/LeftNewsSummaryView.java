@@ -87,10 +87,13 @@ public class LeftNewsSummaryView extends JPanel {
         // Button panel
     JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
     summarizeButton = new JButton("Summarize Left News");
-    JButton saveButton = new JButton("Save Topic");
+    JButton saveButton = new JButton("Add to Search History");
+    JButton searchHistoryButton = new JButton("View Search History");
     JButton switchToRightButton = new JButton("Switch to Right News Summary");
+    // Button order (left-to-right): Summarize, Add, View History, Switch
     buttonPanel.add(summarizeButton);
     buttonPanel.add(saveButton);
+    buttonPanel.add(searchHistoryButton);
     buttonPanel.add(switchToRightButton);
         
         // Error label
@@ -152,6 +155,12 @@ public class LeftNewsSummaryView extends JPanel {
             }
         });
 
+        searchHistoryButton.addActionListener(ev -> {
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
+            }
+        });
+
         saveButton.addActionListener(e -> {
             String topic = topicField.getText().trim();
             if (saveTopicController != null && topic != null && !topic.isEmpty()) {
@@ -159,8 +168,8 @@ public class LeftNewsSummaryView extends JPanel {
             } else {
                 JOptionPane.showMessageDialog(
                         LeftNewsSummaryView.this,
-                        "No topic to save or save controller not available.",
-                        "Save Failed",
+                        "No topic to add or save controller not available.",
+                        "Add Failed",
                         JOptionPane.WARNING_MESSAGE
                 );
             }

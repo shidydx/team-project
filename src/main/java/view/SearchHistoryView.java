@@ -47,9 +47,9 @@ public class SearchHistoryView extends JPanel {
         JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         messagePanel.add(messageLabel);
 
-        // Button panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        backButton = new JButton("Back to Left News");
+    // Button panel
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    backButton = new JButton("Back");
 
         backButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
