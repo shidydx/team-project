@@ -3,10 +3,10 @@ package interface_adapter.right_news_summary;
 import use_case.right_news_summary.RightNewsSummaryOutputBoundary;
 import use_case.right_news_summary.RightNewsSummaryOutputData;
 
-public class RightNewsPresenter implements RightNewsSummaryOutputBoundary {
-    private final RightNewsViewModel viewModel;
+public class RightNewsSummaryPresenter implements RightNewsSummaryOutputBoundary {
+    private final RightNewsSummaryViewModel viewModel;
 
-    public RightNewsPresenter(RightNewsViewModel viewModel) {
+    public RightNewsSummaryPresenter(RightNewsSummaryViewModel viewModel) {
         this.viewModel = viewModel;
     }
 
