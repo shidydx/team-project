@@ -1,126 +1,262 @@
 package view;
 
+import entity.Article;
 import interface_adapter.left_news_summary.LeftNewsSummaryController;
 import interface_adapter.left_news_summary.LeftNewsSummaryState;
 import interface_adapter.left_news_summary.LeftNewsSummaryViewModel;
-import interface_adapter.savetopic.SearchHistoryViewModel;
-import interface_adapter.savetopic.SaveTopicController;
-import interface_adapter.loadsearch.LoadSearchHistoryController;
-
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ItemEvent;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Set;
 
 public class LeftNewsSummaryView extends JPanel {
     public static final String VIEW_NAME = "left_news_summary";
 
     private final LeftNewsSummaryViewModel viewModel;
-
-    // NEW: your autosave stuff
-    private final SearchHistoryViewModel searchHistoryViewModel;
-    private SaveTopicController saveTopicController;
-    private LoadSearchHistoryController loadHistoryController;
-
     private LeftNewsSummaryController controller;
 
-    private final JTextArea summaryArea = new JTextArea(15, 40);
-    private final JLabel errorLabel = new JLabel();
+    private CardLayout cardLayout;
+    private JPanel cardPanel;
 
-    // NEW: UI for showing history
-    private final JTextArea historyArea = new JTextArea(10, 25);
-    private final JButton historyButton = new JButton("Show Search History");
+    private final JTextField topicField;
+    private final JTextArea summaryArea;
+    private final JComboBox<String> sourceComboBox;
+    private final JTextField titleField;
+    private final JTextField nameField;
+    private final JTextField linkField;
+    private final JButton summarizeButton;
+    private final JLabel errorLabel;
 
-
-    public LeftNewsSummaryView(LeftNewsSummaryViewModel viewModel,
-                               SearchHistoryViewModel searchHistoryViewModel) {
+    public LeftNewsSummaryView(LeftNewsSummaryViewModel viewModel) {
         this.viewModel = viewModel;
-        this.searchHistoryViewModel = searchHistoryViewModel;
-        initializeUI();
-        setupHistoryBindings();
-    }
+        this.setLayout(new BorderLayout());
+        
+        JPanel mainPanel = new JPanel();
+        mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
+        
+        // Topic panel
+        JPanel topicPanel = new JPanel(new BorderLayout());
+        JLabel topicLabel = new JLabel("Topic: ");
+        topicField = new JTextField();
+        topicPanel.add(topicLabel, BorderLayout.WEST);
+        topicPanel.add(topicField, BorderLayout.CENTER);
+        
+        // Summary panel
+        JPanel summaryPanel = new JPanel(new BorderLayout());
+        JLabel summaryLabel = new JLabel("Summary:");
+        summaryArea = new JTextArea(8, 40);
+        summaryArea.setLineWrap(true);
+        summaryArea.setWrapStyleWord(true);
+        summaryArea.setEditable(false);
+        JScrollPane summaryScroll = new JScrollPane(summaryArea);
+        summaryPanel.add(summaryLabel, BorderLayout.NORTH);
+        summaryPanel.add(summaryScroll, BorderLayout.CENTER);
+        
+        // Source panel with article details
+        JPanel sourcePanel = new JPanel();
+        sourcePanel.setLayout(new GridLayout(4, 2, 4, 4));
+        JLabel sourceLabel = new JLabel("Source:");
+        sourceComboBox = new JComboBox<>();
+        sourceComboBox.addItem("Left source");
+        JLabel titleLabel = new JLabel("Title:");
+        titleField = new JTextField();
+        titleField.setEditable(false);
+        JLabel nameLabel = new JLabel("Name:");
+        nameField = new JTextField();
+        nameField.setEditable(false);
+        JLabel linkLabel = new JLabel("Link:");
+        linkField = new JTextField();
+        linkField.setEditable(false);
+        sourcePanel.add(sourceLabel);
+        sourcePanel.add(sourceComboBox);
+        sourcePanel.add(titleLabel);
+        sourcePanel.add(titleField);
+        sourcePanel.add(nameLabel);
+        sourcePanel.add(nameField);
+        sourcePanel.add(linkLabel);
+        sourcePanel.add(linkField);
+        
+        // Button panel
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+        summarizeButton = new JButton("Summarize Left News");
+        JButton searchHistoryButton = new JButton("View Search History");
+        JButton switchToRightButton = new JButton("Switch to Right News Summary");
+        buttonPanel.add(summarizeButton);
+        buttonPanel.add(searchHistoryButton);
+        buttonPanel.add(switchToRightButton);
+        
+        // Error label
+        errorLabel = new JLabel();
+        errorLabel.setForeground(Color.RED);
+        JPanel errorPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        errorPanel.add(errorLabel);
+        
+        // Add components to main panel
+        mainPanel.add(topicPanel);
+        mainPanel.add(Box.createVerticalStrut(8));
+        mainPanel.add(summaryPanel);
+        mainPanel.add(Box.createVerticalStrut(8));
+        mainPanel.add(sourcePanel);
+        mainPanel.add(Box.createVerticalStrut(8));
+        mainPanel.add(buttonPanel);
+        mainPanel.add(Box.createVerticalStrut(8));
+        mainPanel.add(errorPanel);
+        
+        this.add(mainPanel, BorderLayout.CENTER);
+        
+        // Set up listeners
+        sourceComboBox.addItemListener(e -> {
+            if (e.getStateChange() == ItemEvent.SELECTED) {
+                updateArticleDetails();
+            }
+        });
+        
+        summarizeButton.addActionListener(e -> {
+            String keyword = topicField.getText().trim();
+            if (controller != null) {
+                controller.execute(keyword);
+            }
+            String error = viewModel.getErrorMessage();
+            if (error != null && !error.isEmpty()) {
+                JOptionPane.showMessageDialog(
+                        LeftNewsSummaryView.this,
+                        error,
+                        "Source Unavailable",
+                        JOptionPane.ERROR_MESSAGE
+                );
+                return;
+            }
 
+            summaryArea.setText(viewModel.getSummary());
+            linkField.setText(viewModel.getUrl());
+            fillSourceComboBox();
+            updateArticleDetails();
+        });
+        
+        searchHistoryButton.addActionListener(e -> {
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
+            }
+        });
+        
+        switchToRightButton.addActionListener(e -> {
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, RightNewsSummaryView.VIEW_NAME);
+            }
+        });
+    }
 
     public void setController(LeftNewsSummaryController controller) {
         this.controller = controller;
     }
 
-    public void setSaveTopicController(SaveTopicController controller) {
-        this.saveTopicController = controller;
-    }
-
-    public void setLoadHistoryController(LoadSearchHistoryController controller) {
-        this.loadHistoryController = controller;
+    public void setCardChange(CardLayout cardLayout, JPanel cardPanel) {
+        this.cardLayout = cardLayout;
+        this.cardPanel = cardPanel;
     }
 
     public String getViewName() {
         return VIEW_NAME;
     }
 
-    private void initializeUI() {
-        setLayout(new BorderLayout());
-
-        JPanel summaryPanel = new JPanel(new BorderLayout());
-        summaryPanel.setBorder(BorderFactory.createTitledBorder("Left-Leaning News Summary"));
-        summaryArea.setEditable(false);
-        summaryArea.setWrapStyleWord(true);
-        summaryArea.setLineWrap(true);
-        summaryArea.setFont(new Font(Font.SANS_SERIF, Font.PLAIN, 12));
-        JScrollPane scrollPane = new JScrollPane(summaryArea);
-        summaryPanel.add(scrollPane, BorderLayout.CENTER);
-
-
-        JPanel errorPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        errorLabel.setForeground(Color.RED);
-        errorPanel.add(errorLabel);
-
-
-        JPanel historyPanel = new JPanel(new BorderLayout());
-        historyPanel.setBorder(BorderFactory.createTitledBorder("Search History"));
-
-        historyArea.setEditable(false);
-        historyArea.setLineWrap(true);
-        historyArea.setWrapStyleWord(true);
-
-        JScrollPane historyScroll = new JScrollPane(historyArea);
-        historyPanel.add(historyScroll, BorderLayout.CENTER);
-        historyPanel.add(historyButton, BorderLayout.SOUTH);
-        historyButton.addActionListener(e -> {
-            if (loadHistoryController != null) {
-                // use any username you’re using elsewhere; placeholder if none
-                String username = "default-user";
-                loadHistoryController.load(username);
+    private void fillSourceComboBox() {
+        sourceComboBox.removeAllItems();
+        List<Article> articles = viewModel.getArticles();
+        if (articles == null || articles.isEmpty()) {
+            String label = viewModel.getName();
+            if (label == null || label.isEmpty()) {
+                label = "Left source";
             }
-        });
-        add(summaryPanel, BorderLayout.CENTER);
-        add(errorPanel, BorderLayout.SOUTH);
-        add(historyPanel, BorderLayout.EAST);
+            sourceComboBox.addItem(label);
+            if (viewModel.getTitle() == null) {
+                titleField.setText("");
+            } else {
+                titleField.setText(viewModel.getTitle());
+            }
+            if (viewModel.getName() == null) {
+                nameField.setText("");
+            } else {
+                nameField.setText(viewModel.getName());
+            }
+            if (viewModel.getUrl() == null) {
+                linkField.setText("");
+            } else {
+                linkField.setText(viewModel.getUrl());
+            }
+            return;
+        }
+        Set<String> addedSources = new HashSet<>();
+        for (Article article : articles) {
+            String label = article.getSourceName();
+            if (label == null || label.isEmpty()) {
+                label = article.getTitle();
+            }
+            if (label == null || label.isEmpty()) {
+                label = "Source";
+            }
+            // Only add if we haven't seen this source name before
+            if (!addedSources.contains(label)) {
+                sourceComboBox.addItem(label);
+                addedSources.add(label);
+            }
+        }
+        if (sourceComboBox.getItemCount() > 0) {
+            sourceComboBox.setSelectedIndex(0);
+        }
     }
 
-    private void setupHistoryBindings() {
-        // listen to changes from the SearchHistoryViewModel
-        searchHistoryViewModel.addPropertyChangeListener(evt -> {
-            switch (evt.getPropertyName()) {
-                case "history":
-                    // rebuild the text in the history area
-                    StringBuilder sb = new StringBuilder();
-                    for (SearchHistoryViewModel.HistoryItemVM item : searchHistoryViewModel.getHistory()) {
-                        sb.append(item.getTopic())
-                                .append(" (")
-                                .append(item.getSearchedAt())
-                                .append(")")
-                                .append(System.lineSeparator());
-                    }
-                    historyArea.setText(sb.toString());
-                    break;
-
-                case "message":
-                    String msg = searchHistoryViewModel.getMessage();
-                    if (msg != null && !msg.isEmpty()) {
-                        errorLabel.setText(msg);
-                    }
-                    break;
+    private void updateArticleDetails() {
+        List<Article> articles = viewModel.getArticles();
+        if (articles == null || articles.isEmpty()) {
+            return;
+        }
+        
+        String selectedSource = (String) sourceComboBox.getSelectedItem();
+        if (selectedSource == null) {
+            return;
+        }
+        
+        // Find the first article that matches the selected source name
+        Article article = null;
+        for (Article a : articles) {
+            String sourceName = a.getSourceName();
+            if (sourceName == null || sourceName.isEmpty()) {
+                sourceName = a.getTitle();
             }
-        });
+            if (sourceName == null || sourceName.isEmpty()) {
+                sourceName = "Source";
+            }
+            if (selectedSource.equals(sourceName)) {
+                article = a;
+                break;
+            }
+        }
+        
+        // Fallback to first article if no match found
+        if (article == null && !articles.isEmpty()) {
+            article = articles.get(0);
+        }
+        
+        if (article != null) {
+            if (article.getTitle() == null) {
+                titleField.setText("");
+            } else {
+                titleField.setText(article.getTitle());
+            }
+            if (article.getSourceName() == null) {
+                nameField.setText("");
+            } else {
+                nameField.setText(article.getSourceName());
+            }
+            if (article.getUrl() == null) {
+                linkField.setText("");
+            } else {
+                linkField.setText(article.getUrl());
+            }
+        }
     }
 
     public void updateView() {

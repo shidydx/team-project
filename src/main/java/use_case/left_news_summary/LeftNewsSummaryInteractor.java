@@ -15,6 +15,10 @@ public class LeftNewsSummaryInteractor implements LeftNewsSummaryInputBoundary {
     @Override
     public void execute(LeftNewsSummaryInputData inputData) {
         String topic = inputData.getTopic();
+        if (topic == null || topic.trim().isEmpty()) {
+            outputBoundary.failureView("Topic is empty");
+            return;
+        }
         try {
             List<Article> articles = dataAccess.fetchLeftNewsArticles(topic);
             String summary = dataAccess.summarizeLeftNewsArticles(articles);
@@ -29,7 +33,7 @@ public class LeftNewsSummaryInteractor implements LeftNewsSummaryInputBoundary {
                 return;
             }
             
-            LeftNewsSummaryOutputData outputData = new LeftNewsSummaryOutputData(summary, "");
+            LeftNewsSummaryOutputData outputData = new LeftNewsSummaryOutputData(summary, "", articles);
             outputBoundary.successView(outputData);
             
         } catch (Exception e) {
