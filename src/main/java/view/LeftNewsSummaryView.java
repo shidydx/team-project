@@ -117,7 +117,6 @@ public class LeftNewsSummaryView extends JPanel {
             if (controller != null) {
                 controller.execute(keyword);
             }
-            
             String error = viewModel.getErrorMessage();
             if (error != null && !error.isEmpty()) {
                 JOptionPane.showMessageDialog(
@@ -128,7 +127,6 @@ public class LeftNewsSummaryView extends JPanel {
                 );
                 return;
             }
-            
             // Update summary and article details
             summaryArea.setText(viewModel.getSummary());
             linkField.setText(viewModel.getUrl());
