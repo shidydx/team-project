@@ -111,4 +111,61 @@ public class OpenAIClient implements OpenAISummarizerService {
             return "";
         }
     }
+
+    @Override
+    public String compareArticles(String leftSummary, String rightSummary) {
+        try {
+            String prompt = buildComparisonPrompt(leftSummary, rightSummary);
+            String requestBody = buildComparisonRequestBody(prompt);
+
+            Request request = new Request.Builder().url(BASE_URL).post(RequestBody.create(requestBody, JSON)).addHeader("Authorization", "Bearer " + apiKey).addHeader("Content-Type", "application/json").build();
+
+            try (Response response = client.newCall(request).execute()) {
+                if (!response.isSuccessful()) {
+                    throw new IOException("Unexpected code " + response + ": " + response.body().string());
+                }
+
+                String responseBody = response.body().string();
+                return parseSummary(responseBody);
+            }
+
+        } catch (IOException e) {
+            System.err.println("Error generating comparison: " + e.getMessage());
+            return "";
+        }
+    }
+
+    private String buildComparisonPrompt(String leftSummary, String rightSummary) {
+        StringBuilder prompt = new StringBuilder();
+        prompt.append("Compare these two news summaries from different political perspectives.\n\n");
+        prompt.append("Left-leaning Summary:\n");
+        prompt.append(leftSummary);
+        prompt.append("\n\nRight-leaning Summary:\n");
+        prompt.append(rightSummary);
+        prompt.append("\n\nProvide a comparison analysis that includes:\n");
+        prompt.append("1. A brief paragraph summarizing the key similarities and differences\n");
+        prompt.append("2. Bullet points highlighting:\n");
+        prompt.append("   - Similarities in coverage\n");
+        prompt.append("   - Differences in framing or emphasis\n");
+        prompt.append("   - Differences in tone or language\n\n");
+        prompt.append("Do not fact-check, only compare how each perspective presents the topic.");
+        return prompt.toString();
+    }
+
+    private String buildComparisonRequestBody(String prompt) {
+        JSONObject requestBody = new JSONObject();
+        requestBody.put("model", MODEL);
+        
+        JSONArray messages = new JSONArray();
+        JSONObject message = new JSONObject();
+        message.put("role", "user");
+        message.put("content", prompt);
+        messages.put(message);
+        
+        requestBody.put("messages", messages);
+        requestBody.put("max_tokens", 800);
+        requestBody.put("temperature", 0.7);
+        
+        return requestBody.toString();
+    }
 }

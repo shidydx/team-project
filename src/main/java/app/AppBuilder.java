@@ -42,6 +42,10 @@ public class AppBuilder {
     private interface_adapter.entertopic.EnterTopicViewModel enterTopicViewModel;
     private view.EnterTopicView enterTopicView;
 
+    private use_case.comparison.ComparisonDataAccessInterface comparisonDataAccess;
+    private interface_adapter.comparison.ComparisonViewModel comparisonViewModel;
+    private view.ComparisonView comparisonView;
+
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
 
@@ -56,6 +60,7 @@ public class AppBuilder {
                 new use_case.loadsearch.InMemorySearchHistoryDataAccessObject();
         this.rightNewsDataAccess = new RightNewsSummaryDataAccessImpl(newsFetcher);
         this.enterTopicDataAccess = new EnterTopicDataAccessImpl(newsFetcher);
+        this.comparisonDataAccess = new data_access.ComparisonDataAccessImpl(newsFetcher, summarizer);
 
     }
 
@@ -167,6 +172,26 @@ public class AppBuilder {
             searchHistoryView.setLoadHistoryController(loadHistoryController);
         }
         
+        return this;
+    }
+
+    public AppBuilder addComparisonView() {
+        comparisonViewModel = new interface_adapter.comparison.ComparisonViewModel();
+        comparisonView = new view.ComparisonView(comparisonViewModel);
+        cardPanel.add(comparisonView, comparisonView.getViewName());
+        return this;
+    }
+
+    public AppBuilder addComparisonUseCase() {
+        final interface_adapter.comparison.ComparisonPresenter presenter =
+                new interface_adapter.comparison.ComparisonPresenter(comparisonViewModel);
+        final use_case.comparison.ComparisonInteractor interactor =
+                new use_case.comparison.ComparisonInteractor(presenter, comparisonDataAccess);
+        final interface_adapter.ComparisonController controller =
+                new interface_adapter.ComparisonController(interactor);
+        
+        comparisonView.setController(controller);
+        comparisonView.setCardChange(cardLayout, cardPanel);
         return this;
     }
 

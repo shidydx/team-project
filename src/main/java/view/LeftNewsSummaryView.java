@@ -84,9 +84,11 @@ public class LeftNewsSummaryView extends JPanel {
         summarizeButton = new JButton("Summarize Left News");
         JButton searchHistoryButton = new JButton("View Search History");
         JButton switchToRightButton = new JButton("Switch to Right News Summary");
+        JButton comparisonButton = new JButton("Compare Coverage");
         buttonPanel.add(summarizeButton);
         buttonPanel.add(searchHistoryButton);
         buttonPanel.add(switchToRightButton);
+        buttonPanel.add(comparisonButton);
         
         // Error label
         errorLabel = new JLabel();
@@ -145,6 +147,12 @@ public class LeftNewsSummaryView extends JPanel {
         switchToRightButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
                 cardLayout.show(cardPanel, RightNewsSummaryView.VIEW_NAME);
+            }
+        });
+        
+        comparisonButton.addActionListener(e -> {
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, ComparisonView.VIEW_NAME);
             }
         });
     }

@@ -70,8 +70,10 @@ public class RightNewsSummaryView extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         summarizeButton = new JButton("Summarize Right News");
         JButton changeButton = new JButton("Change to Left News summary");
+        JButton comparisonButton = new JButton("Compare Coverage");
         buttonPanel.add(summarizeButton);
         buttonPanel.add(changeButton);
+        buttonPanel.add(comparisonButton);
         mainPanel.add(topicPanel);
         mainPanel.add(Box.createVerticalStrut(8));
         mainPanel.add(summaryPanel);
@@ -105,6 +107,9 @@ public class RightNewsSummaryView extends JPanel {
         });
         changeButton.addActionListener(e -> {
             cardLayout.show(cardPanel, LeftNewsSummaryView.VIEW_NAME);
+        });
+        comparisonButton.addActionListener(e -> {
+            cardLayout.show(cardPanel, ComparisonView.VIEW_NAME);
         });
     }
 

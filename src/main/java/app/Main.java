@@ -10,6 +10,7 @@ public class Main {
                 .addLeftNewsSummaryView().addLeftNewsSummaryUseCase()
                 .addSearchHistoryView().addSearchHistoryUseCase()
                 .addRightNewsSummaryView().addRightNewsSummaryUseCase()
+                .addComparisonView().addComparisonUseCase()
                 .build();
 
         application.pack();
