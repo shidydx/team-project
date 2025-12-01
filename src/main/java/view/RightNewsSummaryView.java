@@ -137,7 +137,8 @@ public class RightNewsSummaryView extends JPanel {
 
             String topic = topicField.getText().trim();
             if (!topic.isEmpty()) {
-                saveTopicController.save(topic, "right");
+        // Use a shared username so search history is global across left/right
+        saveTopicController.save(topic, "default-user");
                 JOptionPane.showMessageDialog(
                         this,
                         "Topic added!",
