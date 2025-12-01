@@ -3,15 +3,12 @@ package view;
 import interface_adapter.loadsearch.LoadSearchHistoryController;
 import interface_adapter.savetopic.SearchHistoryViewModel;
 
-
 import javax.swing.*;
 import java.awt.*;
 import java.time.format.DateTimeFormatter;
 
 public class SearchHistoryView extends JPanel {
     public static final String VIEW_NAME = "search_history";
-    public static String lastSourceViewName = LeftNewsSummaryView.VIEW_NAME;
-
 
     private final SearchHistoryViewModel viewModel;
     private LoadSearchHistoryController loadHistoryController;
@@ -20,7 +17,7 @@ public class SearchHistoryView extends JPanel {
     private JPanel cardPanel;
 
     private JTextArea historyArea;
-//    private JButton loadHistoryButton;
+    private JButton loadHistoryButton;
     private JButton backButton;
     private JLabel messageLabel;
 
@@ -53,25 +50,23 @@ public class SearchHistoryView extends JPanel {
 
         // Button panel
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-//        loadHistoryButton = new JButton("Load Search History");
-        backButton = new JButton("Back");
-
-//        loadHistoryButton.addActionListener(e -> {
-//            if (loadHistoryController != null) {
-//                String username = "default-user";
-//                loadHistoryController.load(username);
-//            }
-//        });
-
-
-        backButton.addActionListener(e -> {
-            if (cardLayout != null && cardPanel != null) {
-                cardLayout.show(cardPanel, lastSourceViewName);
+        loadHistoryButton = new JButton("Load Search History");
+        backButton = new JButton("Back to Left News");
+        
+        loadHistoryButton.addActionListener(e -> {
+            if (loadHistoryController != null) {
+                String username = "default-user";
+                loadHistoryController.load(username);
             }
         });
-
-
-//        buttonPanel.add(loadHistoryButton);
+        
+        backButton.addActionListener(e -> {
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, LeftNewsSummaryView.VIEW_NAME);
+            }
+        });
+        
+        buttonPanel.add(loadHistoryButton);
         buttonPanel.add(backButton);
 
         // Add components
