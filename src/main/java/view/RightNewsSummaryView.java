@@ -124,6 +124,7 @@ public class RightNewsSummaryView extends JPanel {
 
         searchHistoryButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
+                SearchHistoryView.lastSourceViewName = RightNewsSummaryView.VIEW_NAME;
                 cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
             }
         });

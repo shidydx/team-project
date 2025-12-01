@@ -5,6 +5,8 @@ import interface_adapter.left_news_summary.LeftNewsSummaryController;
 import interface_adapter.left_news_summary.LeftNewsSummaryState;
 import interface_adapter.left_news_summary.LeftNewsSummaryViewModel;
 import interface_adapter.savetopic.SaveTopicController;
+import view.SearchHistoryView;
+
 
 
 import javax.swing.*;
@@ -170,10 +172,12 @@ public class LeftNewsSummaryView extends JPanel {
 
         searchHistoryButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
+                SearchHistoryView.lastSourceViewName = LeftNewsSummaryView.VIEW_NAME;
                 cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
             }
         });
-        
+
+
         switchToRightButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
                 cardLayout.show(cardPanel, RightNewsSummaryView.VIEW_NAME);
