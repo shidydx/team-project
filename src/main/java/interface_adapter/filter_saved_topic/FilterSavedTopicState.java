@@ -1,15 +1,15 @@
-package interface_adapter.delete_saved_topic;
+package interface_adapter.filter_saved_topic;
 
-public class DeleteSavedTopicState {
+public class FilterSavedTopicState {
     private String topic;
     private String errorMsg;
 
-    public DeleteSavedTopicState(DeleteSavedTopicState copy) {
+    public FilterSavedTopicState(FilterSavedTopicState copy) {
         this.topic = copy.topic;
         this.errorMsg = copy.errorMsg;
     }
 
-    public DeleteSavedTopicState() {}
+    public FilterSavedTopicState() {}
 
     public String getTopic() {
         return topic;

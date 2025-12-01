@@ -7,8 +7,10 @@ public class DeleteSavedTopicPresenter implements DeleteSavedTopicOutputBoundary
     private final DeleteSavedTopicViewModel viewModel;
 
     public DeleteSavedTopicPresenter (DeleteSavedTopicViewModel viewModel) {
-        if (viewModel != null) {this.viewModel = viewModel;
-        } else {this.viewModel = new DeleteSavedTopicViewModel();
+        if (viewModel != null) {
+            this.viewModel = viewModel;
+        } else {
+            this.viewModel = new DeleteSavedTopicViewModel();
         }
     }
 
