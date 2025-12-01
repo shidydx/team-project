@@ -17,7 +17,6 @@ public class SearchHistoryView extends JPanel {
     private JPanel cardPanel;
 
     private JTextArea historyArea;
-    private JButton loadHistoryButton;
     private JButton backButton;
     private JLabel messageLabel;
 
@@ -48,25 +47,16 @@ public class SearchHistoryView extends JPanel {
         JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         messagePanel.add(messageLabel);
 
-        // Button panel
-        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
-        loadHistoryButton = new JButton("Load Search History");
-        backButton = new JButton("Back to Left News");
-        
-        loadHistoryButton.addActionListener(e -> {
-            if (loadHistoryController != null) {
-                String username = "default-user";
-                loadHistoryController.load(username);
-            }
-        });
-        
+    // Button panel
+    JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
+    backButton = new JButton("Back");
+
         backButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
                 cardLayout.show(cardPanel, LeftNewsSummaryView.VIEW_NAME);
             }
         });
-        
-        buttonPanel.add(loadHistoryButton);
+
         buttonPanel.add(backButton);
 
         // Add components
