@@ -8,7 +8,9 @@ import interface_adapter.left_news_summary.LeftNewsSummaryViewModel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class LeftNewsSummaryView extends JPanel {
     public static final String VIEW_NAME = "left_news_summary";
@@ -127,7 +129,7 @@ public class LeftNewsSummaryView extends JPanel {
                 );
                 return;
             }
-            // Update summary and article details
+
             summaryArea.setText(viewModel.getSummary());
             linkField.setText(viewModel.getUrl());
             fillSourceComboBox();
@@ -141,7 +143,6 @@ public class LeftNewsSummaryView extends JPanel {
         });
         
         switchToRightButton.addActionListener(e -> {
-            // Navigate to right news summary view
             if (cardLayout != null && cardPanel != null) {
                 cardLayout.show(cardPanel, "Right News Summary");
             }
@@ -187,6 +188,7 @@ public class LeftNewsSummaryView extends JPanel {
             }
             return;
         }
+        Set<String> addedSources = new HashSet<>();
         for (Article article : articles) {
             String label = article.getSourceName();
             if (label == null || label.isEmpty()) {
@@ -195,7 +197,11 @@ public class LeftNewsSummaryView extends JPanel {
             if (label == null || label.isEmpty()) {
                 label = "Source";
             }
-            sourceComboBox.addItem(label);
+            // Only add if we haven't seen this source name before
+            if (!addedSources.contains(label)) {
+                sourceComboBox.addItem(label);
+                addedSources.add(label);
+            }
         }
         if (sourceComboBox.getItemCount() > 0) {
             sourceComboBox.setSelectedIndex(0);
@@ -207,25 +213,49 @@ public class LeftNewsSummaryView extends JPanel {
         if (articles == null || articles.isEmpty()) {
             return;
         }
-        int index = sourceComboBox.getSelectedIndex();
-        if (index < 0 || index >= articles.size()) {
-            index = 0;
+        
+        String selectedSource = (String) sourceComboBox.getSelectedItem();
+        if (selectedSource == null) {
+            return;
         }
-        Article article = articles.get(index);
-        if (article.getTitle() == null) {
-            titleField.setText("");
-        } else {
-            titleField.setText(article.getTitle());
+        
+        // Find the first article that matches the selected source name
+        Article article = null;
+        for (Article a : articles) {
+            String sourceName = a.getSourceName();
+            if (sourceName == null || sourceName.isEmpty()) {
+                sourceName = a.getTitle();
+            }
+            if (sourceName == null || sourceName.isEmpty()) {
+                sourceName = "Source";
+            }
+            if (selectedSource.equals(sourceName)) {
+                article = a;
+                break;
+            }
         }
-        if (article.getSourceName() == null) {
-            nameField.setText("");
-        } else {
-            nameField.setText(article.getSourceName());
+        
+        // Fallback to first article if no match found
+        if (article == null && !articles.isEmpty()) {
+            article = articles.get(0);
         }
-        if (article.getUrl() == null) {
-            linkField.setText("");
-        } else {
-            linkField.setText(article.getUrl());
+        
+        if (article != null) {
+            if (article.getTitle() == null) {
+                titleField.setText("");
+            } else {
+                titleField.setText(article.getTitle());
+            }
+            if (article.getSourceName() == null) {
+                nameField.setText("");
+            } else {
+                nameField.setText(article.getSourceName());
+            }
+            if (article.getUrl() == null) {
+                linkField.setText("");
+            } else {
+                linkField.setText(article.getUrl());
+            }
         }
     }
 

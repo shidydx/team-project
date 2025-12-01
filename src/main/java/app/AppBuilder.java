@@ -139,7 +139,6 @@ public class AppBuilder {
     }
 
     public AppBuilder addSearchHistoryView() {
-        // Create SearchHistoryView (reuse existing searchHistoryViewModel)
         if (searchHistoryViewModel == null) {
             searchHistoryViewModel = new interface_adapter.savetopic.SearchHistoryViewModel();
         }
@@ -152,7 +151,6 @@ public class AppBuilder {
     }
 
     public AppBuilder addSearchHistoryUseCase() {
-        // Wire up the controller if not already done
         if (loadHistoryController == null) {
             LoadSearchHistoryPresenter loadHistoryPresenter =
                     new LoadSearchHistoryPresenter(searchHistoryViewModel);
@@ -165,7 +163,6 @@ public class AppBuilder {
                     new LoadSearchHistoryController(loadHistoryInteractor);
         }
         
-        // Set controller in view
         if (searchHistoryView != null) {
             searchHistoryView.setLoadHistoryController(loadHistoryController);
         }
