@@ -5,6 +5,7 @@ import entity.Article;
 import view.LeftNewsSummaryView;
 import interface_adapter.right_news_summary.RightNewsSummaryController;
 import interface_adapter.right_news_summary.RightNewsSummaryViewModel;
+import interface_adapter.savetopic.SaveTopicController;
 
 import javax.swing.*;
 import java.awt.*;
@@ -20,8 +21,9 @@ public class RightNewsSummaryView extends JPanel {
         this.saveTopicController = saveTopicController;
     }
 
-    private final RightNewsController controller;
-    private final RightNewsViewModel viewModel;
+    private final RightNewsSummaryController controller;
+    private final RightNewsSummaryViewModel viewModel;
+    private LeftNewsSummaryView leftView;
 
     private CardLayout cardLayout;
     private JPanel cardPanel;
