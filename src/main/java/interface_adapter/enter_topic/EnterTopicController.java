@@ -11,7 +11,7 @@ public class EnterTopicController {
     }
 
     public void execute(String topic) {
-        EnterTopicInputData inputData = new EnterTopicInputData(topic);
+        final EnterTopicInputData inputData = new EnterTopicInputData(topic);
         enterTopicInputBoundary.execute(inputData);
     }
 }

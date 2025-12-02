@@ -1,5 +1,12 @@
 package app;
 
+
+import java.awt.*;
+
+import java.util.List;
+
+import javax.swing.*;
+
 import data_access.RightNewsSummaryDataAccessImpl;
 import interface_adapter.right_news_summary.RightNewsController;
 import interface_adapter.right_news_summary.RightNewsPresenter;
@@ -10,9 +17,6 @@ import use_case.save_topic.SaveTopicUseCase;
 import view.RightNewsSummaryView;
 import view.EnterTopicView;
 
-import javax.swing.*;
-import java.awt.*;
-import java.util.List;
 
 // builder pattern for constructing the application with all views and use cases
 public class AppBuilder {
@@ -50,8 +54,8 @@ public class AppBuilder {
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
 
-        String newsApiKey = loadEnvVariable("NEWS_API_KEY");
-        String openAiApiKey = loadEnvVariable("OPENAI_API_KEY");
+        final String newsApiKey = loadEnvVariable("NEWS_API_KEY");
+        final String openAiApiKey = loadEnvVariable("OPENAI_API_KEY");
         
         System.out.println("NEWS_API_KEY loaded: " + (newsApiKey != null && !newsApiKey.isEmpty() ? "Yes" : "No"));
         System.out.println("OPENAI_API_KEY loaded: " + (openAiApiKey != null && !openAiApiKey.isEmpty() ? "Yes" : "No"));
@@ -74,7 +78,7 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addEnterTopicUseCase(){
+    public AppBuilder addEnterTopicUseCase() {
         final EnterTopicPresenter enterTopicPresenter = new EnterTopicPresenter(enterTopicViewModel);
         final EnterTopicInteractor interactor = new EnterTopicInteractor(enterTopicPresenter);
         final EnterTopicController controller = new EnterTopicController(interactor);
@@ -100,7 +104,7 @@ public class AppBuilder {
                 new interface_adapter.left_news_summary.LeftNewsSummaryPresenter(leftNewsSummaryViewModel);
         final use_case.left_news_summary.LeftNewsSummaryInputBoundary interactor =
                 new use_case.left_news_summary.LeftNewsSummaryInteractor(presenter, dataAccess);
-        interface_adapter.left_news_summary.LeftNewsSummaryController controller =
+        final interface_adapter.left_news_summary.LeftNewsSummaryController controller =
                 new interface_adapter.left_news_summary.LeftNewsSummaryController(interactor);
         leftNewsSummaryView.setController(controller);
         leftNewsSummaryView.setCardChange(cardLayout, cardPanel);
@@ -109,33 +113,33 @@ public class AppBuilder {
             enterTopicView.setLeftController(controller, leftNewsSummaryViewModel);
         }
 
-        interface_adapter.savetopic.SaveTopicPresenter saveTopicPresenter =
+        final interface_adapter.savetopic.SaveTopicPresenter saveTopicPresenter =
                 new interface_adapter.savetopic.SaveTopicPresenter();
 
-        SaveTopicUseCase saveTopicInteractor =
-                new SaveTopicUseCase(saveTopicPresenter);
+        final SaveTopicUseCase saveTopicInteractor = new SaveTopicUseCase(saveTopicPresenter);
 
         this.saveTopicController =
                 new interface_adapter.savetopic.SaveTopicController(saveTopicInteractor) {
-            @Override
-            public void save(String topic, String username) {
-                super.save(topic, username);
-                if (savedTopicRepository != null && topic != null && !topic.trim().isEmpty()) {
-                    entity.Topic newTopic = new entity.Topic(topic.trim());
-                    savedTopicRepository.addTopic(newTopic);
+                @Override
+                public void save(String topic, String username) {
+                    super.save(topic, username);
+                    if (savedTopicRepository != null && topic != null && !topic.trim().isEmpty()) {
+                        final entity.Topic newTopic = new entity.Topic(topic.trim());
+                        savedTopicRepository.addTopic(newTopic);
+                    }
                 }
-            }
             
-            @Override
-            public void saveWithSummaries(String topic, String username, 
-                                         String leftSummary, String rightSummary, String comparisonSummary) {
-                super.saveWithSummaries(topic, username, leftSummary, rightSummary, comparisonSummary);
-                if (savedTopicRepository != null && topic != null && !topic.trim().isEmpty()) {
-                    entity.Topic newTopic = new entity.Topic(topic.trim(), leftSummary, rightSummary, comparisonSummary);
-                    savedTopicRepository.addTopic(newTopic);
+                @Override
+                public void saveWithSummaries(String topic, String username,
+                                             String leftSummary, String rightSummary, String comparisonSummary) {
+                    super.saveWithSummaries(topic, username, leftSummary, rightSummary, comparisonSummary);
+                    if (savedTopicRepository != null && topic != null && !topic.trim().isEmpty()) {
+                        final entity.Topic newTopic = new entity.Topic(topic.trim(),
+                                leftSummary, rightSummary, comparisonSummary);
+                        savedTopicRepository.addTopic(newTopic);
+                    }
                 }
-            }
-        };
+            };
 
         return this;
     }
@@ -146,12 +150,11 @@ public class AppBuilder {
     }
 
     public AppBuilder addRightNewsSummaryUseCase() {
-        RightNewsPresenter presenter = new RightNewsPresenter(rightNewsViewModel);
-        use_case.right_news_summary.RightNewsSummaryInteractor interactor
-                = new  use_case.right_news_summary.RightNewsSummaryInteractor(
-                summarizer, presenter, rightNewsDataAccess);
-        RightNewsController controller = new RightNewsController(interactor);
-        rightNewsSummaryView  = new RightNewsSummaryView(controller, rightNewsViewModel);
+        final RightNewsPresenter presenter = new RightNewsPresenter(rightNewsViewModel);
+        final use_case.right_news_summary.RightNewsSummaryInteractor interactor =
+                new  use_case.right_news_summary.RightNewsSummaryInteractor(summarizer, presenter, rightNewsDataAccess);
+        final RightNewsController controller = new RightNewsController(interactor);
+        rightNewsSummaryView = new RightNewsSummaryView(controller, rightNewsViewModel);
         rightNewsSummaryView.setCardChange(cardLayout, cardPanel);
         cardPanel.add(rightNewsSummaryView, RightNewsSummaryView.VIEW_NAME);
 
@@ -175,21 +178,21 @@ public class AppBuilder {
         if (deleteSavedTopicViewModel == null) {
             deleteSavedTopicViewModel = new interface_adapter.delete_saved_topic.DeleteSavedTopicViewModel();
         }
-        interface_adapter.delete_saved_topic.DeleteSavedTopicPresenter deletePresenter =
+        final interface_adapter.delete_saved_topic.DeleteSavedTopicPresenter deletePresenter =
                 new interface_adapter.delete_saved_topic.DeleteSavedTopicPresenter(deleteSavedTopicViewModel);
-        use_case.delete_saved_topic.DeleteSavedTopicInteractor deleteInteractor =
+        final use_case.delete_saved_topic.DeleteSavedTopicInteractor deleteInteractor =
                 new use_case.delete_saved_topic.DeleteSavedTopicInteractor(deletePresenter, savedTopicRepository);
-        interface_adapter.delete_saved_topic.DeleteSavedTopicController deleteController =
+        final interface_adapter.delete_saved_topic.DeleteSavedTopicController deleteController =
                 new interface_adapter.delete_saved_topic.DeleteSavedTopicController(deleteInteractor);
         
         if (filterSavedTopicViewModel == null) {
             filterSavedTopicViewModel = new interface_adapter.filter_saved_topic.FilterSavedTopicViewModel();
         }
-        interface_adapter.filter_saved_topic.FilterSavedTopicPresenter filterPresenter =
+        final interface_adapter.filter_saved_topic.FilterSavedTopicPresenter filterPresenter =
                 new interface_adapter.filter_saved_topic.FilterSavedTopicPresenter(filterSavedTopicViewModel);
-        use_case.filter_saved_topic.FilterSavedTopicInteractor filterInteractor =
+        final use_case.filter_saved_topic.FilterSavedTopicInteractor filterInteractor =
                 new use_case.filter_saved_topic.FilterSavedTopicInteractor(filterPresenter, savedTopicRepository);
-        interface_adapter.filter_saved_topic.FilterSavedTopicController filterController =
+        final interface_adapter.filter_saved_topic.FilterSavedTopicController filterController =
                 new interface_adapter.filter_saved_topic.FilterSavedTopicController(filterInteractor);
         
         if (savedTopicsView != null) {
@@ -243,10 +246,10 @@ public class AppBuilder {
         }
 
         application.add(cardPanel);
-        if (enterTopicView != null){
+        if (enterTopicView != null) {
             cardLayout.show(cardPanel, enterTopicView.getViewName());
         }
-        else if (rightNewsSummaryView != null){
+        else if (rightNewsSummaryView != null) {
             cardLayout.show(cardPanel, RightNewsSummaryView.VIEW_NAME);
         }
         else if (leftNewsSummaryView != null) {
@@ -280,8 +283,6 @@ public class AppBuilder {
         } catch (Exception e) {
             System.err.println("Error reading .env file: " + e.getMessage());
         }
-        
-        
         return System.getenv(key);
     }
 }

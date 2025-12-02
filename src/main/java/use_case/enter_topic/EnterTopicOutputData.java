@@ -6,6 +6,7 @@ public class EnterTopicOutputData {
     public EnterTopicOutputData(String output) {
         this.output = output;
     }
+
     public String getOutput() {
         return output;
     }

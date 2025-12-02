@@ -1,17 +1,32 @@
 package view;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
+import java.awt.Color;
+import java.awt.Desktop;
+import java.awt.FlowLayout;
+import java.awt.Font;
+import java.awt.GridLayout;
+import java.net.URI;
+
+import javax.swing.BorderFactory;
+import javax.swing.JButton;
+import javax.swing.JEditorPane;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingWorker;
+import javax.swing.border.EmptyBorder;
+import javax.swing.border.TitledBorder;
+import javax.swing.event.HyperlinkEvent;
+
 import interface_adapter.enter_topic.EnterTopicController;
 import interface_adapter.enter_topic.EnterTopicState;
 import interface_adapter.enter_topic.EnterTopicViewModel;
 import interface_adapter.left_news_summary.LeftNewsSummaryController;
 import interface_adapter.right_news_summary.RightNewsController;
-
-import javax.swing.*;
-import javax.swing.border.EmptyBorder;
-import javax.swing.border.TitledBorder;
-import javax.swing.event.HyperlinkEvent;
-import java.awt.*;
-import java.net.URI;
 
 public class EnterTopicView extends JPanel {
     private static final String VIEW_NAME = "EnterTopicView";
@@ -46,7 +61,7 @@ public class EnterTopicView extends JPanel {
     }
     
     private JEditorPane createEditorPane() {
-        JEditorPane pane = new JEditorPane();
+        final JEditorPane pane = new JEditorPane();
         pane.setContentType("text/html");
         pane.setEditable(false);
         pane.setFont(new Font("Arial", Font.PLAIN, 13));
@@ -67,21 +82,21 @@ public class EnterTopicView extends JPanel {
         this.controller = controller;
     }
 
-    public void setLeftController(LeftNewsSummaryController leftController, 
-                                   interface_adapter.left_news_summary.LeftNewsSummaryViewModel leftViewModel) {
-        this.leftController = leftController;
-        this.leftViewModel = leftViewModel;
+    public void setLeftController(LeftNewsSummaryController lController,
+                                   interface_adapter.left_news_summary.LeftNewsSummaryViewModel lViewModel) {
+        this.leftController = lController;
+        this.leftViewModel = lViewModel;
     }
 
-    public void setRightController(RightNewsController rightController,
-                                    interface_adapter.right_news_summary.RightNewsViewModel rightViewModel) {
-        this.rightController = rightController;
-        this.rightViewModel = rightViewModel;
+    public void setRightController(RightNewsController rController,
+                                    interface_adapter.right_news_summary.RightNewsViewModel rViewModel) {
+        this.rightController = rController;
+        this.rightViewModel = rViewModel;
     }
 
-    public void setCardChange(CardLayout cardLayout, JPanel cardPanel) {
-        this.cardLayout = cardLayout;
-        this.cardPanel = cardPanel;
+    public void setCardChange(CardLayout layout, JPanel panel) {
+        this.cardLayout = layout;
+        this.cardPanel = panel;
     }
 
     public void setComparisonView(ComparisonView comparisonView) {
@@ -96,7 +111,6 @@ public class EnterTopicView extends JPanel {
         setLayout(new BorderLayout(10, 10));
         setBorder(new EmptyBorder(15, 15, 15, 15));
 
-        
         JPanel topPanel = new JPanel(new BorderLayout(10, 10));
         
         JLabel titleLabel = new JLabel("MiddleGround AI - Compare Perspectives");
@@ -136,19 +150,16 @@ public class EnterTopicView extends JPanel {
 
         
         summariesPanel.setLayout(new GridLayout(1, 2, 15, 0));
-        
-        
+
         JPanel leftPanel = createSummaryPanel("Left-Leaning Perspective", leftSummaryArea, new Color(52, 152, 219));
-        
-        
+
         JPanel rightPanel = createSummaryPanel("Right-Leaning Perspective", rightSummaryArea, new Color(231, 76, 60));
         
         summariesPanel.add(leftPanel);
         summariesPanel.add(rightPanel);
         summariesPanel.setVisible(false);
 
-        
-        JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        final JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         comparisonButton.setFont(new Font("Arial", Font.PLAIN, 16));
         comparisonButton.setForeground(Color.BLACK);
         comparisonButton.setOpaque(true);
@@ -156,9 +167,8 @@ public class EnterTopicView extends JPanel {
         comparisonButton.setVisible(false);
         bottomPanel.add(comparisonButton);
 
-        
         searchButton.addActionListener(e -> {
-            String topic = topicTextField.getText().trim();
+            final String topic = topicTextField.getText().trim();
             
             if (topic.isEmpty()) {
                 errorLabel.setText("Please enter a topic");
@@ -169,8 +179,8 @@ public class EnterTopicView extends JPanel {
             
             if (controller != null) {
                 controller.execute(topic);
-                EnterTopicState state = viewModel.getState();
-                String errorMsg = state.getErrorMessage();
+                final EnterTopicState state = viewModel.getState();
+                final String errorMsg = state.getErrorMessage();
 
                 if (errorMsg != null && !errorMsg.isEmpty()) {
                     errorLabel.setText(errorMsg);
@@ -185,7 +195,6 @@ public class EnterTopicView extends JPanel {
             rightSummaryArea.setText(convertToHtml("Fetching right-leaning news..."));
             summariesPanel.setVisible(true);
             comparisonButton.setVisible(false);
-
             
             new SwingWorker<Void, Void>() {
                 @Override
@@ -198,25 +207,27 @@ public class EnterTopicView extends JPanel {
                     }
                     return null;
                 }
-                
+
                 @Override
                 protected void done() {
                     
                     if (leftViewModel != null) {
-                        String leftSummary = leftViewModel.getSummary();
-                        String leftError = leftViewModel.getErrorMessage();
+                        final String leftSummary = leftViewModel.getSummary();
+                        final String leftError = leftViewModel.getErrorMessage();
                         if (leftError != null && !leftError.isEmpty()) {
                             leftSummaryArea.setText(convertToHtml("Error: " + leftError));
-                        } else if (leftSummary != null && !leftSummary.isEmpty()) {
+                        }
+                        else if (leftSummary != null && !leftSummary.isEmpty()) {
                             leftSummaryArea.setText(convertToHtml(leftSummary));
-                        } else {
+                        }
+                        else {
                             leftSummaryArea.setText(convertToHtml("No summary available"));
                         }
                     }
                     
                     if (rightViewModel != null) {
-                        String rightSummary = rightViewModel.getSummary();
-                        String rightError = rightViewModel.getErrorMessage();
+                        final String rightSummary = rightViewModel.getSummary();
+                        final String rightError = rightViewModel.getErrorMessage();
                         if (rightError != null && !rightError.isEmpty()) {
                             rightSummaryArea.setText(convertToHtml("Error: " + rightError));
                         } else if (rightSummary != null && !rightSummary.isEmpty()) {
@@ -225,7 +236,6 @@ public class EnterTopicView extends JPanel {
                             rightSummaryArea.setText(convertToHtml("No summary available"));
                         }
                     }
-                    
                     errorLabel.setText("Summaries loaded!");
                     errorLabel.setForeground(new Color(46, 204, 113));
                     comparisonButton.setVisible(true);
@@ -235,16 +245,14 @@ public class EnterTopicView extends JPanel {
                 }
             }.execute();
         });
-        
         viewSavedTopicsButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
                 cardLayout.show(cardPanel, "saved_topics");
             }
         });
-
         comparisonButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
-                String topic = topicTextField.getText().trim();
+                final String topic = topicTextField.getText().trim();
                 if (topic.isEmpty()) {
                     errorLabel.setText("Please enter a topic");
                     return;
@@ -252,21 +260,26 @@ public class EnterTopicView extends JPanel {
                 if (comparisonView != null) {
                     comparisonView.triggerComparison(topic);
                 }
-                cardLayout.show(cardPanel, comparisonView != null
-                        ? comparisonView.getViewName()
-                        : "comparison");
+                // cardLayout.show(cardPanel, comparisonView != null
+                //       ? comparisonView.getViewName()
+                //       : "comparison");
+                if (comparisonView != null) {
+                    cardLayout.show(cardPanel, comparisonView.getViewName());
+                }
+                else {
+                    cardLayout.show(cardPanel, "comparison");
+                }
             }
         });
-
         add(topPanel, BorderLayout.NORTH);
         add(summariesPanel, BorderLayout.CENTER);
         add(bottomPanel, BorderLayout.SOUTH);
     }
 
     private JPanel createSummaryPanel(String title, JEditorPane textArea, Color borderColor) {
-        JPanel panel = new JPanel(new BorderLayout());
+        final JPanel panel = new JPanel(new BorderLayout());
         
-        TitledBorder border = BorderFactory.createTitledBorder(
+        final TitledBorder border = BorderFactory.createTitledBorder(
             BorderFactory.createLineBorder(borderColor, 2),
             title
         );
@@ -274,7 +287,7 @@ public class EnterTopicView extends JPanel {
         border.setTitleColor(borderColor);
         panel.setBorder(border);
         
-        JScrollPane scrollPane = new JScrollPane(textArea);
+        final JScrollPane scrollPane = new JScrollPane(textArea);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
         
         panel.add(scrollPane, BorderLayout.CENTER);
@@ -283,26 +296,27 @@ public class EnterTopicView extends JPanel {
     }
     
     private String convertToHtml(String text) {
+        String result;
         if (text == null || text.isEmpty()) {
-            return "<html><body></body></html>";
+            result = "<html><body></body></html>";
         }
-        
-        
         String html = text.replace("&", "&amp;")
                           .replace("<", "&lt;")
                           .replace(">", "&gt;");
         
         html = html.replaceAll("(https?://[^\\s]+)", "<a href=\"$1\">$1</a>");
-        
         html = html.replace("\n", "<br>");
-        
-        return "<html><body style='font-family: Arial; font-size: 13px; padding: 10px; color: #000000;'>" + html + "</body></html>";
+        result = "<html><body style='font-family: Arial; font-size: 13px; padding: 10px; color: #000000;'>"
+                + html + "</body></html>";
+        return result;
     }
+
     public void updateView() {
         if (viewModel.getState().getErrorMessage() != null && !viewModel.getState().getErrorMessage().isEmpty()) {
             errorLabel.setText(viewModel.getState().getErrorMessage());
             errorLabel.setForeground(Color.RED);
-        } else if (viewModel.getState().getTopic() != null && !viewModel.getState().getTopic().isEmpty()) {
+        }
+        else if (viewModel.getState().getTopic() != null && !viewModel.getState().getTopic().isEmpty()) {
             topicTextField.setText(viewModel.getState().getTopic());
         }
     }
