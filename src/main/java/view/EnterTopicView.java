@@ -106,7 +106,7 @@ public class EnterTopicView extends JPanel {
         
         JPanel searchPanel = new JPanel(new BorderLayout(10, 0));
         JLabel topicLabel = new JLabel("Topic:");
-        topicLabel.setFont(new Font("Arial", Font.PLAIN, 14));
+        topicLabel.setFont(new Font("Arial", Font.BOLD, 14));
         topicTextField.setFont(new Font("Arial", Font.PLAIN, 14));
         searchButton.setFont(new Font("Arial", Font.PLAIN, 14));
         searchButton.setForeground(Color.BLACK);
