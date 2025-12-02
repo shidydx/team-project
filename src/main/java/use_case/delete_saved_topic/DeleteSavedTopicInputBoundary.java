@@ -4,3 +4,5 @@ public interface DeleteSavedTopicInputBoundary {
     void execute(DeleteSavedTopicInputData inputData);
 }
 
+
+
