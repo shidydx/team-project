@@ -1,4 +1,4 @@
-package use_case.SaveTopic;
+package use_case.save_topic;
 
 import org.junit.jupiter.api.Test;
 import use_case.loadsearch.InMemorySearchHistoryDataAccessObject;

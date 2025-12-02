@@ -1,9 +1,9 @@
-package use_case.LeftNewsSummary;
+package use_case.left_news_summary;
 
 import entity.Article;
 import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.Test;
-import use_case.left_news_summary.*;
+
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
 

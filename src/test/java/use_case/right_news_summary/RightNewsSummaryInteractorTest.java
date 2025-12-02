@@ -1,8 +1,8 @@
-package use_case.RightNewsSummary;
+package use_case.right_news_summary;
 
 import entity.Article;
 import org.junit.jupiter.api.Test;
-import use_case.right_news_summary.*;
+
 import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;

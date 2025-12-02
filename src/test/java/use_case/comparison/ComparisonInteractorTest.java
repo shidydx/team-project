@@ -1,8 +1,8 @@
-package use_case.Comparison;
+package use_case.comparison;
 
 import entity.Article;
 import org.junit.jupiter.api.Test;
-import use_case.comparison.*;
+
 import java.util.Arrays;
 import java.util.List;
 import static org.junit.jupiter.api.Assertions.*;
