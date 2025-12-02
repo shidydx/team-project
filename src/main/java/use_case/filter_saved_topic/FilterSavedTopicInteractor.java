@@ -21,10 +21,9 @@ public class FilterSavedTopicInteractor implements FilterSavedTopicInputBoundary
                 Topic topicFiltered = dataAccess.filterTopic(topic_input);
 
                 if  (topicFiltered == null) {
-                    outputBoundary.failureView("No topic named " + topic_input + " was found in saved topics.");
-                    return;
+                    outputBoundary.failureView("No topic named " + topic_input + " was found.");
                 } else {
-                    String successMsg = "Topic " + topic_input + " was found in saved topics.";
+                    String successMsg = "Topic named " + topic_input + " was found.";
                     FilterSavedTopicOutputData outputData = new FilterSavedTopicOutputData(successMsg, "");
                     outputBoundary.successView(outputData);
                 }

@@ -1,10 +1,9 @@
-package use_case.FilterSavedTopic;
+package use_case.filter_saved_topic;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import entity.Topic;
-import use_case.filter_saved_topic.*;
 
 public class FilterSavedTopicInteractorTest {
     @Test
@@ -79,6 +78,33 @@ public class FilterSavedTopicInteractorTest {
             @Override
             public Topic filterTopic(String topic_input) {
                 return new Topic(topic_input);
+            }
+        };
+
+        FilterSavedTopicInteractor interactor = new FilterSavedTopicInteractor(presenter, dataAccess);
+        interactor.execute(inputData);
+    }
+
+    @Test
+    public void topicThrowException() {
+        FilterSavedTopicInputData inputData = new FilterSavedTopicInputData("Topic Does Exist");
+        FilterSavedTopicOutputBoundary presenter = new FilterSavedTopicOutputBoundary() {
+            @Override
+            public void successView(FilterSavedTopicOutputData outputData) {
+                fail("Expected failure view. Exception should be thrown.");
+            }
+
+            @Override
+            public void failureView(String errorMsg) {
+                RuntimeException error = new RuntimeException();
+                assertEquals(errorMsg, "Error: " + error.getMessage());
+            }
+        };
+
+        FilterSavedTopicDataAccessInterface dataAccess = new FilterSavedTopicDataAccessInterface() {
+            @Override
+            public Topic filterTopic(String topic_input) {
+                throw new RuntimeException();
             }
         };
 
