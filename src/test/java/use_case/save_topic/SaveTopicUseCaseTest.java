@@ -1,10 +1,8 @@
 package use_case.save_topic;
 
 import org.junit.jupiter.api.Test;
-import use_case.loadsearch.InMemorySearchHistoryDataAccessObject;
 
 import java.time.LocalDateTime;
-import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -25,59 +23,92 @@ class SaveTopicUseCaseTest {
         }
     }
 
-    @Test
-    void saveNewTopicProducesHistoryItem() {
-        InMemorySearchHistoryDataAccessObject dao = new InMemorySearchHistoryDataAccessObject();
-        CapturingPresenter presenter = new CapturingPresenter();
-        SaveTopicUseCase interactor = new SaveTopicUseCase(dao, presenter);
+    private static class ThrowingPresenter implements SaveTopicOutputBoundary {
+        String lastError;
 
-        LocalDateTime now = LocalDateTime.now();
-        SaveTopicInputData input = new SaveTopicInputData("t1", "u1", now);
-        interactor.execute(input);
+        @Override
+        public void prepareSuccessView(SaveTopicOutputData outputData) {
+            throw new RuntimeException("boom");
+        }
+
+        @Override
+        public void prepareFailView(String errorMessage) {
+            this.lastError = errorMessage;
+        }
+    }
+
+    @Test
+    void inputDataGettersWithoutSummaries() {
+        LocalDateTime now = LocalDateTime.of(2020,1,2,3,4);
+        SaveTopicInputData d = new SaveTopicInputData("topic", "user", now);
+        assertEquals("topic", d.getTopic());
+        assertEquals("user", d.getUsername());
+        assertEquals(now, d.getSearchedAt());
+        assertNull(d.getLeftSummary());
+        assertNull(d.getRightSummary());
+        assertNull(d.getComparisonSummary());
+    }
+
+    @Test
+    void inputDataGettersWithSummaries() {
+        LocalDateTime now = LocalDateTime.of(2021,2,3,4,5);
+        SaveTopicInputData d = new SaveTopicInputData("t", "u", now, "L", "R", "C");
+        assertEquals("t", d.getTopic());
+        assertEquals("u", d.getUsername());
+        assertEquals(now, d.getSearchedAt());
+        assertEquals("L", d.getLeftSummary());
+        assertEquals("R", d.getRightSummary());
+        assertEquals("C", d.getComparisonSummary());
+    }
+
+    @Test
+    void successWhenTopicIsValid() {
+        CapturingPresenter presenter = new CapturingPresenter();
+        SaveTopicUseCase interactor = new SaveTopicUseCase(presenter);
+
+        interactor.execute(new SaveTopicInputData("valid", "u1", LocalDateTime.now()));
 
         assertNull(presenter.lastError);
         assertNotNull(presenter.lastOutput);
-        List<SaveTopicOutputData.HistoryItem> items = presenter.lastOutput.getHistoryItems();
-        assertEquals(1, items.size());
-        assertEquals("t1", items.get(0).getTopic());
-        assertEquals(now, items.get(0).getSearchedAt());
     }
 
     @Test
-    void savingSameTopicUpdatesTimestamp() {
-        InMemorySearchHistoryDataAccessObject dao = new InMemorySearchHistoryDataAccessObject();
+    void failWhenTopicIsNull() {
         CapturingPresenter presenter = new CapturingPresenter();
-        SaveTopicUseCase interactor = new SaveTopicUseCase(dao, presenter);
+        SaveTopicUseCase interactor = new SaveTopicUseCase(presenter);
 
-        LocalDateTime t1 = LocalDateTime.now();
-        interactor.execute(new SaveTopicInputData("dup", "u2", t1));
+        interactor.execute(new SaveTopicInputData(null, "u", LocalDateTime.now()));
 
-        LocalDateTime t2 = t1.plusSeconds(10);
-        interactor.execute(new SaveTopicInputData("dup", "u2", t2));
-
-        assertNull(presenter.lastError);
-        List<SaveTopicOutputData.HistoryItem> items = presenter.lastOutput.getHistoryItems();
-        assertEquals(1, items.size(), "Duplicate topic should remain single entry");
-        assertEquals(t2, items.get(0).getSearchedAt(), "Timestamp should be updated to latest");
+        assertNull(presenter.lastOutput);
+        assertEquals("Topic cannot be empty.", presenter.lastError);
     }
 
     @Test
-    void savingDifferentTopicsAddsMultipleEntriesInReverseChronologicalOrder() {
-        InMemorySearchHistoryDataAccessObject dao = new InMemorySearchHistoryDataAccessObject();
+    void failWhenTopicIsEmptyOrWhitespace() {
         CapturingPresenter presenter = new CapturingPresenter();
-        SaveTopicUseCase interactor = new SaveTopicUseCase(dao, presenter);
+        SaveTopicUseCase interactor = new SaveTopicUseCase(presenter);
 
-        LocalDateTime t1 = LocalDateTime.now();
-        interactor.execute(new SaveTopicInputData("first", "u3", t1));
+        interactor.execute(new SaveTopicInputData("", "u", LocalDateTime.now()));
+        assertEquals("Topic cannot be empty.", presenter.lastError);
 
-        LocalDateTime t2 = t1.plusSeconds(5);
-        interactor.execute(new SaveTopicInputData("second", "u3", t2));
+        // reset
+        presenter = new CapturingPresenter();
+        interactor = new SaveTopicUseCase(presenter);
+        interactor.execute(new SaveTopicInputData("   ", "u", LocalDateTime.now()));
+        assertEquals("Topic cannot be empty.", presenter.lastError);
+    }
 
-        List<SaveTopicOutputData.HistoryItem> items = presenter.lastOutput.getHistoryItems();
-        assertEquals(2, items.size());
-        // most recent should be first
-        assertEquals("second", items.get(0).getTopic());
-        assertEquals(t2, items.get(0).getSearchedAt());
-        assertEquals("first", items.get(1).getTopic());
+    @Test
+    void prepareSuccessThrowingCausesFailView() {
+        ThrowingPresenter presenter = new ThrowingPresenter();
+        SaveTopicUseCase interactor = new SaveTopicUseCase(presenter);
+
+    interactor.execute(new SaveTopicInputData("ok", "u", LocalDateTime.now()));
+        // The ThrowingPresenter catches the failure message in its prepareFailView implementation
+        // which sets lastError when called. Since prepareSuccessView throws, the use case should
+        // call prepareFailView with a message containing the thrown exception message.
+        assertNotNull(presenter.lastError);
+        assertTrue(presenter.lastError.contains("Unable to save topic:"));
+        assertTrue(presenter.lastError.contains("boom"));
     }
 }
