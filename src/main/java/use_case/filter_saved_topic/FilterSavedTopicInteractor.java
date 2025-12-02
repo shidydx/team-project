@@ -21,13 +21,13 @@ public class FilterSavedTopicInteractor implements FilterSavedTopicInputBoundary
                 Topic topicFiltered = dataAccess.filterTopic(topic_input);
 
                 if  (topicFiltered == null) {
-                    outputBoundary.failureView("No topic named \"" + topic_input + "\" was found in saved topics.");
+                    outputBoundary.failureView("No topic named " + topic_input + " was found in saved topics.");
                     return;
+                } else {
+                    String successMsg = "Topic " + topic_input + " was found in saved topics.";
+                    FilterSavedTopicOutputData outputData = new FilterSavedTopicOutputData(successMsg, "");
+                    outputBoundary.successView(outputData);
                 }
-
-                String successMsg = "Topic \"" + topic_input + "\" was found in saved topics.";
-                FilterSavedTopicOutputData outputData = new FilterSavedTopicOutputData(successMsg, "");
-                outputBoundary.successView(outputData);
 
             } catch (Exception e) {
                 outputBoundary.failureView("Error: " + e.getMessage());

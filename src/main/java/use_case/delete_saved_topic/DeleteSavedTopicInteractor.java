@@ -22,13 +22,13 @@ public class DeleteSavedTopicInteractor implements DeleteSavedTopicInputBoundary
                 Topic topicDeleted = dataAccess.deleteTopic(topic_input);
 
                 if (topicDeleted == null) {
-                    outputBoundary.failureView("No topic named \"" + topic_input + "\" was found in saved topics.");
+                    outputBoundary.failureView("No topic named " + topic_input + " was found in saved topics.");
                     return;
+                } else {
+                    String successMsg = "Topic " + topic_input + " was successfully deleted.";
+                    DeleteSavedTopicOutputData outputData = new DeleteSavedTopicOutputData(successMsg, "");
+                    outputBoundary.successView(outputData);
                 }
-
-                String successMsg = "Topic \"" + topic_input + "\" was successfully deleted.";
-                DeleteSavedTopicOutputData outputData = new DeleteSavedTopicOutputData(successMsg, "");
-                outputBoundary.successView(outputData);
 
             } catch (Exception e) {
                 outputBoundary.failureView("Error: " + e.getMessage());
