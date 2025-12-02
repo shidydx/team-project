@@ -3,9 +3,6 @@ package use_case.savetopic;
 import java.time.LocalDateTime;
 import java.util.List;
 
-/**
- * Immutable DTO for the updated history list.
- */
 public class SaveTopicOutputData {
 
     public static class HistoryItem {

@@ -37,14 +37,14 @@ public class LeftNewsSummaryView extends JPanel {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
         
-        // Topic panel
+        
         JPanel topicPanel = new JPanel(new BorderLayout());
         JLabel topicLabel = new JLabel("Topic: ");
         topicField = new JTextField();
         topicPanel.add(topicLabel, BorderLayout.WEST);
         topicPanel.add(topicField, BorderLayout.CENTER);
         
-        // Summary panel
+        
         JPanel summaryPanel = new JPanel(new BorderLayout());
         JLabel summaryLabel = new JLabel("Summary:");
         summaryArea = new JTextArea(8, 40);
@@ -55,7 +55,7 @@ public class LeftNewsSummaryView extends JPanel {
         summaryPanel.add(summaryLabel, BorderLayout.NORTH);
         summaryPanel.add(summaryScroll, BorderLayout.CENTER);
         
-        // Source panel with article details
+        
         JPanel sourcePanel = new JPanel();
         sourcePanel.setLayout(new GridLayout(4, 2, 4, 4));
         JLabel sourceLabel = new JLabel("Source:");
@@ -79,24 +79,26 @@ public class LeftNewsSummaryView extends JPanel {
         sourcePanel.add(linkLabel);
         sourcePanel.add(linkField);
         
-        // Button panel
+        
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         summarizeButton = new JButton("Summarize Left News");
+        JButton backButton = new JButton("← Back");
         JButton searchHistoryButton = new JButton("View Search History");
-        JButton switchToRightButton = new JButton("Switch to Right News Summary");
+        JButton switchToRightButton = new JButton("Switch to Right News");
         JButton comparisonButton = new JButton("Compare Coverage");
+        buttonPanel.add(backButton);
         buttonPanel.add(summarizeButton);
         buttonPanel.add(searchHistoryButton);
         buttonPanel.add(switchToRightButton);
         buttonPanel.add(comparisonButton);
         
-        // Error label
+        
         errorLabel = new JLabel();
         errorLabel.setForeground(Color.RED);
         JPanel errorPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         errorPanel.add(errorLabel);
         
-        // Add components to main panel
+        
         mainPanel.add(topicPanel);
         mainPanel.add(Box.createVerticalStrut(8));
         mainPanel.add(summaryPanel);
@@ -109,7 +111,7 @@ public class LeftNewsSummaryView extends JPanel {
         
         this.add(mainPanel, BorderLayout.CENTER);
         
-        // Set up listeners
+        
         sourceComboBox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
                 updateArticleDetails();
@@ -138,6 +140,12 @@ public class LeftNewsSummaryView extends JPanel {
             updateArticleDetails();
         });
         
+        backButton.addActionListener(e -> {
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, "EnterTopicView");
+            }
+        });
+
         searchHistoryButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
                 cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
@@ -152,7 +160,7 @@ public class LeftNewsSummaryView extends JPanel {
         
         comparisonButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
-                cardLayout.show(cardPanel, ComparisonView.VIEW_NAME);
+                cardLayout.show(cardPanel, "comparison");
             }
         });
     }
@@ -168,6 +176,10 @@ public class LeftNewsSummaryView extends JPanel {
 
     public String getViewName() {
         return VIEW_NAME;
+    }
+
+    public void setTopic(String topic) {
+        topicField.setText(topic);
     }
 
     private void fillSourceComboBox() {
@@ -205,7 +217,7 @@ public class LeftNewsSummaryView extends JPanel {
             if (label == null || label.isEmpty()) {
                 label = "Source";
             }
-            // Only add if we haven't seen this source name before
+            
             if (!addedSources.contains(label)) {
                 sourceComboBox.addItem(label);
                 addedSources.add(label);
@@ -227,7 +239,7 @@ public class LeftNewsSummaryView extends JPanel {
             return;
         }
         
-        // Find the first article that matches the selected source name
+        
         Article article = null;
         for (Article a : articles) {
             String sourceName = a.getSourceName();
@@ -243,7 +255,7 @@ public class LeftNewsSummaryView extends JPanel {
             }
         }
         
-        // Fallback to first article if no match found
+        
         if (article == null && !articles.isEmpty()) {
             article = articles.get(0);
         }

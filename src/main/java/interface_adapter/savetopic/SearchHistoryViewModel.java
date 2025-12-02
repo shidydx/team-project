@@ -23,7 +23,7 @@ public class SearchHistoryViewModel {
     private final PropertyChangeSupport support = new PropertyChangeSupport(this);
 
     private List<HistoryItemVM> history;
-    private String message; // “No previous searches found”, errors, etc.
+    private String message; 
 
     public List<HistoryItemVM> getHistory() { return history; }
     public String getMessage() { return message; }

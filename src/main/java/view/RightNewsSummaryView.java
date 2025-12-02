@@ -69,8 +69,10 @@ public class RightNewsSummaryView extends JPanel {
         sourcePanel.add(linkField);
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         summarizeButton = new JButton("Summarize Right News");
-        JButton changeButton = new JButton("Change to Left News summary");
+        JButton backButton = new JButton("← Back");
+        JButton changeButton = new JButton("Switch to Left News");
         JButton comparisonButton = new JButton("Compare Coverage");
+        buttonPanel.add(backButton);
         buttonPanel.add(summarizeButton);
         buttonPanel.add(changeButton);
         buttonPanel.add(comparisonButton);
@@ -105,17 +107,26 @@ public class RightNewsSummaryView extends JPanel {
             fillSourceComboBox();
             updateArticleDetails();
         });
+        backButton.addActionListener(e -> {
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, "EnterTopicView");
+            }
+        });
         changeButton.addActionListener(e -> {
-            cardLayout.show(cardPanel, LeftNewsSummaryView.VIEW_NAME);
+            cardLayout.show(cardPanel, "left_news_summary");
         });
         comparisonButton.addActionListener(e -> {
-            cardLayout.show(cardPanel, ComparisonView.VIEW_NAME);
+            cardLayout.show(cardPanel, "comparison");
         });
     }
 
     public void setCardChange(CardLayout cardLayout, JPanel cardPanel) {
         this.cardLayout = cardLayout;
         this.cardPanel = cardPanel;
+    }
+
+    public void setTopic(String topic) {
+        topicField.setText(topic);
     }
 
     private void fillSourceComboBox() {

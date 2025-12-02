@@ -15,6 +15,7 @@ import view.EnterTopicView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.List;
 
 public class AppBuilder {
     private final JPanel cardPanel = new JPanel();
@@ -29,7 +30,7 @@ public class AppBuilder {
     private interface_adapter.left_news_summary.LeftNewsSummaryViewModel leftNewsSummaryViewModel;
 
     private view.RightNewsSummaryView rightNewsSummaryView;
-    // *** YOUR NEW FIELDS ***
+    
     private use_case.loadsearch.SearchHistoryDataAccessInterface searchHistoryDataAccess;
     private interface_adapter.savetopic.SearchHistoryViewModel searchHistoryViewModel;
     private view.SearchHistoryView searchHistoryView;
@@ -49,8 +50,11 @@ public class AppBuilder {
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
 
-        String newsApiKey = System.getenv("NEWS_API_KEY");
-        String openAiApiKey = System.getenv("OPENAI_API_KEY");
+        String newsApiKey = loadEnvVariable("NEWS_API_KEY");
+        String openAiApiKey = loadEnvVariable("OPENAI_API_KEY");
+        
+        System.out.println("NEWS_API_KEY loaded: " + (newsApiKey != null && !newsApiKey.isEmpty() ? "Yes" : "No"));
+        System.out.println("OPENAI_API_KEY loaded: " + (openAiApiKey != null && !openAiApiKey.isEmpty() ? "Yes" : "No"));
 
         this.newsFetcher = new interface_adapter.NewsAPIClient(newsApiKey);
         this.summarizer = new interface_adapter.OpenAIClient(openAiApiKey);
@@ -67,7 +71,7 @@ public class AppBuilder {
     public AppBuilder addEnterTopicView() {
         enterTopicViewModel = new interface_adapter.entertopic.EnterTopicViewModel();
         enterTopicView = new EnterTopicView(enterTopicViewModel);
-        cardPanel.add(enterTopicView, enterTopicView.getName());
+        cardPanel.add(enterTopicView, enterTopicView.getViewName());
         return this;
     }
 
@@ -77,7 +81,8 @@ public class AppBuilder {
         final EnterTopicController controller = new EnterTopicController(interactor);
 
         enterTopicView.setController(controller);
-        cardPanel.add(enterTopicView, enterTopicView.getName());
+        enterTopicView.setCardChange(cardLayout, cardPanel);
+        cardPanel.add(enterTopicView, enterTopicView.getViewName());
         return this;
     }
 
@@ -102,6 +107,10 @@ public class AppBuilder {
         leftNewsSummaryView.setController(controller);
         leftNewsSummaryView.setCardChange(cardLayout, cardPanel);
 
+        if (enterTopicView != null) {
+            enterTopicView.setLeftController(controller, leftNewsSummaryViewModel);
+        }
+
         interface_adapter.savetopic.SaveTopicPresenter saveTopicPresenter =
                 new interface_adapter.savetopic.SaveTopicPresenter(searchHistoryViewModel);
 
@@ -112,7 +121,6 @@ public class AppBuilder {
         interface_adapter.savetopic.SaveTopicController saveTopicController =
                 new interface_adapter.savetopic.SaveTopicController(saveTopicInteractor);
 
-        // *** YOUR LOAD use case wiring ***
         LoadSearchHistoryPresenter loadHistoryPresenter =
                 new LoadSearchHistoryPresenter(searchHistoryViewModel);
 
@@ -140,6 +148,11 @@ public class AppBuilder {
         rightNewsSummaryView  = new RightNewsSummaryView(controller, rightNewsViewModel);
         rightNewsSummaryView.setCardChange(cardLayout, cardPanel);
         cardPanel.add(rightNewsSummaryView, RightNewsSummaryView.VIEW_NAME);
+
+        if (enterTopicView != null) {
+            enterTopicView.setRightController(controller, rightNewsViewModel);
+        }
+        
         return this;
     }
 
@@ -196,16 +209,52 @@ public class AppBuilder {
     }
 
     public JFrame build() {
-        final JFrame application = new JFrame("News Analysis Application");
+        final JFrame application = new JFrame("MiddleGround AI");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
 
+        if (enterTopicView != null && comparisonView != null) {
+            enterTopicView.setComparisonView(comparisonView);
+        }
+
         application.add(cardPanel);
-        if (rightNewsSummaryView != null){
+        if (enterTopicView != null){
+            cardLayout.show(cardPanel, enterTopicView.getViewName());
+        }
+        else if (rightNewsSummaryView != null){
             cardLayout.show(cardPanel, RightNewsSummaryView.VIEW_NAME);
         }
         else if (leftNewsSummaryView != null) {
             cardLayout.show(cardPanel, leftNewsSummaryView.getViewName());
         }
         return application;
+    }
+    
+    private String loadEnvVariable(String key) {
+        try {
+            java.nio.file.Path envPath = java.nio.file.Paths.get("team-project/.env");
+            if (!java.nio.file.Files.exists(envPath)) {
+                envPath = java.nio.file.Paths.get(".env");
+            }
+            
+            if (java.nio.file.Files.exists(envPath)) {
+                List<String> lines = java.nio.file.Files.readAllLines(envPath);
+                for (String line : lines) {
+                    line = line.trim();
+                    if (line.startsWith(key + "=")) {
+                        String value = line.substring(key.length() + 1).trim();
+                        
+                        if (value.startsWith("\"") && value.endsWith("\"")) {
+                            value = value.substring(1, value.length() - 1);
+                        }
+                        return value;
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.err.println("Error reading .env file: " + e.getMessage());
+        }
+        
+        
+        return System.getenv(key);
     }
 }

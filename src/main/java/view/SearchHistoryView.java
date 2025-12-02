@@ -33,7 +33,7 @@ public class SearchHistoryView extends JPanel {
         JPanel mainPanel = new JPanel(new BorderLayout());
         mainPanel.setBorder(BorderFactory.createTitledBorder("Search History"));
 
-        // History display area
+        
         historyArea = new JTextArea(15, 40);
         historyArea.setEditable(false);
         historyArea.setLineWrap(true);
@@ -42,13 +42,13 @@ public class SearchHistoryView extends JPanel {
         JScrollPane scrollPane = new JScrollPane(historyArea);
         mainPanel.add(scrollPane, BorderLayout.CENTER);
 
-        // Message label for errors/empty state
+        
         messageLabel = new JLabel();
         messageLabel.setForeground(Color.RED);
         JPanel messagePanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         messagePanel.add(messageLabel);
 
-        // Button panel
+        
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         loadHistoryButton = new JButton("Load Search History");
         backButton = new JButton("Back to Left News");
@@ -69,7 +69,7 @@ public class SearchHistoryView extends JPanel {
         buttonPanel.add(loadHistoryButton);
         buttonPanel.add(backButton);
 
-        // Add components
+        
         add(mainPanel, BorderLayout.CENTER);
         add(messagePanel, BorderLayout.NORTH);
         add(buttonPanel, BorderLayout.SOUTH);

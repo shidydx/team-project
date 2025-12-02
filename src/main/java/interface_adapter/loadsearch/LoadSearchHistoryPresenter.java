@@ -32,6 +32,6 @@ public class LoadSearchHistoryPresenter implements LoadSearchHistoryOutputBounda
 
     @Override
     public void prepareFailView(String errorMessage) {
-        viewModel.setMessage(errorMessage); // e.g. “Unable to load this search. Please try again.”
+        viewModel.setMessage(errorMessage); 
     }
 }

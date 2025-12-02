@@ -19,11 +19,11 @@ public class LeftNewsSummaryPresenter implements LeftNewsSummaryOutputBoundary{
         currState.setSummary(outputData.getSummary());
         currState.setErrorMessage("");
         
-        // Store articles
+        
         List<Article> articles = outputData.getArticles();
         currState.setArticles(articles);
         
-        // Set first article details if articles exist (similar to right news pattern)
+        
         if (articles != null && !articles.isEmpty()) {
             Article first = articles.get(0);
             currState.setTitle(first.getTitle() != null ? first.getTitle() : "");

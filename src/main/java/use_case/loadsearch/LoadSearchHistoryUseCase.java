@@ -22,7 +22,7 @@ public class LoadSearchHistoryUseCase implements LoadSearchHistoryInputBoundary 
         try {
             List<SearchHistoryEntry> history = historyGateway.getHistoryForUser(username);
 
-            // reverse chronological order
+            
             history.sort(Comparator.comparing(SearchHistoryEntry::getSearchedAt).reversed());
 
             boolean empty = history.isEmpty();

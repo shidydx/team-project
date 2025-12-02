@@ -40,3 +40,4 @@ build/
 
 ###Environment###
 APIs.env/
+.env

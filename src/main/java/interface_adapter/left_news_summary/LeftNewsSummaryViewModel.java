@@ -18,7 +18,7 @@ public class LeftNewsSummaryViewModel {
         this.state = state;
     }
 
-    // Convenience getters and setters for easier access
+    
     public String getSummary() {
         return state.getSummary();
     }

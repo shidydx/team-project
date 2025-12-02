@@ -3,9 +3,6 @@ package use_case.loadsearch;
 import java.time.LocalDateTime;
 import java.util.Objects;
 
-/**
- * Entity representing one search in the Search History.
- */
 public class SearchHistoryEntry {
 
     private String topic;
@@ -39,7 +36,7 @@ public class SearchHistoryEntry {
         if (this == o) return true;
         if (!(o instanceof SearchHistoryEntry)) return false;
         SearchHistoryEntry that = (SearchHistoryEntry) o;
-        // “Same entry” means same topic and same user.
+        
         return Objects.equals(topic, that.topic)
                 && Objects.equals(username, that.username);
     }

@@ -39,6 +39,9 @@ public class NewsAPIClient implements NewsFetcherService {
             String sourcesString = String.join(",", sources);
             String encodedTopic = URLEncoder.encode(topic, StandardCharsets.UTF_8);
             String url = BASE_URL + "?q=" + encodedTopic + "&sources=" + sourcesString + "&pageSize=5&apiKey=" + apiKey;
+            
+            System.out.println("\n=== Fetching " + stance + " news for: " + topic + " ===");
+            System.out.println("URL: " + url.replace(apiKey, "***"));
 
             Request request = new Request.Builder().url(url).get().build();
 
@@ -48,7 +51,12 @@ public class NewsAPIClient implements NewsFetcherService {
                 }
 
                 String responseBody = response.body().string();
-                return parseArticles(responseBody);
+                List<Article> articles = parseArticles(responseBody);
+                System.out.println("Found " + articles.size() + " articles");
+                for (Article article : articles) {
+                    System.out.println("  - " + article.getSourceName() + ": " + article.getTitle());
+                }
+                return articles;
             }
 
         } catch (IOException e) {

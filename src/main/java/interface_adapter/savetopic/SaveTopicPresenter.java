@@ -21,7 +21,7 @@ public class SaveTopicPresenter implements SaveTopicOutputBoundary {
                                 i.getTopic(), i.getSearchedAt()))
                         .collect(Collectors.toList())
         );
-        viewModel.setMessage(""); // clear any old error
+        viewModel.setMessage(""); 
     }
 
     @Override
