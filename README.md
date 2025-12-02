@@ -41,8 +41,8 @@ As a user, I want to save topics I’ve searched for, so that I can revisit impo
 ones.
 
 ### 6. Manage Saved Topics - Anya
-As a user, I want to manage my saved topics, so that I can clean up my collection
-and remove the topics that I am no longer interested in following up.
+As a user, I want to manage my saved topics, so that I can remove the topics that I
+am no longer interested in following up and search for specific saved topics. 
 
 ## APIs
 - API Name: https://newsapi.org/

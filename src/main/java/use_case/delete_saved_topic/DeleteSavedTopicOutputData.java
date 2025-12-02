@@ -1,10 +1,10 @@
-package use_case.delete_saved_topics;
+package use_case.delete_saved_topic;
 
-public class DeleteSavedTopicsOutputData {
+public class DeleteSavedTopicOutputData {
     private final String deleteSuccessful;
     private final String deleteFailed;
 
-    public DeleteSavedTopicsOutputData(String deleteSuccessful, String deleteFailed) {
+    public DeleteSavedTopicOutputData(String deleteSuccessful, String deleteFailed) {
         this.deleteSuccessful = deleteSuccessful;
         this.deleteFailed = deleteFailed;
     }
