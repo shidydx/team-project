@@ -1,7 +1,7 @@
-package interface_adapter.entertopic;
+package interface_adapter.enter_topic;
 
 public class EnterTopicViewModel {
-    private EnterTopicState enterTopicState;
+    private final EnterTopicState enterTopicState;
 
     public EnterTopicViewModel() {
         enterTopicState = new EnterTopicState();
@@ -9,8 +9,5 @@ public class EnterTopicViewModel {
 
     public EnterTopicState getState() {
         return enterTopicState;
-    }
-    public void setEnterTopicState(EnterTopicState enterTopicState) {
-        this.enterTopicState = enterTopicState;
     }
 }

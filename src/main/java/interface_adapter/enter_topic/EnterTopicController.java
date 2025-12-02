@@ -1,4 +1,4 @@
-package interface_adapter.entertopic;
+package interface_adapter.enter_topic;
 
 import use_case.enter_topic.EnterTopicInputBoundary;
 import use_case.enter_topic.EnterTopicInputData;

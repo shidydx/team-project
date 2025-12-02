@@ -1,8 +1,8 @@
 package view;
 
-import interface_adapter.entertopic.EnterTopicController;
-import interface_adapter.entertopic.EnterTopicState;
-import interface_adapter.entertopic.EnterTopicViewModel;
+import interface_adapter.enter_topic.EnterTopicController;
+import interface_adapter.enter_topic.EnterTopicState;
+import interface_adapter.enter_topic.EnterTopicViewModel;
 import interface_adapter.left_news_summary.LeftNewsSummaryController;
 import interface_adapter.right_news_summary.RightNewsController;
 
@@ -35,7 +35,6 @@ public class EnterTopicView extends JPanel {
     private final JEditorPane leftSummaryArea;
     private final JEditorPane rightSummaryArea;
     private final JPanel summariesPanel = new JPanel();
-
 
     public EnterTopicView(EnterTopicViewModel viewModel) {
         this.viewModel = viewModel;

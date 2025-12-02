@@ -1,11 +1,10 @@
 package app;
 
-import data_access.EnterTopicDataAccessImpl;
 import data_access.RightNewsSummaryDataAccessImpl;
 import interface_adapter.right_news_summary.RightNewsController;
 import interface_adapter.right_news_summary.RightNewsPresenter;
-import interface_adapter.entertopic.EnterTopicController;
-import interface_adapter.entertopic.EnterTopicPresenter;
+import interface_adapter.enter_topic.EnterTopicController;
+import interface_adapter.enter_topic.EnterTopicPresenter;
 import use_case.enter_topic.EnterTopicInteractor;
 import use_case.save_topic.SaveTopicUseCase;
 import view.RightNewsSummaryView;
@@ -35,8 +34,7 @@ public class AppBuilder {
     private use_case.right_news_summary.RightNewsSummaryDataAccessInterface rightNewsDataAccess;
     private interface_adapter.right_news_summary.RightNewsViewModel rightNewsViewModel;
 
-    private use_case.enter_topic.EnterTopicDataAccessInterface enterTopicDataAccess;
-    private interface_adapter.entertopic.EnterTopicViewModel enterTopicViewModel;
+    private interface_adapter.enter_topic.EnterTopicViewModel enterTopicViewModel;
     private view.EnterTopicView enterTopicView;
 
     private use_case.comparison.ComparisonDataAccessInterface comparisonDataAccess;
@@ -63,7 +61,6 @@ public class AppBuilder {
         this.dataAccess = new data_access.LeftNewsSummaryDataAccessImpl(newsFetcher, summarizer);
 
         this.rightNewsDataAccess = new RightNewsSummaryDataAccessImpl(newsFetcher);
-        this.enterTopicDataAccess = new EnterTopicDataAccessImpl(newsFetcher);
         this.comparisonDataAccess = new data_access.ComparisonDataAccessImpl(newsFetcher, summarizer);
         
         this.savedTopicRepository = new data_access.SavedTopicRepositoryImpl(new java.util.ArrayList<>());
@@ -71,7 +68,7 @@ public class AppBuilder {
     }
 
     public AppBuilder addEnterTopicView() {
-        enterTopicViewModel = new interface_adapter.entertopic.EnterTopicViewModel();
+        enterTopicViewModel = new interface_adapter.enter_topic.EnterTopicViewModel();
         enterTopicView = new EnterTopicView(enterTopicViewModel);
         cardPanel.add(enterTopicView, enterTopicView.getViewName());
         return this;
@@ -79,7 +76,7 @@ public class AppBuilder {
 
     public AppBuilder addEnterTopicUseCase(){
         final EnterTopicPresenter enterTopicPresenter = new EnterTopicPresenter(enterTopicViewModel);
-        final EnterTopicInteractor interactor = new EnterTopicInteractor(enterTopicPresenter, enterTopicDataAccess);
+        final EnterTopicInteractor interactor = new EnterTopicInteractor(enterTopicPresenter);
         final EnterTopicController controller = new EnterTopicController(interactor);
 
         enterTopicView.setController(controller);

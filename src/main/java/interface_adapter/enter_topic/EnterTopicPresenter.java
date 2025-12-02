@@ -1,4 +1,4 @@
-package interface_adapter.entertopic;
+package interface_adapter.enter_topic;
 
 
 import use_case.enter_topic.EnterTopicOutputBoundary;
@@ -8,10 +8,10 @@ public class EnterTopicPresenter implements EnterTopicOutputBoundary {
     private final EnterTopicViewModel viewModel;
 
     public EnterTopicPresenter(EnterTopicViewModel viewModel) {
-        if (viewModel != null) {this.viewModel = viewModel;
+        if (viewModel != null) {
+            this.viewModel = viewModel;
         } else {this.viewModel = new EnterTopicViewModel();
         }
-
     }
 
     @Override

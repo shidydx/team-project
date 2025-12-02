@@ -1,4 +1,4 @@
-package interface_adapter.entertopic;
+package interface_adapter.enter_topic;
 
 public class EnterTopicState {
     private String topic;
