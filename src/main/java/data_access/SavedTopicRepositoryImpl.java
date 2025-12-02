@@ -16,7 +16,7 @@ public class SavedTopicRepositoryImpl implements
     @Override
     public Topic deleteTopic(String topic_input) {
         for (Topic savedTopic : savedTopics) {
-            if (topic_input.toLowerCase().equals(savedTopic.getKeyword())) {
+            if (topic_input.toLowerCase().trim().equals(savedTopic.getKeyword())) {
                 savedTopics.remove(savedTopic);
                 return savedTopic;
             }
@@ -27,9 +27,10 @@ public class SavedTopicRepositoryImpl implements
     @Override
     public Topic filterTopic(String topic_input) {
         for (Topic savedTopic : savedTopics) {
-            if (topic_input.toLowerCase().equals(savedTopic.getKeyword()));
+            if (topic_input.toLowerCase().equals(savedTopic.getKeyword())) {
                 return savedTopic;
             }
-            return null;
         }
+        return null;
     }
+}
