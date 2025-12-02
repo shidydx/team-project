@@ -108,17 +108,15 @@ public class EnterTopicView extends JPanel {
         JLabel topicLabel = new JLabel("Topic:");
         topicLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         topicTextField.setFont(new Font("Arial", Font.PLAIN, 14));
-        searchButton.setFont(new Font("Arial", Font.BOLD, 14));
-        searchButton.setBackground(Color.BLACK);
-        searchButton.setForeground(Color.WHITE);
+        searchButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        searchButton.setForeground(Color.BLACK);
         searchButton.setOpaque(true);
         searchButton.setFocusPainted(false);
         
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         
         viewSavedTopicsButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        viewSavedTopicsButton.setBackground(Color.BLACK);
-        viewSavedTopicsButton.setForeground(Color.WHITE);
+        viewSavedTopicsButton.setForeground(Color.BLACK);
         viewSavedTopicsButton.setOpaque(true);
         viewSavedTopicsButton.setFocusPainted(false);
         viewSavedTopicsButton.setToolTipText("View and manage your saved topics");
@@ -152,9 +150,8 @@ public class EnterTopicView extends JPanel {
 
         
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
-        comparisonButton.setFont(new Font("Arial", Font.BOLD, 16));
-        comparisonButton.setBackground(Color.BLACK);
-        comparisonButton.setForeground(Color.WHITE);
+        comparisonButton.setFont(new Font("Arial", Font.PLAIN, 16));
+        comparisonButton.setForeground(Color.BLACK);
         comparisonButton.setOpaque(true);
         comparisonButton.setFocusPainted(false);
         comparisonButton.setVisible(false);
