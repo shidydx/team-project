@@ -61,8 +61,7 @@ public class SavedTopicsView extends JPanel {
         JPanel savedTopicsButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         loadSavedTopicsButton = new JButton("Refresh Saved Topics");
         loadSavedTopicsButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        loadSavedTopicsButton.setBackground(Color.BLACK);
-        loadSavedTopicsButton.setForeground(Color.WHITE);
+        loadSavedTopicsButton.setForeground(Color.BLACK);
         loadSavedTopicsButton.setOpaque(true);
         loadSavedTopicsButton.setFocusPainted(false);
         loadSavedTopicsButton.addActionListener(e -> refreshSavedTopics());
@@ -85,8 +84,7 @@ public class SavedTopicsView extends JPanel {
         
         filterButton = new JButton("Filter Topic");
         filterButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        filterButton.setBackground(Color.BLACK);
-        filterButton.setForeground(Color.WHITE);
+        filterButton.setForeground(Color.BLACK);
         filterButton.setOpaque(true);
         filterButton.setFocusPainted(false);
         filterButton.setToolTipText("Search for a specific topic in your saved topics");
@@ -102,8 +100,7 @@ public class SavedTopicsView extends JPanel {
         
         deleteButton = new JButton("Delete Topic");
         deleteButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        deleteButton.setBackground(Color.BLACK);
-        deleteButton.setForeground(Color.WHITE);
+        deleteButton.setForeground(Color.BLACK);
         deleteButton.setOpaque(true);
         deleteButton.setFocusPainted(false);
         deleteButton.setToolTipText("Remove a topic from your saved topics");
@@ -144,8 +141,7 @@ public class SavedTopicsView extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         backButton = new JButton("Back to Home");
         backButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        backButton.setBackground(Color.BLACK);
-        backButton.setForeground(Color.WHITE);
+        backButton.setForeground(Color.BLACK);
         backButton.setOpaque(true);
         backButton.setFocusPainted(false);
         
