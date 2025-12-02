@@ -1,10 +1,9 @@
-package use_case.DeleteSavedTopic;
+package use_case.delete_saved_topic;
 
 import org.junit.jupiter.api.Test;
 import static org.junit.jupiter.api.Assertions.*;
 
 import entity.Topic;
-import use_case.delete_saved_topic.*;
 
 public class DeleteSavedTopicInteractorTest {
 
@@ -67,7 +66,7 @@ public class DeleteSavedTopicInteractorTest {
         DeleteSavedTopicOutputBoundary presenter = new DeleteSavedTopicOutputBoundary() {
             @Override
             public void successView(DeleteSavedTopicOutputData outputData) {
-                assertEquals(outputData.getDeleteSuccessful(), "Topic named " + topic_input.getTopic() + " was deleted.");
+                assertEquals(outputData.getDeleteSuccessful(), "Topic named " + topic_input.getTopic() + " was successfully deleted.");
             }
 
             @Override
@@ -80,6 +79,33 @@ public class DeleteSavedTopicInteractorTest {
             @Override
             public Topic deleteTopic(String topic_input) {
                 return new Topic(topic_input);
+            }
+        };
+
+        DeleteSavedTopicInteractor interactor = new DeleteSavedTopicInteractor(presenter, dataAccess);
+        interactor.execute(topic_input);
+    }
+
+    @Test
+    public void topicThrowException() {
+        DeleteSavedTopicInputData topic_input = new DeleteSavedTopicInputData("Topic Does Exist");
+        DeleteSavedTopicOutputBoundary presenter = new DeleteSavedTopicOutputBoundary() {
+            @Override
+            public void successView(DeleteSavedTopicOutputData outputData) {
+                fail("Expected failure view. Exception should be thrown.");
+            }
+
+            @Override
+            public void failureView(String errorMsg) {
+                RuntimeException error = new RuntimeException();
+                assertEquals(errorMsg, "Error: " + error.getMessage());
+            }
+        };
+
+        DeleteSavedTopicDataAccessInterface dataAccess = new DeleteSavedTopicDataAccessInterface() {
+            @Override
+            public Topic deleteTopic(String topic_input) {
+                throw new RuntimeException();
             }
         };
 
