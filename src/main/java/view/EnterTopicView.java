@@ -260,9 +260,6 @@ public class EnterTopicView extends JPanel {
                 if (comparisonView != null) {
                     comparisonView.triggerComparison(topic);
                 }
-                // cardLayout.show(cardPanel, comparisonView != null
-                //       ? comparisonView.getViewName()
-                //       : "comparison");
                 if (comparisonView != null) {
                     cardLayout.show(cardPanel, comparisonView.getViewName());
                 }
