@@ -1,8 +1,7 @@
-package use_case.EnterTopicTest;
+package use_case.enter_topic;
 
 import entity.Article;
 import org.junit.jupiter.api.Test;
-import use_case.enter_topic.*;
 
 
 import static org.junit.jupiter.api.Assertions.*;

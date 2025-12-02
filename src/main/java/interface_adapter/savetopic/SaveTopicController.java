@@ -1,7 +1,7 @@
 package interface_adapter.savetopic;
 
-import use_case.SaveTopic.SaveTopicInputBoundary;
-import use_case.SaveTopic.SaveTopicInputData;
+import use_case.save_topic.SaveTopicInputBoundary;
+import use_case.save_topic.SaveTopicInputData;
 
 import java.time.LocalDateTime;
 
