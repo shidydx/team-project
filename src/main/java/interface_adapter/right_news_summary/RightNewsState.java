@@ -1,11 +1,10 @@
 package interface_adapter.right_news_summary;
 
 import entity.Article;
-import interface_adapter.left_news_summary.LeftNewsSummaryState;
 
 import java.util.List;
 
-public class RightNewsSummaryState {
+public class RightNewsState {
     private String summary = "";
     private String errorMessage = "";
     private String topic = "";
@@ -14,7 +13,7 @@ public class RightNewsSummaryState {
     private String name;
     private String url;
 
-    public RightNewsSummaryState(RightNewsSummaryState copy) {
+    public RightNewsState(RightNewsState copy) {
         summary = copy.summary;
         errorMessage = copy.errorMessage;
         topic = copy.topic;
@@ -24,7 +23,7 @@ public class RightNewsSummaryState {
         url = copy.url;
     }
 
-    public RightNewsSummaryState() {}
+    public RightNewsState() {}
 
     public String getSummary() {
         return summary;

@@ -1,22 +1,21 @@
 package interface_adapter.right_news_summary;
 
 import entity.Article;
-import interface_adapter.left_news_summary.LeftNewsSummaryState;
 
 import java.util.List;
 
-public class RightNewsSummaryViewModel {
-    RightNewsSummaryState state;
+public class RightNewsViewModel {
+    RightNewsState state;
 
-    public RightNewsSummaryViewModel() {
-        state = new RightNewsSummaryState();
+    public RightNewsViewModel() {
+        state = new RightNewsState();
     }
 
-    public RightNewsSummaryState getState() {
+    public RightNewsState getState() {
         return state;
     }
 
-    public void setState(RightNewsSummaryState state) {
+    public void setState(RightNewsState state) {
         this.state = state;
     }
 
@@ -50,43 +49,43 @@ public class RightNewsSummaryViewModel {
     }
 
     public void setSummary(String summary) {
-        RightNewsSummaryState currentState = getState();
+        RightNewsState currentState = getState();
         currentState.setSummary(summary);
         setState(currentState);
     }
 
     public void setErrorMessage(String errorMessage) {
-        RightNewsSummaryState currentState = getState();
+        RightNewsState currentState = getState();
         currentState.setErrorMessage(errorMessage);
         setState(currentState);
     }
 
     public void setTopic(String topic) {
-        RightNewsSummaryState currentState = getState();
+        RightNewsState currentState = getState();
         currentState.setTopic(topic);
         setState(currentState);
     }
 
     public void setArticles(List<Article> articles) {
-        RightNewsSummaryState currentState = getState();
+        RightNewsState currentState = getState();
         currentState.setArticles(articles);
         setState(currentState);
     }
 
     public void setTitle(String title) {
-        RightNewsSummaryState currentState = getState();
+        RightNewsState currentState = getState();
         currentState.setTitle(title);
         setState(currentState);
     }
 
     public void setName(String name) {
-        RightNewsSummaryState currentState = getState();
+        RightNewsState currentState = getState();
         currentState.setName(name);
         setState(currentState);
     }
 
     public void setUrl(String url) {
-        RightNewsSummaryState currentState = getState();
+        RightNewsState currentState = getState();
         currentState.setUrl(url);
         setState(currentState);
     }
