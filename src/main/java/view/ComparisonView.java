@@ -87,14 +87,14 @@ public class ComparisonView extends JPanel implements PropertyChangeListener {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         backButton = new JButton("Back to Menu");
         backButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        backButton.setBackground(new Color(100, 100, 100));
+        backButton.setBackground(Color.BLACK);
         backButton.setForeground(Color.WHITE);
         backButton.setOpaque(true);
         backButton.setFocusPainted(false);
         
         saveTopicButton = new JButton("Save Topic & Summaries");
         saveTopicButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        saveTopicButton.setBackground(new Color(46, 204, 113));
+        saveTopicButton.setBackground(Color.BLACK);
         saveTopicButton.setForeground(Color.WHITE);
         saveTopicButton.setOpaque(true);
         saveTopicButton.setFocusPainted(false);

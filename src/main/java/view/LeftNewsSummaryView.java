@@ -86,35 +86,35 @@ public class LeftNewsSummaryView extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         summarizeButton = new JButton("Summarize Left News");
         summarizeButton.setFont(new Font("Arial", Font.BOLD, 14));
-        summarizeButton.setBackground(new Color(59, 89, 182));
+        summarizeButton.setBackground(Color.BLACK);
         summarizeButton.setForeground(Color.WHITE);
         summarizeButton.setOpaque(true);
         summarizeButton.setFocusPainted(false);
         
         JButton backButton = new JButton("Back");
         backButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        backButton.setBackground(new Color(100, 100, 100));
+        backButton.setBackground(Color.BLACK);
         backButton.setForeground(Color.WHITE);
         backButton.setOpaque(true);
         backButton.setFocusPainted(false);
         
         JButton searchHistoryButton = new JButton("View Search History");
         searchHistoryButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        searchHistoryButton.setBackground(new Color(155, 89, 182));
+        searchHistoryButton.setBackground(Color.BLACK);
         searchHistoryButton.setForeground(Color.WHITE);
         searchHistoryButton.setOpaque(true);
         searchHistoryButton.setFocusPainted(false);
         
         JButton switchToRightButton = new JButton("Switch to Right News");
         switchToRightButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        switchToRightButton.setBackground(new Color(231, 76, 60));
+        switchToRightButton.setBackground(Color.BLACK);
         switchToRightButton.setForeground(Color.WHITE);
         switchToRightButton.setOpaque(true);
         switchToRightButton.setFocusPainted(false);
         
         JButton comparisonButton = new JButton("Compare Coverage");
         comparisonButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        comparisonButton.setBackground(new Color(46, 204, 113));
+        comparisonButton.setBackground(Color.BLACK);
         comparisonButton.setForeground(Color.WHITE);
         comparisonButton.setOpaque(true);
         comparisonButton.setFocusPainted(false);

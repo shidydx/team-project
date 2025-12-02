@@ -109,7 +109,7 @@ public class EnterTopicView extends JPanel {
         topicLabel.setFont(new Font("Arial", Font.PLAIN, 14));
         topicTextField.setFont(new Font("Arial", Font.PLAIN, 14));
         searchButton.setFont(new Font("Arial", Font.BOLD, 14));
-        searchButton.setBackground(new Color(59, 89, 182));
+        searchButton.setBackground(Color.BLACK);
         searchButton.setForeground(Color.WHITE);
         searchButton.setOpaque(true);
         searchButton.setFocusPainted(false);
@@ -117,7 +117,7 @@ public class EnterTopicView extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
         
         viewSavedTopicsButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        viewSavedTopicsButton.setBackground(new Color(155, 89, 182));
+        viewSavedTopicsButton.setBackground(Color.BLACK);
         viewSavedTopicsButton.setForeground(Color.WHITE);
         viewSavedTopicsButton.setOpaque(true);
         viewSavedTopicsButton.setFocusPainted(false);
@@ -153,7 +153,7 @@ public class EnterTopicView extends JPanel {
         
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.CENTER));
         comparisonButton.setFont(new Font("Arial", Font.BOLD, 16));
-        comparisonButton.setBackground(new Color(46, 204, 113));
+        comparisonButton.setBackground(Color.BLACK);
         comparisonButton.setForeground(Color.WHITE);
         comparisonButton.setOpaque(true);
         comparisonButton.setFocusPainted(false);

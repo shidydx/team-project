@@ -61,7 +61,7 @@ public class SavedTopicsView extends JPanel {
         JPanel savedTopicsButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         loadSavedTopicsButton = new JButton("Refresh Saved Topics");
         loadSavedTopicsButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        loadSavedTopicsButton.setBackground(new Color(59, 89, 182));
+        loadSavedTopicsButton.setBackground(Color.BLACK);
         loadSavedTopicsButton.setForeground(Color.WHITE);
         loadSavedTopicsButton.setOpaque(true);
         loadSavedTopicsButton.setFocusPainted(false);
@@ -85,7 +85,7 @@ public class SavedTopicsView extends JPanel {
         
         filterButton = new JButton("Filter Topic");
         filterButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        filterButton.setBackground(new Color(59, 89, 182));
+        filterButton.setBackground(Color.BLACK);
         filterButton.setForeground(Color.WHITE);
         filterButton.setOpaque(true);
         filterButton.setFocusPainted(false);
@@ -102,7 +102,7 @@ public class SavedTopicsView extends JPanel {
         
         deleteButton = new JButton("Delete Topic");
         deleteButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        deleteButton.setBackground(new Color(200, 0, 0));
+        deleteButton.setBackground(Color.BLACK);
         deleteButton.setForeground(Color.WHITE);
         deleteButton.setOpaque(true);
         deleteButton.setFocusPainted(false);
@@ -144,7 +144,7 @@ public class SavedTopicsView extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         backButton = new JButton("Back to Home");
         backButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        backButton.setBackground(new Color(100, 100, 100));
+        backButton.setBackground(Color.BLACK);
         backButton.setForeground(Color.WHITE);
         backButton.setOpaque(true);
         backButton.setFocusPainted(false);

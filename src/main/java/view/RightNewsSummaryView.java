@@ -73,28 +73,28 @@ public class RightNewsSummaryView extends JPanel {
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         summarizeButton = new JButton("Summarize Right News");
         summarizeButton.setFont(new Font("Arial", Font.BOLD, 14));
-        summarizeButton.setBackground(new Color(231, 76, 60));
+        summarizeButton.setBackground(Color.BLACK);
         summarizeButton.setForeground(Color.WHITE);
         summarizeButton.setOpaque(true);
         summarizeButton.setFocusPainted(false);
         
         JButton backButton = new JButton("Back");
         backButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        backButton.setBackground(new Color(100, 100, 100));
+        backButton.setBackground(Color.BLACK);
         backButton.setForeground(Color.WHITE);
         backButton.setOpaque(true);
         backButton.setFocusPainted(false);
         
         JButton changeButton = new JButton("Switch to Left News");
         changeButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        changeButton.setBackground(new Color(52, 152, 219));
+        changeButton.setBackground(Color.BLACK);
         changeButton.setForeground(Color.WHITE);
         changeButton.setOpaque(true);
         changeButton.setFocusPainted(false);
         
         JButton comparisonButton = new JButton("Compare Coverage");
         comparisonButton.setFont(new Font("Arial", Font.PLAIN, 14));
-        comparisonButton.setBackground(new Color(46, 204, 113));
+        comparisonButton.setBackground(Color.BLACK);
         comparisonButton.setForeground(Color.WHITE);
         comparisonButton.setOpaque(true);
         comparisonButton.setFocusPainted(false);
