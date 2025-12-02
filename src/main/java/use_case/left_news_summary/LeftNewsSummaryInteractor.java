@@ -3,6 +3,7 @@ package use_case.left_news_summary;
 import entity.Article;
 import java.util.List;
 
+// fetches left-leaning articles and generates summary
 public class LeftNewsSummaryInteractor implements LeftNewsSummaryInputBoundary {
     private final LeftNewsSummaryOutputBoundary outputBoundary;
     private final LeftNewsSummaryDataAccessInterface dataAccess;

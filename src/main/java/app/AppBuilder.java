@@ -2,8 +2,6 @@ package app;
 
 import data_access.EnterTopicDataAccessImpl;
 import data_access.RightNewsSummaryDataAccessImpl;
-import interface_adapter.loadsearch.LoadSearchHistoryController;
-import interface_adapter.loadsearch.LoadSearchHistoryPresenter;
 import interface_adapter.right_news_summary.RightNewsController;
 import interface_adapter.right_news_summary.RightNewsPresenter;
 import interface_adapter.entertopic.EnterTopicController;
@@ -17,6 +15,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.List;
 
+// builder pattern for constructing the application with all views and use cases
 public class AppBuilder {
     private final JPanel cardPanel = new JPanel();
     private final CardLayout cardLayout = new CardLayout();
@@ -31,10 +30,7 @@ public class AppBuilder {
 
     private view.RightNewsSummaryView rightNewsSummaryView;
     
-    private use_case.loadsearch.SearchHistoryDataAccessInterface searchHistoryDataAccess;
-    private interface_adapter.savetopic.SearchHistoryViewModel searchHistoryViewModel;
-    private view.SearchHistoryView searchHistoryView;
-    private LoadSearchHistoryController loadHistoryController;
+    private view.SavedTopicsView savedTopicsView;
 
     private use_case.right_news_summary.RightNewsSummaryDataAccessInterface rightNewsDataAccess;
     private interface_adapter.right_news_summary.RightNewsViewModel rightNewsViewModel;
@@ -46,7 +42,13 @@ public class AppBuilder {
     private use_case.comparison.ComparisonDataAccessInterface comparisonDataAccess;
     private interface_adapter.comparison.ComparisonViewModel comparisonViewModel;
     private view.ComparisonView comparisonView;
+    
+    private data_access.SavedTopicRepositoryImpl savedTopicRepository;
+    private interface_adapter.savetopic.SaveTopicController saveTopicController;
+    private interface_adapter.delete_saved_topic.DeleteSavedTopicViewModel deleteSavedTopicViewModel;
+    private interface_adapter.filter_saved_topic.FilterSavedTopicViewModel filterSavedTopicViewModel;
 
+    // initialize services, data access objects, and repositories
     public AppBuilder() {
         cardPanel.setLayout(cardLayout);
 
@@ -60,11 +62,11 @@ public class AppBuilder {
         this.summarizer = new interface_adapter.OpenAIClient(openAiApiKey);
         this.dataAccess = new data_access.LeftNewsSummaryDataAccessImpl(newsFetcher, summarizer);
 
-        this.searchHistoryDataAccess =
-                new use_case.loadsearch.InMemorySearchHistoryDataAccessObject();
         this.rightNewsDataAccess = new RightNewsSummaryDataAccessImpl(newsFetcher);
         this.enterTopicDataAccess = new EnterTopicDataAccessImpl(newsFetcher);
         this.comparisonDataAccess = new data_access.ComparisonDataAccessImpl(newsFetcher, summarizer);
+        
+        this.savedTopicRepository = new data_access.SavedTopicRepositoryImpl(new java.util.ArrayList<>());
 
     }
 
@@ -89,14 +91,13 @@ public class AppBuilder {
     public AppBuilder addLeftNewsSummaryView() {
         leftNewsSummaryViewModel = new interface_adapter.left_news_summary.LeftNewsSummaryViewModel();
 
-        searchHistoryViewModel = new interface_adapter.savetopic.SearchHistoryViewModel();
-
         leftNewsSummaryView = new view.LeftNewsSummaryView(leftNewsSummaryViewModel);
 
         cardPanel.add(leftNewsSummaryView, leftNewsSummaryView.getViewName());
         return this;
     }
 
+    // wire up left news summary use case and create save topic controller wrapper
     public AppBuilder addLeftNewsSummaryUseCase() {
         final use_case.left_news_summary.LeftNewsSummaryOutputBoundary presenter =
                 new interface_adapter.left_news_summary.LeftNewsSummaryPresenter(leftNewsSummaryViewModel);
@@ -112,24 +113,32 @@ public class AppBuilder {
         }
 
         interface_adapter.savetopic.SaveTopicPresenter saveTopicPresenter =
-                new interface_adapter.savetopic.SaveTopicPresenter(searchHistoryViewModel);
+                new interface_adapter.savetopic.SaveTopicPresenter();
 
         SaveTopicUseCase saveTopicInteractor =
-                new SaveTopicUseCase(
-                        searchHistoryDataAccess, saveTopicPresenter);
+                new SaveTopicUseCase(saveTopicPresenter);
 
-        interface_adapter.savetopic.SaveTopicController saveTopicController =
-                new interface_adapter.savetopic.SaveTopicController(saveTopicInteractor);
-
-        LoadSearchHistoryPresenter loadHistoryPresenter =
-                new LoadSearchHistoryPresenter(searchHistoryViewModel);
-
-        use_case.loadsearch.LoadSearchHistoryUseCase loadHistoryInteractor =
-                new use_case.loadsearch.LoadSearchHistoryUseCase(
-                        searchHistoryDataAccess, loadHistoryPresenter);
-
-        loadHistoryController =
-                new LoadSearchHistoryController(loadHistoryInteractor);
+        this.saveTopicController =
+                new interface_adapter.savetopic.SaveTopicController(saveTopicInteractor) {
+            @Override
+            public void save(String topic, String username) {
+                super.save(topic, username);
+                if (savedTopicRepository != null && topic != null && !topic.trim().isEmpty()) {
+                    entity.Topic newTopic = new entity.Topic(topic.trim());
+                    savedTopicRepository.addTopic(newTopic);
+                }
+            }
+            
+            @Override
+            public void saveWithSummaries(String topic, String username, 
+                                         String leftSummary, String rightSummary, String comparisonSummary) {
+                super.saveWithSummaries(topic, username, leftSummary, rightSummary, comparisonSummary);
+                if (savedTopicRepository != null && topic != null && !topic.trim().isEmpty()) {
+                    entity.Topic newTopic = new entity.Topic(topic.trim(), leftSummary, rightSummary, comparisonSummary);
+                    savedTopicRepository.addTopic(newTopic);
+                }
+            }
+        };
 
         return this;
     }
@@ -156,33 +165,45 @@ public class AppBuilder {
         return this;
     }
 
-    public AppBuilder addSearchHistoryView() {
-        if (searchHistoryViewModel == null) {
-            searchHistoryViewModel = new interface_adapter.savetopic.SearchHistoryViewModel();
-        }
-        
-        searchHistoryView = new view.SearchHistoryView(searchHistoryViewModel);
-        searchHistoryView.setCardChange(cardLayout, cardPanel);
-        cardPanel.add(searchHistoryView, searchHistoryView.getViewName());
+    public AppBuilder addSavedTopicsView() {
+        savedTopicsView = new view.SavedTopicsView();
+        savedTopicsView.setCardChange(cardLayout, cardPanel);
+        cardPanel.add(savedTopicsView, savedTopicsView.getViewName());
         
         return this;
     }
 
-    public AppBuilder addSearchHistoryUseCase() {
-        if (loadHistoryController == null) {
-            LoadSearchHistoryPresenter loadHistoryPresenter =
-                    new LoadSearchHistoryPresenter(searchHistoryViewModel);
-
-            use_case.loadsearch.LoadSearchHistoryUseCase loadHistoryInteractor =
-                    new use_case.loadsearch.LoadSearchHistoryUseCase(
-                            searchHistoryDataAccess, loadHistoryPresenter);
-
-            loadHistoryController =
-                    new LoadSearchHistoryController(loadHistoryInteractor);
+    // wire up delete and filter use cases for saved topics management
+    public AppBuilder addSavedTopicsUseCase() {
+        if (deleteSavedTopicViewModel == null) {
+            deleteSavedTopicViewModel = new interface_adapter.delete_saved_topic.DeleteSavedTopicViewModel();
         }
+        interface_adapter.delete_saved_topic.DeleteSavedTopicPresenter deletePresenter =
+                new interface_adapter.delete_saved_topic.DeleteSavedTopicPresenter(deleteSavedTopicViewModel);
+        use_case.delete_saved_topic.DeleteSavedTopicInteractor deleteInteractor =
+                new use_case.delete_saved_topic.DeleteSavedTopicInteractor(deletePresenter, savedTopicRepository);
+        interface_adapter.delete_saved_topic.DeleteSavedTopicController deleteController =
+                new interface_adapter.delete_saved_topic.DeleteSavedTopicController(deleteInteractor);
         
-        if (searchHistoryView != null) {
-            searchHistoryView.setLoadHistoryController(loadHistoryController);
+        if (filterSavedTopicViewModel == null) {
+            filterSavedTopicViewModel = new interface_adapter.filter_saved_topic.FilterSavedTopicViewModel();
+        }
+        interface_adapter.filter_saved_topic.FilterSavedTopicPresenter filterPresenter =
+                new interface_adapter.filter_saved_topic.FilterSavedTopicPresenter(filterSavedTopicViewModel);
+        use_case.filter_saved_topic.FilterSavedTopicInteractor filterInteractor =
+                new use_case.filter_saved_topic.FilterSavedTopicInteractor(filterPresenter, savedTopicRepository);
+        interface_adapter.filter_saved_topic.FilterSavedTopicController filterController =
+                new interface_adapter.filter_saved_topic.FilterSavedTopicController(filterInteractor);
+        
+        if (savedTopicsView != null) {
+            savedTopicsView.setDeleteTopicController(deleteController);
+            savedTopicsView.setFilterTopicController(filterController);
+            savedTopicsView.setDeleteTopicViewModel(deleteSavedTopicViewModel);
+            savedTopicsView.setFilterTopicViewModel(filterSavedTopicViewModel);
+            savedTopicsView.setSavedTopicRepository(savedTopicRepository);
+            if (comparisonView != null) {
+                savedTopicsView.setComparisonView(comparisonView);
+            }
         }
         
         return this;
@@ -191,7 +212,11 @@ public class AppBuilder {
     public AppBuilder addComparisonView() {
         comparisonViewModel = new interface_adapter.comparison.ComparisonViewModel();
         comparisonView = new view.ComparisonView(comparisonViewModel);
+        comparisonView.setCardChange(cardLayout, cardPanel);
         cardPanel.add(comparisonView, comparisonView.getViewName());
+        if (savedTopicsView != null) {
+            savedTopicsView.setComparisonView(comparisonView);
+        }
         return this;
     }
 
@@ -205,9 +230,13 @@ public class AppBuilder {
         
         comparisonView.setController(controller);
         comparisonView.setCardChange(cardLayout, cardPanel);
+        if (saveTopicController != null) {
+            comparisonView.setSaveTopicController(saveTopicController);
+        }
         return this;
     }
 
+    // finalize application setup and return configured jframe
     public JFrame build() {
         final JFrame application = new JFrame("MiddleGround AI");
         application.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
@@ -229,6 +258,7 @@ public class AppBuilder {
         return application;
     }
     
+    // load environment variables from .env file or system environment
     private String loadEnvVariable(String key) {
         try {
             java.nio.file.Path envPath = java.nio.file.Paths.get("team-project/.env");

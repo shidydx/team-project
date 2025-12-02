@@ -29,6 +29,7 @@ public class EnterTopicView extends JPanel {
     private final JLabel errorLabel = new JLabel();
     private final JTextField topicTextField = new JTextField();
     private final JButton searchButton = new JButton("Search & Summarize");
+    private final JButton viewSavedTopicsButton = new JButton("📋 View Saved Topics");
     private final JButton comparisonButton = new JButton("View Detailed Comparison");
     
     private final JEditorPane leftSummaryArea;
@@ -112,9 +113,20 @@ public class EnterTopicView extends JPanel {
         searchButton.setForeground(Color.WHITE);
         searchButton.setFocusPainted(false);
         
+        JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
+        
+        viewSavedTopicsButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        viewSavedTopicsButton.setBackground(new Color(155, 89, 182));
+        viewSavedTopicsButton.setForeground(Color.WHITE);
+        viewSavedTopicsButton.setFocusPainted(false);
+        viewSavedTopicsButton.setToolTipText("View and manage your saved topics");
+        
+        buttonPanel.add(viewSavedTopicsButton);
+        buttonPanel.add(searchButton);
+        
         searchPanel.add(topicLabel, BorderLayout.WEST);
         searchPanel.add(topicTextField, BorderLayout.CENTER);
-        searchPanel.add(searchButton, BorderLayout.EAST);
+        searchPanel.add(buttonPanel, BorderLayout.EAST);
         
         errorLabel.setForeground(Color.RED);
         errorLabel.setFont(new Font("Arial", Font.ITALIC, 12));
@@ -155,7 +167,6 @@ public class EnterTopicView extends JPanel {
                 comparisonButton.setVisible(false);
                 return;
             }
-
             
             if (controller != null) {
                 controller.execute(topic);
@@ -224,6 +235,12 @@ public class EnterTopicView extends JPanel {
                     rightSummaryArea.setCaretPosition(0);
                 }
             }.execute();
+        });
+        
+        viewSavedTopicsButton.addActionListener(e -> {
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, "saved_topics");
+            }
         });
 
         comparisonButton.addActionListener(e -> {

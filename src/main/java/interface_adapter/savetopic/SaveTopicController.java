@@ -18,4 +18,12 @@ public class SaveTopicController {
                 new SaveTopicInputData(topic, username, LocalDateTime.now());
         saveTopicUseCase.execute(inputData);
     }
+    
+    public void saveWithSummaries(String topic, String username, 
+                                  String leftSummary, String rightSummary, String comparisonSummary) {
+        SaveTopicInputData inputData =
+                new SaveTopicInputData(topic, username, LocalDateTime.now(),
+                                      leftSummary, rightSummary, comparisonSummary);
+        saveTopicUseCase.execute(inputData);
+    }
 }

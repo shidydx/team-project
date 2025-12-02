@@ -14,6 +14,7 @@ import java.nio.charset.StandardCharsets;
 import java.util.ArrayList;
 import java.util.List;
 
+// client for fetching news articles from newsapi with left/right source filtering
 public class NewsAPIClient implements NewsFetcherService {
 
     private static final String BASE_URL = "https://newsapi.org/v2/everything";
@@ -65,6 +66,7 @@ public class NewsAPIClient implements NewsFetcherService {
         }
     }
 
+    // parse json response into article entities
     private List<Article> parseArticles(String jsonResponse) {
         List<Article> articles = new ArrayList<>();
 

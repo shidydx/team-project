@@ -80,6 +80,9 @@ public class LeftNewsSummaryView extends JPanel {
         sourcePanel.add(linkField);
         
         
+        errorLabel = new JLabel();
+        errorLabel.setForeground(Color.RED);
+        
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         summarizeButton = new JButton("Summarize Left News");
         JButton backButton = new JButton("← Back");
@@ -91,10 +94,6 @@ public class LeftNewsSummaryView extends JPanel {
         buttonPanel.add(searchHistoryButton);
         buttonPanel.add(switchToRightButton);
         buttonPanel.add(comparisonButton);
-        
-        
-        errorLabel = new JLabel();
-        errorLabel.setForeground(Color.RED);
         JPanel errorPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         errorPanel.add(errorLabel);
         
@@ -148,7 +147,7 @@ public class LeftNewsSummaryView extends JPanel {
 
         searchHistoryButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {
-                cardLayout.show(cardPanel, SearchHistoryView.VIEW_NAME);
+                cardLayout.show(cardPanel, "saved_topics");
             }
         });
         

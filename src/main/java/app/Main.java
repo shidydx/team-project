@@ -8,7 +8,7 @@ public class Main {
 
         JFrame application = appBuilder.addEnterTopicView().addEnterTopicUseCase()
                 .addLeftNewsSummaryView().addLeftNewsSummaryUseCase()
-                .addSearchHistoryView().addSearchHistoryUseCase()
+                .addSavedTopicsView().addSavedTopicsUseCase()
                 .addRightNewsSummaryView().addRightNewsSummaryUseCase()
                 .addComparisonView().addComparisonUseCase()
                 .build();

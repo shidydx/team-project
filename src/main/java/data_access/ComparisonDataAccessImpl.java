@@ -7,6 +7,7 @@ import use_case.comparison.ComparisonDataAccessInterface;
 
 import java.util.List;
 
+// data access implementation for comparison: fetches articles and generates summaries/comparisons
 public class ComparisonDataAccessImpl implements ComparisonDataAccessInterface {
     private final NewsFetcherService newsFetcher;
     private final OpenAISummarizerService summarizer;

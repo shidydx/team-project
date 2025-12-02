@@ -13,6 +13,7 @@ import use_case.OpenAISummarizerService;
 import java.io.IOException;
 import java.util.List;
 
+// client for openai api: summarizes articles and generates comparison analysis
 public class OpenAIClient implements OpenAISummarizerService {
 
     private static final String BASE_URL = "https://api.openai.com/v1/chat/completions";
@@ -92,6 +93,7 @@ public class OpenAIClient implements OpenAISummarizerService {
         return sources.toString();
     }
 
+    // construct prompt for article summarization with formatting instructions
     private String buildPrompt(List<Article> articles) {
         StringBuilder prompt = new StringBuilder();
         prompt.append("Please provide a detailed, well-formatted summary of the following news articles.\n\n");
@@ -181,6 +183,7 @@ public class OpenAIClient implements OpenAISummarizerService {
         }
     }
 
+    // construct prompt for comparing left and right summaries
     private String buildComparisonPrompt(String leftSummary, String rightSummary) {
         StringBuilder prompt = new StringBuilder();
         prompt.append("Provide a detailed comparison of these two news summaries from different political perspectives.\n\n");

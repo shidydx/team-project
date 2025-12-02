@@ -5,6 +5,7 @@ import use_case.OpenAISummarizerService;
 
 import java.util.List;
 
+// fetches right-leaning articles and generates summary
 public class RightNewsSummaryInteractor implements RightNewsSummaryInputBoundary {
     private final OpenAISummarizerService summarizer;
     private final RightNewsSummaryOutputBoundary presenter;

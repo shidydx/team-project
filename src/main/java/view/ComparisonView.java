@@ -13,6 +13,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.net.URI;
 
+// ui for displaying left/right summaries and comparison analysis side by side
 public class ComparisonView extends JPanel implements PropertyChangeListener {
     public static final String VIEW_NAME = "comparison";
 
@@ -24,12 +25,15 @@ public class ComparisonView extends JPanel implements PropertyChangeListener {
 
     private final JTextField topicField;
     private final JButton backButton;
+    private final JButton saveTopicButton;
     private final JEditorPane leftSummaryArea;
     private final JEditorPane rightSummaryArea;
     private final JEditorPane comparisonArea;
     private final JLabel statusLabel;
     private final JPanel contentPanel;
+    private interface_adapter.savetopic.SaveTopicController saveTopicController;
 
+    // initialize comparison view with topic input, summary panels, and save functionality
     public ComparisonView(ComparisonViewModel viewModel) {
         this.viewModel = viewModel;
         this.viewModel.addPropertyChangeListener(this);
@@ -83,7 +87,17 @@ public class ComparisonView extends JPanel implements PropertyChangeListener {
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         backButton = new JButton("← Back to Menu");
         backButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        
+        saveTopicButton = new JButton("💾 Save Topic & Summaries");
+        saveTopicButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        saveTopicButton.setBackground(new Color(46, 204, 113));
+        saveTopicButton.setForeground(Color.WHITE);
+        saveTopicButton.setFocusPainted(false);
+        saveTopicButton.setToolTipText("Save this topic and all summaries (left, right, and comparison)");
+        saveTopicButton.setVisible(false);
+        
         bottomPanel.add(backButton);
+        bottomPanel.add(saveTopicButton);
 
         this.add(topPanel, BorderLayout.NORTH);
         this.add(contentPanel, BorderLayout.CENTER);
@@ -94,6 +108,59 @@ public class ComparisonView extends JPanel implements PropertyChangeListener {
                 cardLayout.show(cardPanel, "EnterTopicView");
             }
         });
+        
+        saveTopicButton.addActionListener(e -> {
+            ComparisonState state = viewModel.getState();
+            String topic = state.getTopic();
+            String leftSummary = state.getLeftSummary();
+            String rightSummary = state.getRightSummary();
+            String comparisonSummary = state.getComparisonAnalysis();
+            
+            if (topic == null || topic.trim().isEmpty()) {
+                statusLabel.setText("No topic to save. Please run a comparison first.");
+                statusLabel.setForeground(Color.RED);
+                return;
+            }
+            
+            if (leftSummary == null || rightSummary == null || comparisonSummary == null ||
+                leftSummary.trim().isEmpty() || rightSummary.trim().isEmpty() || comparisonSummary.trim().isEmpty()) {
+                statusLabel.setText("Please wait for all summaries to load before saving.");
+                statusLabel.setForeground(Color.RED);
+                return;
+            }
+            
+            if (saveTopicController != null) {
+                saveTopicController.saveWithSummaries(topic.trim(), "default-user", 
+                                                     leftSummary, rightSummary, comparisonSummary);
+                statusLabel.setText("Topic and summaries saved successfully!");
+                statusLabel.setForeground(new Color(46, 204, 113));
+            } else {
+                statusLabel.setText("Save feature not available.");
+                statusLabel.setForeground(Color.RED);
+            }
+        });
+    }
+    
+    public void setSaveTopicController(interface_adapter.savetopic.SaveTopicController controller) {
+        this.saveTopicController = controller;
+    }
+    
+    public void loadSavedTopic(entity.Topic topic) {
+        if (topic != null) {
+            topicField.setText(topic.getKeyword());
+            ComparisonState state = viewModel.getState();
+            state.setTopic(topic.getKeyword());
+            state.setLeftSummary(topic.getLeftSummary());
+            state.setRightSummary(topic.getRightSummary());
+            state.setComparisonAnalysis(topic.getComparisonSummary());
+            state.setLoading(false);
+            state.setError("");
+            viewModel.firePropertyChanged();
+            
+            if (cardLayout != null && cardPanel != null) {
+                cardLayout.show(cardPanel, VIEW_NAME);
+            }
+        }
     }
 
     private JPanel createSummaryPanel(String title, Color borderColor) {
@@ -139,6 +206,7 @@ public class ComparisonView extends JPanel implements PropertyChangeListener {
         runComparison(topic);
     }
 
+    // execute comparison use case asynchronously to avoid blocking ui
     private void runComparison(String topic) {
         if (!topic.isEmpty() && controller != null) {
             ComparisonState state = viewModel.getState();
@@ -181,6 +249,7 @@ public class ComparisonView extends JPanel implements PropertyChangeListener {
         }
     }
 
+    // update ui based on view model state: show errors or display summaries
     private void updateView() {
         ComparisonState state = viewModel.getState();
         
@@ -200,9 +269,12 @@ public class ComparisonView extends JPanel implements PropertyChangeListener {
             leftSummaryArea.setCaretPosition(0);
             rightSummaryArea.setCaretPosition(0);
             comparisonArea.setCaretPosition(0);
+            
+            saveTopicButton.setVisible(true);
         }
     }
     
+    // convert plain text to html with link detection and formatting
     private String convertToHtml(String text) {
         if (text == null || text.isEmpty()) {
             return "<html><body></body></html>";

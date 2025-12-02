@@ -4,6 +4,7 @@ import entity.Article;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
+// orchestrates fetching left/right articles, generating summaries, and comparison analysis
 public class ComparisonInteractor implements ComparisonInputBoundary {
     private final ComparisonOutputBoundary outputBoundary;
     private final ComparisonDataAccessInterface dataAccess;
@@ -14,6 +15,7 @@ public class ComparisonInteractor implements ComparisonInputBoundary {
         this.dataAccess = dataAccess;
     }
 
+    // fetch articles and summaries in parallel, then generate comparison
     @Override
     public void execute(ComparisonInputData inputData) {
         String topic = inputData.getTopic();
