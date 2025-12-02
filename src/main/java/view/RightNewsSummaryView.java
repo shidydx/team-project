@@ -7,7 +7,9 @@ import interface_adapter.right_news_summary.RightNewsViewModel;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ItemEvent;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class RightNewsSummaryView extends JPanel {
     public static final String VIEW_NAME = "Right News Summary";
@@ -24,6 +26,7 @@ public class RightNewsSummaryView extends JPanel {
     private final JTextField nameField;
     private final JTextField linkField;
     private final JButton summarizeButton;
+    private final JLabel errorLabel;
 
     public RightNewsSummaryView(RightNewsController controller, RightNewsViewModel viewModel) {
         this.controller = controller;
@@ -69,13 +72,44 @@ public class RightNewsSummaryView extends JPanel {
         sourcePanel.add(linkField);
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         summarizeButton = new JButton("Summarize Right News");
-        JButton backButton = new JButton("← Back");
+        summarizeButton.setFont(new Font("Arial", Font.BOLD, 14));
+        summarizeButton.setBackground(new Color(231, 76, 60));
+        summarizeButton.setForeground(Color.WHITE);
+        summarizeButton.setOpaque(true);
+        summarizeButton.setFocusPainted(false);
+        
+        JButton backButton = new JButton("Back");
+        backButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        backButton.setBackground(new Color(100, 100, 100));
+        backButton.setForeground(Color.WHITE);
+        backButton.setOpaque(true);
+        backButton.setFocusPainted(false);
+        
         JButton changeButton = new JButton("Switch to Left News");
+        changeButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        changeButton.setBackground(new Color(52, 152, 219));
+        changeButton.setForeground(Color.WHITE);
+        changeButton.setOpaque(true);
+        changeButton.setFocusPainted(false);
+        
         JButton comparisonButton = new JButton("Compare Coverage");
+        comparisonButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        comparisonButton.setBackground(new Color(46, 204, 113));
+        comparisonButton.setForeground(Color.WHITE);
+        comparisonButton.setOpaque(true);
+        comparisonButton.setFocusPainted(false);
+        
+        errorLabel = new JLabel();
+        errorLabel.setForeground(Color.RED);
+        
         buttonPanel.add(backButton);
         buttonPanel.add(summarizeButton);
         buttonPanel.add(changeButton);
         buttonPanel.add(comparisonButton);
+        
+        JPanel errorPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
+        errorPanel.add(errorLabel);
+        
         mainPanel.add(topicPanel);
         mainPanel.add(Box.createVerticalStrut(8));
         mainPanel.add(summaryPanel);
@@ -83,6 +117,8 @@ public class RightNewsSummaryView extends JPanel {
         mainPanel.add(sourcePanel);
         mainPanel.add(Box.createVerticalStrut(8));
         mainPanel.add(buttonPanel);
+        mainPanel.add(Box.createVerticalStrut(8));
+        mainPanel.add(errorPanel);
         this.add(mainPanel, BorderLayout.CENTER);
         sourceComboBox.addItemListener(e -> {
             if (e.getStateChange() == ItemEvent.SELECTED) {
@@ -91,9 +127,13 @@ public class RightNewsSummaryView extends JPanel {
         });
         summarizeButton.addActionListener(e -> {
             String keyword = topicField.getText().trim();
-            controller.execute(keyword);
+            if (controller != null) {
+                controller.execute(keyword);
+            }
             String error = viewModel.getErrorMessage();
             if (error != null && !error.isEmpty()) {
+                errorLabel.setText(error);
+                summaryArea.setText("");
                 JOptionPane.showMessageDialog(
                         RightNewsSummaryView.this,
                         error,
@@ -155,6 +195,7 @@ public class RightNewsSummaryView extends JPanel {
             }
             return;
         }
+        Set<String> addedSources = new HashSet<>();
         for (Article article : articles) {
             String label = article.getSourceName();
             if (label == null || label.isEmpty()) {
@@ -163,7 +204,11 @@ public class RightNewsSummaryView extends JPanel {
             if (label == null || label.isEmpty()) {
                 label = "Source";
             }
-            sourceComboBox.addItem(label);
+            
+            if (!addedSources.contains(label)) {
+                sourceComboBox.addItem(label);
+                addedSources.add(label);
+            }
         }
         if (sourceComboBox.getItemCount() > 0) {
             sourceComboBox.setSelectedIndex(0);
@@ -175,25 +220,59 @@ public class RightNewsSummaryView extends JPanel {
         if (articles == null || articles.isEmpty()) {
             return;
         }
-        int index = sourceComboBox.getSelectedIndex();
-        if (index < 0 || index >= articles.size()) {
-            index = 0;
+        
+        String selectedSource = (String) sourceComboBox.getSelectedItem();
+        if (selectedSource == null) {
+            return;
         }
-        Article article = articles.get(index);
-        if (article.getTitle() == null) {
-            titleField.setText("");
-        } else {
-            titleField.setText(article.getTitle());
+        
+        // Find article by source name matching
+        Article article = null;
+        for (Article a : articles) {
+            String sourceName = a.getSourceName();
+            if (sourceName == null || sourceName.isEmpty()) {
+                sourceName = a.getTitle();
+            }
+            if (sourceName == null || sourceName.isEmpty()) {
+                sourceName = "Source";
+            }
+            if (selectedSource.equals(sourceName)) {
+                article = a;
+                break;
+            }
         }
-        if (article.getSourceName() == null) {
-            nameField.setText("");
-        } else {
-            nameField.setText(article.getSourceName());
+        
+        // If no match found, use first article
+        if (article == null && !articles.isEmpty()) {
+            article = articles.get(0);
         }
-        if (article.getUrl() == null) {
-            linkField.setText("");
-        } else {
-            linkField.setText(article.getUrl());
+        
+        if (article != null) {
+            if (article.getTitle() == null) {
+                titleField.setText("");
+            } else {
+                titleField.setText(article.getTitle());
+            }
+            if (article.getSourceName() == null) {
+                nameField.setText("");
+            } else {
+                nameField.setText(article.getSourceName());
+            }
+            if (article.getUrl() == null) {
+                linkField.setText("");
+            } else {
+                linkField.setText(article.getUrl());
+            }
+        }
+    }
+    
+    public void updateView() {
+        if (viewModel.getErrorMessage() != null && !viewModel.getErrorMessage().isEmpty()) {
+            errorLabel.setText(viewModel.getErrorMessage());
+            summaryArea.setText("");
+        } else if (viewModel.getSummary() != null && !viewModel.getSummary().isEmpty()) {
+            summaryArea.setText(viewModel.getSummary());
+            errorLabel.setText("");
         }
     }
 

@@ -60,6 +60,11 @@ public class SavedTopicsView extends JPanel {
         savedTopicsPanel.add(savedTopicsScrollPane, BorderLayout.CENTER);
         JPanel savedTopicsButtonPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
         loadSavedTopicsButton = new JButton("Refresh Saved Topics");
+        loadSavedTopicsButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        loadSavedTopicsButton.setBackground(new Color(59, 89, 182));
+        loadSavedTopicsButton.setForeground(Color.WHITE);
+        loadSavedTopicsButton.setOpaque(true);
+        loadSavedTopicsButton.setFocusPainted(false);
         loadSavedTopicsButton.addActionListener(e -> refreshSavedTopics());
         savedTopicsButtonPanel.add(loadSavedTopicsButton);
         savedTopicsPanel.add(savedTopicsButtonPanel, BorderLayout.SOUTH);
@@ -79,6 +84,11 @@ public class SavedTopicsView extends JPanel {
         inputPanel.add(topicInputField);
         
         filterButton = new JButton("Filter Topic");
+        filterButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        filterButton.setBackground(new Color(59, 89, 182));
+        filterButton.setForeground(Color.WHITE);
+        filterButton.setOpaque(true);
+        filterButton.setFocusPainted(false);
         filterButton.setToolTipText("Search for a specific topic in your saved topics");
         filterButton.addActionListener(e -> {
             String topic = topicInputField.getText().trim();
@@ -91,8 +101,12 @@ public class SavedTopicsView extends JPanel {
         });
         
         deleteButton = new JButton("Delete Topic");
+        deleteButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        deleteButton.setBackground(new Color(200, 0, 0));
+        deleteButton.setForeground(Color.WHITE);
+        deleteButton.setOpaque(true);
+        deleteButton.setFocusPainted(false);
         deleteButton.setToolTipText("Remove a topic from your saved topics");
-        deleteButton.setForeground(new Color(200, 0, 0));
         deleteButton.addActionListener(e -> {
             String topic = topicInputField.getText().trim();
             if (!topic.isEmpty() && deleteTopicController != null) {
@@ -129,6 +143,11 @@ public class SavedTopicsView extends JPanel {
 
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT));
         backButton = new JButton("Back to Home");
+        backButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        backButton.setBackground(new Color(100, 100, 100));
+        backButton.setForeground(Color.WHITE);
+        backButton.setOpaque(true);
+        backButton.setFocusPainted(false);
         
         backButton.addActionListener(e -> {
             if (cardLayout != null && cardPanel != null) {

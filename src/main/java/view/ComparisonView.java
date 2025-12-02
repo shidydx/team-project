@@ -85,13 +85,18 @@ public class ComparisonView extends JPanel implements PropertyChangeListener {
         contentPanel.add(comparisonPanel, BorderLayout.CENTER);
 
         JPanel bottomPanel = new JPanel(new FlowLayout(FlowLayout.LEFT));
-        backButton = new JButton("← Back to Menu");
+        backButton = new JButton("Back to Menu");
         backButton.setFont(new Font("Arial", Font.PLAIN, 14));
+        backButton.setBackground(new Color(100, 100, 100));
+        backButton.setForeground(Color.WHITE);
+        backButton.setOpaque(true);
+        backButton.setFocusPainted(false);
         
-        saveTopicButton = new JButton("💾 Save Topic & Summaries");
+        saveTopicButton = new JButton("Save Topic & Summaries");
         saveTopicButton.setFont(new Font("Arial", Font.PLAIN, 14));
         saveTopicButton.setBackground(new Color(46, 204, 113));
         saveTopicButton.setForeground(Color.WHITE);
+        saveTopicButton.setOpaque(true);
         saveTopicButton.setFocusPainted(false);
         saveTopicButton.setToolTipText("Save this topic and all summaries (left, right, and comparison)");
         saveTopicButton.setVisible(false);
@@ -287,7 +292,7 @@ public class ComparisonView extends JPanel implements PropertyChangeListener {
         
         html = html.replace("\n", "<br>");
         
-        return "<html><body style='font-family: Arial; font-size: 13px; padding: 10px;'>" + html + "</body></html>";
+        return "<html><body style='font-family: Arial; font-size: 13px; padding: 10px; color: #000000;'>" + html + "</body></html>";
     }
 }
 

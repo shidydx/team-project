@@ -29,7 +29,7 @@ public class EnterTopicView extends JPanel {
     private final JLabel errorLabel = new JLabel();
     private final JTextField topicTextField = new JTextField();
     private final JButton searchButton = new JButton("Search & Summarize");
-    private final JButton viewSavedTopicsButton = new JButton("📋 View Saved Topics");
+    private final JButton viewSavedTopicsButton = new JButton("View Saved Topics");
     private final JButton comparisonButton = new JButton("View Detailed Comparison");
     
     private final JEditorPane leftSummaryArea;
@@ -111,6 +111,7 @@ public class EnterTopicView extends JPanel {
         searchButton.setFont(new Font("Arial", Font.BOLD, 14));
         searchButton.setBackground(new Color(59, 89, 182));
         searchButton.setForeground(Color.WHITE);
+        searchButton.setOpaque(true);
         searchButton.setFocusPainted(false);
         
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 5, 0));
@@ -118,6 +119,7 @@ public class EnterTopicView extends JPanel {
         viewSavedTopicsButton.setFont(new Font("Arial", Font.PLAIN, 14));
         viewSavedTopicsButton.setBackground(new Color(155, 89, 182));
         viewSavedTopicsButton.setForeground(Color.WHITE);
+        viewSavedTopicsButton.setOpaque(true);
         viewSavedTopicsButton.setFocusPainted(false);
         viewSavedTopicsButton.setToolTipText("View and manage your saved topics");
         
@@ -153,6 +155,7 @@ public class EnterTopicView extends JPanel {
         comparisonButton.setFont(new Font("Arial", Font.BOLD, 16));
         comparisonButton.setBackground(new Color(46, 204, 113));
         comparisonButton.setForeground(Color.WHITE);
+        comparisonButton.setOpaque(true);
         comparisonButton.setFocusPainted(false);
         comparisonButton.setVisible(false);
         bottomPanel.add(comparisonButton);
@@ -297,7 +300,7 @@ public class EnterTopicView extends JPanel {
         
         html = html.replace("\n", "<br>");
         
-        return "<html><body style='font-family: Arial; font-size: 13px; padding: 10px;'>" + html + "</body></html>";
+        return "<html><body style='font-family: Arial; font-size: 13px; padding: 10px; color: #000000;'>" + html + "</body></html>";
     }
     public void updateView() {
         if (viewModel.getState().getErrorMessage() != null && !viewModel.getState().getErrorMessage().isEmpty()) {
