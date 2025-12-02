@@ -1,55 +1,92 @@
 package interface_adapter.right_news_summary;
 
 import entity.Article;
+
 import java.util.List;
 
 public class RightNewsViewModel {
-    private String ideology = "Right";
-    private String summary;
-    private String url;
-    private String title;
-    private String name;
-    private String errorMessage;
-    private List<Article> articles;
+    RightNewsState state;
 
-
-    public void setSummary(String summary) {
-        this.summary = summary;
+    public RightNewsViewModel() {
+        state = new RightNewsState();
     }
 
-    public void setUrl(String url) {
-        this.url = url;
+    public RightNewsState getState() {
+        return state;
     }
 
-    public void setErrorMessage(String errorMessage) {
-        this.errorMessage = errorMessage;
+    public void setState(RightNewsState state) {
+        this.state = state;
     }
 
-    public void setArticles(List<Article> articles) {this.articles = articles;}
-
-    public void setTitle(String title) {this.title = title;}
-
-    public void setName(String name) {this.name = name;}
-
-    public String getIdeology() {
-        return ideology;
-    }
-
+    // Convenience getters and setters for easier access
     public String getSummary() {
-        return summary;
-    }
-
-    public String getUrl() {
-        return url;
+        return state.getSummary();
     }
 
     public String getErrorMessage() {
-        return errorMessage;
+        return state.getErrorMessage();
     }
 
-    public List<Article> getArticles() {return articles;}
+    public String getTopic() {
+        return state.getTopic();
+    }
 
-    public String getName() {return name;}
+    public List<Article> getArticles() {
+        return state.getArticles();
+    }
 
-    public String getTitle() {return title;}
+    public String getTitle() {
+        return state.getTitle();
+    }
+
+    public String getName() {
+        return state.getName();
+    }
+
+    public String getUrl() {
+        return state.getUrl();
+    }
+
+    public void setSummary(String summary) {
+        RightNewsState currentState = getState();
+        currentState.setSummary(summary);
+        setState(currentState);
+    }
+
+    public void setErrorMessage(String errorMessage) {
+        RightNewsState currentState = getState();
+        currentState.setErrorMessage(errorMessage);
+        setState(currentState);
+    }
+
+    public void setTopic(String topic) {
+        RightNewsState currentState = getState();
+        currentState.setTopic(topic);
+        setState(currentState);
+    }
+
+    public void setArticles(List<Article> articles) {
+        RightNewsState currentState = getState();
+        currentState.setArticles(articles);
+        setState(currentState);
+    }
+
+    public void setTitle(String title) {
+        RightNewsState currentState = getState();
+        currentState.setTitle(title);
+        setState(currentState);
+    }
+
+    public void setName(String name) {
+        RightNewsState currentState = getState();
+        currentState.setName(name);
+        setState(currentState);
+    }
+
+    public void setUrl(String url) {
+        RightNewsState currentState = getState();
+        currentState.setUrl(url);
+        setState(currentState);
+    }
 }
