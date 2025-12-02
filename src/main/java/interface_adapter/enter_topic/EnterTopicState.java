@@ -1,15 +1,11 @@
-package interface_adapter.entertopic;
+package interface_adapter.enter_topic;
 
 public class EnterTopicState {
     private String topic;
     private String errorMsg;
 
-    public EnterTopicState(EnterTopicState copy) {
-        this.topic = copy.topic;
-        this.errorMsg = copy.errorMsg;
+    public EnterTopicState() {
     }
-
-    public EnterTopicState() {}
 
     public String getTopic() {
         return topic;
