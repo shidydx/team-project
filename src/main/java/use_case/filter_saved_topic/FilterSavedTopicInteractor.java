@@ -22,11 +22,11 @@ public class FilterSavedTopicInteractor implements FilterSavedTopicInputBoundary
 
                 if  (topicFiltered == null) {
                     outputBoundary.failureView("No topic named " + topic_input + " was found.");
+                } else {
+                    String successMsg = "Topic named " + topic_input + " was found.";
+                    FilterSavedTopicOutputData outputData = new FilterSavedTopicOutputData(successMsg, "");
+                    outputBoundary.successView(outputData);
                 }
-
-                String successMsg = "Topic named " + topic_input + " was found.";
-                FilterSavedTopicOutputData outputData = new FilterSavedTopicOutputData(successMsg, "");
-                outputBoundary.successView(outputData);
 
             } catch (Exception e) {
                 outputBoundary.failureView("Error: " + e.getMessage());

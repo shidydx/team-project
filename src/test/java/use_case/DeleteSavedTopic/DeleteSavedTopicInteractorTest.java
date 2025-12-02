@@ -46,7 +46,7 @@ public class DeleteSavedTopicInteractorTest {
 
             @Override
             public void failureView(String errorMessage) {
-                assertEquals(errorMessage, "No topic named " + topic_input + " was found.");
+                assertEquals(errorMessage, "No topic named " + topic_input.getTopic() + " was found.");
             }
         };
 
@@ -67,7 +67,7 @@ public class DeleteSavedTopicInteractorTest {
         DeleteSavedTopicOutputBoundary presenter = new DeleteSavedTopicOutputBoundary() {
             @Override
             public void successView(DeleteSavedTopicOutputData outputData) {
-                assertEquals(outputData.getDeleteSuccessful(), "Topic named " + topic_input + " was deleted.");
+                assertEquals(outputData.getDeleteSuccessful(), "Topic named " + topic_input.getTopic() + " was deleted.");
             }
 
             @Override

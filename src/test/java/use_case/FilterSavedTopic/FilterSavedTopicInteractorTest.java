@@ -45,7 +45,7 @@ public class FilterSavedTopicInteractorTest {
 
             @Override
             public void failureView(String errorMsg) {
-                assertEquals(errorMsg, "No topic named " + inputData + " was found.");
+                assertEquals(errorMsg, "No topic named " + inputData.getTopic() + " was found.");
             }
         };
 
@@ -66,7 +66,7 @@ public class FilterSavedTopicInteractorTest {
         FilterSavedTopicOutputBoundary presenter = new FilterSavedTopicOutputBoundary() {
             @Override
             public void successView(FilterSavedTopicOutputData outputData) {
-                assertEquals(outputData, "Topic named " + inputData + " was found.");
+                assertEquals(outputData.getFilterSuccessful(), "Topic named " + inputData.getTopic() + " was found.");
             }
 
             @Override
