@@ -38,7 +38,7 @@ and remove the topics that I am no longer interested in following up.
         - Fetches recent and relevant news articles from online sources and blogs worldwide
         - Supports searching by keywords, domain, language and date range
     - **Status**: Tested with OkHttp in Java.
-- API Name: https://platform.openai.com/docs/models/gpt-5-mini
+- API Name: https://platform.openai.com/docs/models/gpt-3.5-turbo
     - Main service provided:
         - Generate summaries and analyses in natural language.
     - Status: Tested with OkHttp in Java.
