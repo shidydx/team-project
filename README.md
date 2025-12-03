@@ -43,4 +43,3 @@ and remove the topics that I am no longer interested in following up.
         - Generate summaries and analyses in natural language.
     - Status: Tested with OkHttp in Java.
 
-## Functionality Demonstration
